@@ -1,20 +1,20 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Album from "./src/Album";
+import Test from "./src/Test";
 
-export default function App() {
+const App = () => {
+  const Stack = createStackNavigator();
+
   return (
-    <View style={styles.container}>
-      <Text>반려견 NFT 서비스</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="dd" component={Test} />
+        <Stack.Screen name="Album" component={Album} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default App;
