@@ -1,16 +1,37 @@
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import {useState} from "react";
 import HamburgerMenu from "../../assets/images/hamburger-menu-icon.png";
+import SideMenu from './SideMenu';
 
 const MainHeader = () => {
+  const [activeSideMenu, setActiveSideMenu] = useState<Boolean>(false);
+  const clickHamburger = () => {
+    switch(activeSideMenu){
+      case true:
+        setActiveSideMenu(false);
+        break;
+      case false:
+        setActiveSideMenu(true);
+        break;
+    }
+  }
   return (
     <>
         <View style={styles.header}>
             <Text style={styles.logo}>LOGO</Text>
-            <Image
-                source={HamburgerMenu}
-                style={styles.menuIcon}
-            />
+            <TouchableOpacity activeOpacity={0.7} onPress={clickHamburger}>
+              <Image
+                  source={HamburgerMenu}
+                  style={styles.menuIcon}
+              />
+            </TouchableOpacity>
         </View>
+        {
+          activeSideMenu ?
+          <></>
+          :
+          <SideMenu/>
+        }
     </>
   );
 }
