@@ -1,4 +1,5 @@
 import {View, Text, Image, TouchableOpacity} from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
 import SideMenuIcon from "./SideMenuIcon";
 import SideMenuLayout from "../styles/sideMenuLayout";
@@ -12,6 +13,7 @@ import WalkRootIcon from "../../assets/images/line-walk-root-icon.png"
 import TribeIcon from "../../assets/images/line-tribe-icon.png"
 
 const SideMenu = () => {
+    const navigation = useNavigation();
     return(
         <>
             <View style={SideMenuLayout.sideMenuWrap}>
@@ -35,7 +37,7 @@ const SideMenu = () => {
                     <Text style={SideMenuLayout.navTitle}>반려견과의 <Text style={SideMenuLayout.boldNavTitle}>추억공유</Text></Text>
                     <Text style={SideMenuLayout.navDesc}>소중한 추억을 간직하세요.</Text>
                     <View style={SideMenuLayout.navFlex}>
-                        <SideMenuIcon title="프로필 등록" imageIcon={PhotoAlbumIcon}></SideMenuIcon>
+                        <SideMenuIcon title="프로필 등록" imageIcon={PhotoAlbumIcon} movePage="Album"></SideMenuIcon>
                         <SideMenuIcon title="프로필 등록" imageIcon={MedicalIcon}></SideMenuIcon>
                         <SideMenuIcon title="프로필 등록" imageIcon={WalkRootIcon}></SideMenuIcon>
                         <SideMenuIcon title="프로필 등록" imageIcon={TribeIcon}></SideMenuIcon>

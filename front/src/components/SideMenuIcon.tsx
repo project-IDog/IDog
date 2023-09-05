@@ -1,10 +1,12 @@
 import {StyleSheet, View, Text, Image, TouchableOpacity} from "react-native";
 import {responsiveWidth, responsiveHeight} from "react-native-responsive-dimensions"
+import { useNavigation } from '@react-navigation/native';
 
-const SideMenuIcon = ({title, imageIcon}: any) => {
+const SideMenuIcon = ({title, imageIcon, movePage}: any) => {
+    const navigation = useNavigation();
     return(
         <>
-            <TouchableOpacity activeOpacity={0.7}>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate(movePage)}>
                 <View style={styles.iconWrap}>
                     <Image
                         source={imageIcon}

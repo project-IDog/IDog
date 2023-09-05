@@ -28,9 +28,9 @@ const MainHeader = () => {
         </View>
         {
           activeSideMenu ?
-          <></>
-          :
           <SideMenu/>
+          :
+          <></>
         }
     </>
   );
