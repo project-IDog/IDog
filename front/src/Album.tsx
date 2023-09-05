@@ -17,7 +17,6 @@ const Album = () => {
     secretAccessKey: AWS_SECRET_ACCESS_KEY,
     region: AWS_REGION,
   });
-  console.log("s3", s3);
 
   const uploadImage = async (uri: any) => {
     const response = await fetch(uri);
