@@ -1,0 +1,49 @@
+import {View, Text, Image, TouchableOpacity} from "react-native";
+
+import SideMenuIcon from "./SideMenuIcon";
+import SideMenuLayout from "../styles/sideMenuLayout";
+
+import CloseIcon from "../../assets/images/close-icon.png"
+import NftCardIcon from "../../assets/images/line-nft-card-icon.png"
+import AdoptionIcon from "../../assets/images/line-adoption-icon.png"
+import PhotoAlbumIcon from "../../assets/images/line-photo-album-icon.png"
+import MedicalIcon from "../../assets/images/line-medical-icon.png"
+import WalkRootIcon from "../../assets/images/line-walk-root-icon.png"
+import TribeIcon from "../../assets/images/line-tribe-icon.png"
+
+const SideMenu = () => {
+    return(
+        <>
+            <View style={SideMenuLayout.sideMenuWrap}>
+                <View style={SideMenuLayout.sideMenuHeader}>
+                    <Text style={SideMenuLayout.sideMenuLogo}>LOGO</Text>
+                    <TouchableOpacity activeOpacity={0.7}>
+                        <Image
+                            source={CloseIcon}
+                        />
+                    </TouchableOpacity>
+                </View>
+
+                <View style={SideMenuLayout.navWrap}>
+                    <Text style={SideMenuLayout.navTitle}>반려견 <Text style={SideMenuLayout.boldNavTitle}>소유증명</Text></Text>
+                    <Text style={SideMenuLayout.navDesc}>간편한 NFT 소유증명 및 이전</Text>
+                    <View style={SideMenuLayout.navFlex}>
+                        <SideMenuIcon title="프로필 등록" imageIcon={NftCardIcon}></SideMenuIcon>
+                        <SideMenuIcon title="프로필 등록" imageIcon={AdoptionIcon}></SideMenuIcon>
+                    </View>
+                    <View style={{marginTop:25}}></View>
+                    <Text style={SideMenuLayout.navTitle}>반려견과의 <Text style={SideMenuLayout.boldNavTitle}>추억공유</Text></Text>
+                    <Text style={SideMenuLayout.navDesc}>소중한 추억을 간직하세요.</Text>
+                    <View style={SideMenuLayout.navFlex}>
+                        <SideMenuIcon title="프로필 등록" imageIcon={PhotoAlbumIcon}></SideMenuIcon>
+                        <SideMenuIcon title="프로필 등록" imageIcon={MedicalIcon}></SideMenuIcon>
+                        <SideMenuIcon title="프로필 등록" imageIcon={WalkRootIcon}></SideMenuIcon>
+                        <SideMenuIcon title="프로필 등록" imageIcon={TribeIcon}></SideMenuIcon>
+                    </View>
+                </View>
+            </View>
+        </>
+    )
+}
+
+export default SideMenu;
