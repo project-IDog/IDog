@@ -4,9 +4,7 @@
     "jsx": "react-native",
     "typeRoots": ["./node_modules/@types"],
     "esModuleInterop": true,
-    "baseUrl": ".",
-    "paths": {
-      "@env": ["./.env.d.ts"]
-    }
-  }
+    "baseUrl": "."
+  },
+  "extends": "expo/tsconfig.base"
 }
