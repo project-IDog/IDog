@@ -8,6 +8,5 @@
     "paths": {
       "@env": ["./.env.d.ts"]
     }
-  },
-  "extends": "expo/tsconfig.base"
+  }
 }
