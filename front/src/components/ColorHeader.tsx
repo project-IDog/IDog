@@ -1,23 +1,49 @@
-import {View, Text, Image, StyleSheet} from "react-native"
+import {useState} from "react";
+import {View, Text, Image, StyleSheet, TouchableOpacity} from "react-native"
+import { useNavigation } from '@react-navigation/native';
 import { responsiveWidth, responsiveHeight } from "react-native-responsive-dimensions"
+import SideMenu from './SideMenu';
 import Preview from "../../assets/images/preview-icon.png"
 import HamburgerIcon from "../../assets/images/hamburger-menu-icon.png"
 
 const ColorHeader = ({title}: any) => {
+    const navigation = useNavigation();
+    const [activeSideMenu, setActiveSideMenu] = useState<Boolean>(false);
+    const clickHamburger = () => {
+        switch(activeSideMenu){
+        case true:
+            setActiveSideMenu(false);
+            break;
+        case false:
+            setActiveSideMenu(true);
+            break;
+        }
+    }
     return(
         <>
             <View style={styles.whiteHeaderWrap}>
-                <Image
-                    source={Preview}
-                />
+                <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.pop()}>
+                    <Image
+                        source={Preview}
+                    />
+                </TouchableOpacity>
                 <View style={styles.logoWrap}>
                     <Text style={styles.logoTitle}>LOGO</Text>
                     <View style={styles.verticalLine}></View>
                     <Text style={styles.headerTitle}>{title}</Text>
                 </View>
-                <Image
-                    source={HamburgerIcon}
-                />
+                <TouchableOpacity activeOpacity={0.7} onPress={clickHamburger}>
+                    <Image
+                        source={HamburgerIcon}
+                    />
+                </TouchableOpacity>
+
+                {
+                    activeSideMenu ?
+                    <SideMenu/>
+                    :
+                    <></>
+                }
             </View>
         </>
     );
