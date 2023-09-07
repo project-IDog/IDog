@@ -20,7 +20,7 @@ const Footer = () => {
                         <View style={styles.footerButton}><Text style={styles.footerButtonText}>이용안내</Text></View>
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.copyright}>COPYRIGHTⓒ2020.반려견커뮤니티 ALL. RIGHTS RESERVED</Text>
+                <Text style={styles.copyright}>COPYRIGHTⓒ2023.IDog반려견커뮤니티 ALL. RIGHTS RESERVED</Text>
             </View>
         </>
     )
