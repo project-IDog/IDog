@@ -3,7 +3,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import Main from "./src/screens/Main"
 import Album from "./src/screens/Album"
-import SideMenu from './src/components/SideMenu';
+import SideMenu from "./src/components/SideMenu"
+import Profile from "./src/screens/Profile"
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -13,6 +14,8 @@ const App = () => {
         <Stack.Screen name="Main" component={Main} />
         <Stack.Screen name="Album" component={Album} />
         <Stack.Screen name="SideMenu" component={SideMenu} />
+        <Stack.Screen name="Profile" component={Profile} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
