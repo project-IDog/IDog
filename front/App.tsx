@@ -7,6 +7,7 @@ import SideMenu from "./src/components/SideMenu"
 import Profile from "./src/screens/Profile"
 import CreateProfile from "./src/screens/CreateProfile"
 import EditProfile from "./src/screens/EditProfile"
+import MyPage from './src/screens/MyPage';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -19,6 +20,7 @@ const App = () => {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="CreateProfile" component={CreateProfile} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen name="MyPage" component={MyPage} />
 
       </Stack.Navigator>
     </NavigationContainer>

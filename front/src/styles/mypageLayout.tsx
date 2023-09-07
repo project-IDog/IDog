@@ -1,0 +1,121 @@
+import {StyleSheet} from "react-native"
+import { responsiveWidth, responsiveHeight } from "react-native-responsive-dimensions";
+
+const MyPageLayout = StyleSheet.create({
+    myInfoWrap:{
+        marginTop:-80,
+    },
+    myThumbnailWrap:{
+        width:responsiveWidth(92),
+        marginTop:-1 * responsiveHeight(3),
+        paddingHorizontal: responsiveWidth(4),
+        display:"flex",
+        flexDirection:"row",
+        justifyContent:"flex-end",
+        marginLeft:30,
+    },
+    profileThumbnail:{
+        width:78,
+        height:78,
+        borderRadius:50,
+    },
+    penIconWrap:{
+        position:"relative",
+    },
+    penIconButton:{
+        width:30,
+        height:30,
+        borderRadius:50,
+        backgroundColor:"#EE8A72",
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        position:"absolute",
+        top:78 - 30,
+        right:78 - 15,
+    },
+    myProfileInfoWrap:{
+        marginTop:-1 * responsiveHeight(3),
+        paddingHorizontal:responsiveWidth(4),
+    },
+    myTitleOuter:{
+        width:responsiveWidth(20),
+        height:responsiveHeight(4),
+        backgroundColor:"#010101",
+        borderRadius:2,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+    },
+    myTitle:{
+        fontSize:10,
+        fontWeight:"400",
+        color:"#F6F6F6",
+    },
+    myName:{
+        fontSize:16,
+        fontWeight:"700",
+        color:"#33383B",
+        marginTop:8,
+    },
+    myProfileInfo:{
+        marginTop:13,
+        display:"flex",
+        flexDirection:"row",
+    },
+    myInfo:{
+        width:responsiveWidth(72),
+        fontSize:11,
+        fontWeight:"400",
+        color:"#919191",
+    },
+    editProfileButton:{
+        width:responsiveWidth(20),
+        padding:4,
+        borderWidth:1,
+        borderColor:"#EE8A72",
+        borderRadius:30,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+    },
+    editProfileButtonText:{
+        fontSize:14,
+        fontWeight:"500",
+        color:"#F09883",
+    },
+    myPetTitle:{
+        fontSize:16,
+        fontWeight:"700",
+        color:"#4A4A4A",
+    },
+    myPetWrap:{
+        paddingHorizontal:responsiveWidth(4),
+        marginTop:48,
+    },
+    myPetList:{
+        marginTop:23,
+        marginBottom:50,
+        display:"flex",
+        flexDirection:"row",
+    },
+    addNewMyPetWrap:{
+        width:120,
+        height:150,
+        borderWidth:2,
+        borderColor:"#DEDEDE",
+        borderRadius:10,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        marginHorizontal:responsiveWidth(1),
+    },
+    addNewMyPetText:{
+        fontSize:10,
+        fontWeight:"600",
+        color:"#97989A",
+        marginTop:6,
+    },
+})
+
+export default MyPageLayout;
