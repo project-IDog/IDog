@@ -35,7 +35,7 @@ const Profile = ({navigation}:any) => {
                         <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('CreateProfile')}>
                             <ProfileItem desc="평생 소장하는 내 반려견 NFT 프로필" title="프로필 만들기" thumbnail={NftCardIcon}/>
                         </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.7}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Adoption')}>
                             <ProfileItem desc="간편한 소유권 변경" title="입양절차" thumbnail={AdoptionIcon}/>
                         </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.7}>

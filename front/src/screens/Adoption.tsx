@@ -11,7 +11,7 @@ import MyPetThumnail2 from "../../assets/images/my-pet-thumbnail2.png"
 
 import AdoptionLayout from "../styles/adptionLayout";
 
-const Adoption = () => {
+const Adoption = ({navigation}: any) => {
     const [myPetPressState, setMyPetPressState] = useState({});
     const myPetList = [
         {
@@ -72,7 +72,7 @@ const Adoption = () => {
                             <Text style={AdoptionLayout.submitButtonText}>작성완료</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.7} style={AdoptionLayout.cancelButton}>
+                    <TouchableOpacity activeOpacity={0.7} style={AdoptionLayout.cancelButton} onPress={() => navigation.navigate('Profile')}>
                         <View >
                             <Text style={AdoptionLayout.cancelButtonText}>취소하기</Text>
                         </View>

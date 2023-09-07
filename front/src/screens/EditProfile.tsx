@@ -10,7 +10,7 @@ import AddPlusIcon from "../../assets/images/add-plus-icon.png"
 
 import CreateProfileLayout from "../styles/createProfileLayout"
 
-const EditProfile = () => {
+const EditProfile = ({navigation} : any) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     const showDatePicker = () => {
@@ -79,7 +79,7 @@ const EditProfile = () => {
                             </Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.7}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Profile')}>
                         <View style={CreateProfileLayout.cancelButton}>
                             <Text style={CreateProfileLayout.cancelButtonText}>
                                 취소하기
