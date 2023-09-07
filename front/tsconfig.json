@@ -2,7 +2,9 @@
   "compilerOptions": {
     "strict": true,
     "jsx": "react-native",
-    "typeRoots": ["./node_modules/@types"],
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
     "esModuleInterop": true,
     "baseUrl": "."
   },

@@ -19,4 +19,5 @@ declare module "@env" {
 	export const AWS_REGION: string;
 	export const AWS_BUCKET: string;
 	export const WEB_CLIENT_ID: string;
+	export const ANDROID_CLIENT_ID: string;
 }
