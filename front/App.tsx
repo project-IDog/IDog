@@ -9,6 +9,7 @@ import CreateProfile from "./src/screens/CreateProfile"
 import EditProfile from "./src/screens/EditProfile"
 import MyPage from './src/screens/MyPage';
 import EditMyPage from './src/screens/EditMyPage';
+import Adoption from './src/screens/Adoption';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -23,6 +24,7 @@ const App = () => {
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="MyPage" component={MyPage} />
         <Stack.Screen name="EditMyPage" component={EditMyPage} />
+        <Stack.Screen name="Adoption" component={Adoption} />
 
       </Stack.Navigator>
     </NavigationContainer>

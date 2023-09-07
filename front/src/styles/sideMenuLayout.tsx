@@ -16,7 +16,7 @@ const SideMenuLayout = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        paddingHorizontal: responsiveWidth(2),
+        paddingHorizontal: responsiveWidth(4),
         paddingVertical: responsiveHeight(4),
     },
     sideMenuLogo:{
@@ -26,7 +26,7 @@ const SideMenuLayout = StyleSheet.create({
     },
 
     navWrap:{
-        paddingHorizontal:responsiveWidth(2),
+        paddingHorizontal:responsiveWidth(4),
     },
     navTitle:{
         fontSize:16,

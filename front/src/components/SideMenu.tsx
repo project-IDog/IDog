@@ -30,8 +30,8 @@ const SideMenu = () => {
                     <Text style={SideMenuLayout.navTitle}>반려견 <Text style={SideMenuLayout.boldNavTitle}>소유증명</Text></Text>
                     <Text style={SideMenuLayout.navDesc}>간편한 NFT 소유증명 및 이전</Text>
                     <View style={SideMenuLayout.navFlex}>
-                        <SideMenuIcon title="프로필 등록" imageIcon={NftCardIcon} movePage='Profile'></SideMenuIcon>
-                        <SideMenuIcon title="반려견 입양" imageIcon={AdoptionIcon}></SideMenuIcon>
+                        <SideMenuIcon title="프로필 등록" imageIcon={NftCardIcon} movePage="Profile"></SideMenuIcon>
+                        <SideMenuIcon title="반려견 입양" imageIcon={AdoptionIcon} movePage="Adoption"></SideMenuIcon>
                     </View>
                     <View style={{marginTop:25}}></View>
                     <Text style={SideMenuLayout.navTitle}>반려견과의 <Text style={SideMenuLayout.boldNavTitle}>추억공유</Text></Text>
