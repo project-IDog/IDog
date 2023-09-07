@@ -49,8 +49,10 @@ const Profile = ({navigation}:any) => {
                         <Text style={ProfileLayout.myNftMore}>전체보기</Text>
                     </View>
                     <ScrollView horizontal={true} style={ProfileLayout.nftList}>
-                        <NftProfile dogName="해피" createdAt="2023. 09. 02." species="시베리안허스키" bgImg={PuppyThumbnail1}/>
-                        <TouchableOpacity activeOpacity={0.8}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('EditProfile')}>
+                            <NftProfile dogName="해피" createdAt="2023. 09. 02." species="시베리안허스키" bgImg={PuppyThumbnail1} />
+                        </TouchableOpacity>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CreateProfile')}>
                             <View style={ProfileLayout.addNewNftWrap}>
                                 <Image
                                     source={AddPlusIcon}

@@ -10,7 +10,7 @@ import AddPlusIcon from "../../assets/images/add-plus-icon.png"
 
 import CreateProfileLayout from "../styles/createProfileLayout"
 
-const CreateProfile = () => {
+const EditProfile = () => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     const showDatePicker = () => {
@@ -28,7 +28,7 @@ const CreateProfile = () => {
     return(
         <>
             <CommonLayout>
-                <ColorHeader title="프로필 작성"/>
+                <ColorHeader title="프로필 수정"/>
                 <View style={CreateProfileLayout.createProfileTitleWrap}>
                     <Text style={CreateProfileLayout.createProfileDesc}>반려견 NFT</Text>
                     <Text style={CreateProfileLayout.createProfileTitle}>
@@ -93,4 +93,4 @@ const CreateProfile = () => {
     );
 }
 
-export default CreateProfile;
+export default EditProfile;
