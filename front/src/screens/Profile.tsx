@@ -13,12 +13,14 @@ import NftCardIcon from "../../assets/images/nft-card-icon.png"
 import AdoptionIcon from "../../assets/images/adoption-icon.png"
 import CertificateIcon from "../../assets/images/certificate-icon.png"
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
+import PuppyThumbnail1 from "../../assets/images/puppy-thumbnail1.png"
 
-const Profile = () => {
+
+const Profile = ({navigation}:any) => {
     return(
         <>
             <CommonLayout>
-                <WhiteHeader/>
+                <WhiteHeader title="프로필 만들기"/>
                 <SubMain subTitle="NFT 프로필" mainTitle={`OOO은 내 반려견의\n프로필을 NFT로 만들어\n평생 소장 프로필을 만듭니다.`} bgImg={SubMainImg} desc="프로필 만들기"/>
                 <View style={ProfileLayout.profileWrap}>
                     <Text style={ProfileLayout.subTitle}>NFT Service</Text>
@@ -30,7 +32,7 @@ const Profile = () => {
                         />
                     </View>
                     <ScrollView style={ProfileLayout.iconWrap} horizontal={true}>
-                        <TouchableOpacity activeOpacity={0.7}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('CreateProfile')}>
                             <ProfileItem desc="평생 소장하는 내 반려견 NFT 프로필" title="프로필 만들기" thumbnail={NftCardIcon}/>
                         </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.7}>
@@ -47,7 +49,7 @@ const Profile = () => {
                         <Text style={ProfileLayout.myNftMore}>전체보기</Text>
                     </View>
                     <ScrollView horizontal={true} style={ProfileLayout.nftList}>
-                        <NftProfile dogName="해피" createdAt="2023. 09. 02." species="시베리안허스키"/>
+                        <NftProfile dogName="해피" createdAt="2023. 09. 02." species="시베리안허스키" bgImg={PuppyThumbnail1}/>
                         <TouchableOpacity activeOpacity={0.8}>
                             <View style={ProfileLayout.addNewNftWrap}>
                                 <Image

@@ -1,14 +1,14 @@
 import {View, Text, Image, StyleSheet} from "react-native"
 import { responsiveWidth, responsiveHeight } from "react-native-responsive-dimensions"
-import WhitePreview from "../../assets/images/white-preview-icon.png"
-import WhiteHamburgerIcon from "../../assets/images/white-hamburger-menu.png"
+import Preview from "../../assets/images/preview-icon.png"
+import HamburgerIcon from "../../assets/images/hamburger-menu-icon.png"
 
-const WhiteHeader = ({title}: any) => {
+const ColorHeader = ({title}: any) => {
     return(
         <>
             <View style={styles.whiteHeaderWrap}>
                 <Image
-                    source={WhitePreview}
+                    source={Preview}
                 />
                 <View style={styles.logoWrap}>
                     <Text style={styles.logoTitle}>LOGO</Text>
@@ -16,7 +16,7 @@ const WhiteHeader = ({title}: any) => {
                     <Text style={styles.headerTitle}>{title}</Text>
                 </View>
                 <Image
-                    source={WhiteHamburgerIcon}
+                    source={HamburgerIcon}
                 />
             </View>
         </>
@@ -40,19 +40,19 @@ const styles = StyleSheet.create({
     logoTitle:{
         fontSize:18,
         fontWeight:"700",
-        color:"#FFFFFF",
+        color:"#EE8A72",
     },
     verticalLine:{
         width:2,
         height:20,
-        backgroundColor:"#FFFFFF",
+        backgroundColor:"#EE8A72",
         marginHorizontal:10,
     },
     headerTitle:{
         fontSize:18,
         fontWeight:"700",
-        color:"#FFFFFF",
+        color:"#656565",
     }
 });
 
-export default WhiteHeader;
+export default ColorHeader;
