@@ -14,7 +14,7 @@ import VaccineIcon from "../../assets/images/vaccine-icon.png";
 import AdoptionIcon from "../../assets/images/adoption-icon.png";
 import PhotoAlbumIcon from "../../assets/images/photo-album-icon.png";
 
-const Main = () => {
+const Main = ({navigation}: any) => {
   return (
     <>
       <CommonLayout>
@@ -24,10 +24,10 @@ const Main = () => {
           <Text style={MainLayout.walkMainTitle}>
             함께걷는 내 반려견{"\n"}
             평생 지켜줄 수 있도록{"\n"}
-            <Text style={MainLayout.walkBoldText}>서비스이름</Text>와 함께
+            <Text style={MainLayout.walkBoldText}>IDog</Text> 와 함께
           </Text>
           <Text style={MainLayout.walkMainDesc}>
-            서비스이름은 내 반려견의 프로필을 NFT화하여{"\n"}
+            IDog은 내 반려견의 프로필을 NFT화하여{"\n"}
             사육방지를 조장하고 반려견과의 추억을 모으는 플랫폼입니다.
           </Text>
         </View>
@@ -39,7 +39,7 @@ const Main = () => {
             />
           </View>
           <View style={MainLayout.walkButtonWrap}>
-            <TouchableOpacity activeOpacity={0.7}>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Walk')}>
               <View style={MainLayout.walkRootButton}><Text style={MainLayout.walkRootButtonText}>산책루트 확인하기</Text></View>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.7}>
@@ -63,7 +63,7 @@ const Main = () => {
             </Text>
             <Text style={MainLayout.traceDesc}>
               내 반려견 <Text style={MainLayout.boldTraceDesc}>프로필 등록</Text>하셨나요?{"\n"}
-              OOO에서 내 반려견의 정보를{"\n"}
+              IDog에서 내 반려견의 정보를{"\n"}
               관리하세요.
             </Text>
             <TouchableOpacity activeOpacity={0.7}>

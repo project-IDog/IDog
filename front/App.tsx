@@ -10,8 +10,9 @@ import EditProfile from "./src/screens/EditProfile"
 import MyPage from './src/screens/MyPage'
 import EditMyPage from './src/screens/EditMyPage'
 import Adoption from './src/screens/Adoption'
-import CreateFeed from './src/screens/CreateFeed';
-import DetailFeed from './src/screens/DetailFeed';
+import CreateFeed from './src/screens/CreateFeed'
+import DetailFeed from './src/screens/DetailFeed'
+import Walk from './src/screens/Walk';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -29,7 +30,7 @@ const App = () => {
         <Stack.Screen name="Adoption" component={Adoption} />
         <Stack.Screen name="CreateFeed" component={CreateFeed} />
         <Stack.Screen name="DetailFeed" component={DetailFeed} />
-
+        <Stack.Screen name="Walk" component={Walk} />
       </Stack.Navigator>
     </NavigationContainer>
   );

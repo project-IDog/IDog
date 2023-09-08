@@ -38,9 +38,9 @@ const SideMenu = (props: any) => {
                     <Text style={SideMenuLayout.navDesc}>소중한 추억을 간직하세요.</Text>
                     <View style={SideMenuLayout.navFlex}>
                         <SideMenuIcon title="포토앨범" imageIcon={PhotoAlbumIcon} movePage="Album"></SideMenuIcon>
-                        <SideMenuIcon title="진료일정등록" imageIcon={MedicalIcon}></SideMenuIcon>
-                        <SideMenuIcon title="산책루트" imageIcon={WalkRootIcon}></SideMenuIcon>
-                        <SideMenuIcon title="추모공원" imageIcon={TribeIcon}></SideMenuIcon>
+                        {/* <SideMenuIcon title="진료일정등록" imageIcon={MedicalIcon}></SideMenuIcon> */}
+                        <SideMenuIcon title="산책루트" imageIcon={WalkRootIcon} movePage="Walk"></SideMenuIcon>
+                        {/* <SideMenuIcon title="추모공원" imageIcon={TribeIcon}></SideMenuIcon> */}
                     </View>
                 </View>
 
