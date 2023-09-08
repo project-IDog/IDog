@@ -16,7 +16,7 @@ const SideMenuLayout = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        paddingHorizontal: responsiveWidth(2),
+        paddingHorizontal: responsiveWidth(4),
         paddingVertical: responsiveHeight(4),
     },
     sideMenuLogo:{
@@ -26,7 +26,7 @@ const SideMenuLayout = StyleSheet.create({
     },
 
     navWrap:{
-        paddingHorizontal:responsiveWidth(2),
+        paddingHorizontal:responsiveWidth(4),
     },
     navTitle:{
         fontSize:16,
@@ -47,6 +47,38 @@ const SideMenuLayout = StyleSheet.create({
         flexDirection:"row",
         flexWrap:"wrap",
     },
+
+    authButtonWrap:{
+        paddingHorizontal:responsiveWidth(4),
+        marginTop:34,
+    },
+    googleAuthButton:{
+        width:responsiveWidth(62),
+        height:40,
+        backgroundColor:"#EE8A72",
+        borderRadius:10,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+    },
+    googleAuthButtonText:{
+        fontSize:14,
+        fontWeight:"700",
+        color:"#FFFFFF",
+    },
+    moveMypageButton:{
+        width:responsiveWidth(62),
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        marginTop:4,
+    },
+    moveMypageButtonText:{
+        fontSize:12,
+        fontWeight:"500",
+        color:"#EE8A72",
+    },
+
 })
 
 export default SideMenuLayout;
