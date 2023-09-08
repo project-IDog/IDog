@@ -4,7 +4,7 @@ import {responsiveWidth, responsiveHeight} from "react-native-responsive-dimensi
 const SideMenuLayout = StyleSheet.create({
     sideMenuWrap:{
         width: responsiveWidth(70),
-        height: responsiveHeight(100),
+        height: "100%",
         position:"absolute",
         top:0,
         left:0,

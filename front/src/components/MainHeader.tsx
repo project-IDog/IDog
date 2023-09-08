@@ -15,6 +15,11 @@ const MainHeader = () => {
         break;
     }
   }
+
+  const updateActiveSideMenu = (status : Boolean) => {
+    setActiveSideMenu(status)
+  }
+
   return (
     <>
         <View style={styles.header}>
@@ -28,7 +33,7 @@ const MainHeader = () => {
         </View>
         {
           activeSideMenu ?
-          <SideMenu/>
+          <SideMenu updateActiveSideMenu={updateActiveSideMenu}/>
           :
           <></>
         }

@@ -12,14 +12,14 @@ import MedicalIcon from "../../assets/images/line-medical-icon.png"
 import WalkRootIcon from "../../assets/images/line-walk-root-icon.png"
 import TribeIcon from "../../assets/images/line-tribe-icon.png"
 
-const SideMenu = () => {
+const SideMenu = (props: any) => {
     const navigation = useNavigation();
     return(
         <>
             <View style={SideMenuLayout.sideMenuWrap}>
                 <View style={SideMenuLayout.sideMenuHeader}>
                     <Text style={SideMenuLayout.sideMenuLogo}>LOGO</Text>
-                    <TouchableOpacity activeOpacity={0.7}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => props.updateActiveSideMenu(false)}>
                         <Image
                             source={CloseIcon}
                         />
