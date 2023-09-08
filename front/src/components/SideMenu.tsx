@@ -70,6 +70,7 @@ const SideMenu = () => {
 					<TouchableOpacity
 						activeOpacity={0.7}
 						style={SideMenuLayout.googleAuthButton}
+						onPress={() => navigation.navigate("Login")}
 					>
 						<View>
 							<Text style={SideMenuLayout.googleAuthButtonText}>로그인</Text>
