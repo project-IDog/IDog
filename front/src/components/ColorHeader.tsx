@@ -19,6 +19,10 @@ const ColorHeader = ({title}: any) => {
             break;
         }
     }
+
+    const updateActiveSideMenu = (status : Boolean) => {
+        setActiveSideMenu(status)
+    }
     return(
         <>
             <View style={styles.whiteHeaderWrap}>
@@ -37,14 +41,13 @@ const ColorHeader = ({title}: any) => {
                         source={HamburgerIcon}
                     />
                 </TouchableOpacity>
-
-                {
-                    activeSideMenu ?
-                    <SideMenu/>
-                    :
-                    <></>
-                }
             </View>
+            {
+                activeSideMenu ?
+                <SideMenu updateActiveSideMenu={updateActiveSideMenu}/>
+                :
+                <></>
+            }
         </>
     );
 }

@@ -14,16 +14,29 @@ const MainHeader = () => {
         setActiveSideMenu(true);
         break;
     }
-  };
+  }
+
+  const updateActiveSideMenu = (status : Boolean) => {
+    setActiveSideMenu(status)
+  }
+
   return (
     <>
-      <View style={styles.header}>
-        <Text style={styles.logo}>LOGO</Text>
-        <TouchableOpacity activeOpacity={0.7} onPress={clickHamburger}>
-          <Image source={HamburgerMenu} style={styles.menuIcon} />
-        </TouchableOpacity>
-      </View>
-      {activeSideMenu ? <SideMenu /> : <></>}
+        <View style={styles.header}>
+            <Text style={styles.logo}>LOGO</Text>
+            <TouchableOpacity activeOpacity={0.7} onPress={clickHamburger}>
+              <Image
+                  source={HamburgerMenu}
+                  style={styles.menuIcon}
+              />
+            </TouchableOpacity>
+        </View>
+        {
+          activeSideMenu ?
+          <SideMenu updateActiveSideMenu={updateActiveSideMenu}/>
+          :
+          <></>
+        }
     </>
   );
 };
