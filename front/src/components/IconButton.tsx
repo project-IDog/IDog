@@ -15,6 +15,7 @@ const IconButton = ({desc, title, iconImage} : any) => {
               <View>
                 <Image
                   source={iconImage}
+                  style={IconButtonLayout.iconButtonIcon}
                 />
               </View>
             </View>

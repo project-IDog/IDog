@@ -26,6 +26,10 @@ const IconButtonLayout = StyleSheet.create({
         fontWeight: "700",
         color:"#4B76A0",
     },
+    iconButtonIcon:{
+        width:36,
+        height:36,
+    }
 });
 
 export default IconButtonLayout;
