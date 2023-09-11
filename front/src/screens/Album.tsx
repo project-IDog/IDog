@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, View, Platform, Text, TouchableOpacity } from "react-native";
+import { Image, Button, View, Platform, Text, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { S3 } from "aws-sdk";
 import {
@@ -232,6 +232,13 @@ const Album = ({navigation} : any) => {
     //     <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />
     //   )}
     //   <Button title="upload to s3" onPress={() => uploadImage(imageUri)} />
+    // </View>
+    // <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      // <Button title="Pick an image from gallery" onPress={pickImage} />
+      // {imageUri && (
+        // <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />
+      // )}
+      // <Button title="upload to s3" onPress={() => uploadImage(imageUri)} />
     // </View>
   );
 };

@@ -1,5 +1,5 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Main from "./src/screens/Main"
 import Album from "./src/screens/Album"
@@ -12,6 +12,7 @@ import EditMyPage from './src/screens/EditMyPage'
 import Adoption from './src/screens/Adoption'
 import CreateFeed from './src/screens/CreateFeed';
 import DetailFeed from './src/screens/DetailFeed';
+import Login from "./src/screens/Login";
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -29,10 +30,11 @@ const App = () => {
         <Stack.Screen name="Adoption" component={Adoption} />
         <Stack.Screen name="CreateFeed" component={CreateFeed} />
         <Stack.Screen name="DetailFeed" component={DetailFeed} />
-
+        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
 
 export default App;
