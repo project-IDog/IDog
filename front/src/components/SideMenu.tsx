@@ -1,16 +1,16 @@
-import {View, Text, Image, TouchableOpacity} from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, Image, TouchableOpacity, Button } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import SideMenuIcon from "./SideMenuIcon";
 import SideMenuLayout from "../styles/sideMenuLayout";
 
-import CloseIcon from "../../assets/images/close-icon.png"
-import NftCardIcon from "../../assets/images/line-nft-card-icon.png"
-import AdoptionIcon from "../../assets/images/line-adoption-icon.png"
-import PhotoAlbumIcon from "../../assets/images/line-photo-album-icon.png"
-import MedicalIcon from "../../assets/images/line-medical-icon.png"
-import WalkRootIcon from "../../assets/images/line-walk-root-icon.png"
-import TribeIcon from "../../assets/images/line-tribe-icon.png"
+import CloseIcon from "../../assets/images/close-icon.png";
+import NftCardIcon from "../../assets/images/line-nft-card-icon.png";
+import AdoptionIcon from "../../assets/images/line-adoption-icon.png";
+import PhotoAlbumIcon from "../../assets/images/line-photo-album-icon.png";
+import MedicalIcon from "../../assets/images/line-medical-icon.png";
+import WalkRootIcon from "../../assets/images/line-walk-root-icon.png";
+import TribeIcon from "../../assets/images/line-tribe-icon.png";
 
 const SideMenu = (props: any) => {
     const navigation = useNavigation();
@@ -44,17 +44,27 @@ const SideMenu = (props: any) => {
                     </View>
                 </View>
 
-                <View style={SideMenuLayout.authButtonWrap}>
-                    <TouchableOpacity activeOpacity={0.7} style={SideMenuLayout.googleAuthButton}>
-                        <View><Text style={SideMenuLayout.googleAuthButtonText}>로그인</Text></View>
-                    </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.7} style={SideMenuLayout.moveMypageButton} onPress={() => navigation.navigate('MyPage')}>
-                        <Text style={SideMenuLayout.moveMypageButtonText}>마이페이지</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </>
-    )
-}
+				<View style={SideMenuLayout.authButtonWrap}>
+					<TouchableOpacity
+						activeOpacity={0.7}
+						style={SideMenuLayout.googleAuthButton}
+						onPress={() => navigation.navigate("Login")}
+					>
+						<View>
+							<Text style={SideMenuLayout.googleAuthButtonText}>로그인</Text>
+						</View>
+					</TouchableOpacity>
+					<TouchableOpacity
+						activeOpacity={0.7}
+						style={SideMenuLayout.moveMypageButton}
+						onPress={() => navigation.navigate("MyPage")}
+					>
+						<Text style={SideMenuLayout.moveMypageButtonText}>마이페이지</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</>
+	);
+};
 
 export default SideMenu;
