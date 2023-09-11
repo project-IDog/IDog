@@ -1,8 +1,10 @@
 import { View, Text, Image, TouchableOpacity} from "react-native";
 import IconButtonLayout from "../styles/iconButtonLayout";
+import { useNavigation } from '@react-navigation/native';
 
 const IconButton = ({desc, title, iconImage} : any) => {
-    return(
+  const navigation = useNavigation();
+  return(
         <>
           <TouchableOpacity activeOpacity={0.7}>
             <View style={IconButtonLayout.iconButtonWrap}>
