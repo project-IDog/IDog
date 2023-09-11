@@ -119,7 +119,7 @@ fabric.properties
 # local env files
 .env*.local
 
+# dotenv environment variable files
 .env
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij
-

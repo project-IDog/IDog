@@ -7,12 +7,16 @@ import { ethers } from 'ethers';
 import CryptoJS from "react-native-crypto-js";
 import * as SecureStore from 'expo-secure-store';
 
+// import smartcontract from './TestNFT1.json';
+
+
 
 export default function App() {
   const [password, setPassword] = useState('');
 
   const RPC_URL = process.env.RPC_URL;
   const SECRET_SALT = process.env.SECRET_SALT;
+  const NFT_STORAGE = process.env.NFT_STORAGE;
 
   //1. 니모닉 생성 (지갑 생성)
   // 지갑을 생성하면 첫번째 계정은 만들어진다. (디폴트 경로가 있으니까)
@@ -87,9 +91,28 @@ export default function App() {
     }
   }
 
+
+  //NFT Minting
+  // const provider = new ethers.JsonRpcProvider("https://rpc.sepolia.org");
+  // const sepoliawallet = new ethers.Wallet("4f2a7e577a4fa0143e172e799cb182e9efdf59e543a386ed9e879e797315aafc", provider);
+  // const contractAbi = smartcontract.abi; // 배포된 컨트랙트의 ABI
+  // const contractAddress = "0xb84E333213874e742ad883220B17Fd8A38E12553"; // 배포된 컨트랙트의 주소
+  // const contract = new ethers.Contract(contractAddress, contractAbi, sepoliawallet);
+
+  // const mintNFT = async() => {
+  //   const recipient = "0xe4aB23dE71Aa79c773C1783E1120f1f5e6A7F551"; // 수신자의 Ethereum 주소
+  //   const uri = "https://example.com/path/to/your/metadata.json"; // NFT의 메타데이터 URI
+
+  //   const tx = await contract.mintNFT(recipient, uri);
+  //   await tx.wait();
+
+  //   console.log("NFT minted successfully.");
+  // }
+
   
   return ( 
     <View style={styles.container}>
+      <StatusBar style="auto" />
       <Text>디지털지갑</Text>
       <TextInput 
         placeholder="Enter your password"
@@ -97,9 +120,12 @@ export default function App() {
         onChangeText={text => setPassword(text)}
         value={password}
       />
+      <View style={styles.space}></View>
       <Text>--------------------------------------</Text>
       <Button title="Create Wallet" onPress={createWallet} />
-      <StatusBar style="auto" />
+      <View style={styles.space}></View>
+      <Text>--------------------------------------</Text>
+      <Button title="NFT Mint" onPress={mintNFT} />
     </View>
   );
 }
@@ -111,4 +137,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  space: {
+    flex:0.1,
+  }
 });
