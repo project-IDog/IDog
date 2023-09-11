@@ -5,6 +5,7 @@ import CommonLayout from "../components/CommonLayout"
 import WhiteHeader from "../components/WhiteHeader"
 import SubMain from "../components/SubMain"
 import Footer from "../components/Footer"
+import WeekTimeItem from "../components/weekTimeItem"
 
 import WalkMainImg from "../../assets/images/walk-main-img.png"
 import TimerImg from "../../assets/images/timer.png"
@@ -12,14 +13,19 @@ import TimerImg from "../../assets/images/timer.png"
 import WalkLayout from "../styles/walkLayout"
 
 const Walk = () => {
-    let now = dayjs();
-    const todayDate = now.format("DD");
-    const todayDay = now.get("day");
+    const [now, setNow] = useState<any>(dayjs());
+    const [todayDate, setTodayDaye] = useState<number>(now.format("DD"));
+    const [todayDay, setTodayDay] = useState<number>(now.get("day"));
 
     const [hour, setHour] = useState<number>(0);
     const [minute, setMinute] = useState<number>(0);
     const [second, setSecond] = useState<number>(0);
     const timerId = useRef<any>(null);
+    const [weekList, setWeekList] = useState<Object[]>(
+        [
+
+        ]
+    );
 
     const minusDate = (offset: number) => {
         return dayjs().subtract(offset, "day").get('date');
@@ -55,6 +61,12 @@ const Walk = () => {
 
     const finishTimer = () => {
         clearInterval(timerId.current);
+        for(let i=0; i<weekList.length; i++){
+            if(dayjs().get("date") === parseInt(weekList[i].day)){
+                return;
+            }
+        }
+        setWeekList([...weekList, {day:todayDate, itemMinute:minute, itemSecond: second}]);
     }
 
     const days = [minusDay(3), minusDay(2), minusDay(1), todayDay, plusDay(1), plusDay(2), plusDay(3)];
@@ -181,7 +193,18 @@ const Walk = () => {
                         </View>
                         <View style={WalkLayout.listWrap}>
                             <Text style={WalkLayout.weekListTitle}>이번주 내 반려견 산책</Text>
-                            
+                            <View>
+                                {
+                                    weekList.map((value, index) => {
+                                        return(
+                                            <View key={index}>
+                                                <WeekTimeItem day={value.day} totalMinute={value.itemMinute} totalSecond={value.itemSecond}/>
+                                            </View>
+                                        )
+                                    })
+                                }
+                            </View>
+                            <Text style={WalkLayout.totalTimeText}>이번 주 총 함께한 시간 <Text style={WalkLayout.boldTotalTimeText}>1:46:19</Text></Text>
                         </View>
                     </View>
                 </View>

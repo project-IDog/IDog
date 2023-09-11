@@ -171,11 +171,22 @@ const WalkLayout = StyleSheet.create({
         flexDirection:"column",
         justifyContent:"center",
         alignItems:"center",
+        paddingVertical:responsiveHeight(4),
     },
     weekListTitle:{
         fontSize:12,
         fontWeight:"700",
         color:"#8F8F8F",
+        marginBottom:7,
+    },
+    totalTimeText:{
+        fontSize:10,
+        fontWeight:"500",
+        color:"#8F8F8F",
+        marginTop:12,
+    },
+    boldTotalTimeText:{
+        fontWeight:"700",
     }
 })
 
