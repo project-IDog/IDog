@@ -44,6 +44,10 @@ public class Walking extends BaseEntity {
         this.dog = dog;
 
         //무한루프에 빠지지 않도록 체크
+        if(!dog.getWalkings().contains(this)){
+            dog.getWalkings().add(this);
+        }
+
     }
 
 

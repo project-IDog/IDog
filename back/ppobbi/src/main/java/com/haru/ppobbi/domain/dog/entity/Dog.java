@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -47,7 +48,17 @@ public class Dog extends BaseEntity {
     @Column(name = "dog_nft")
     private String dogNft;
 
-    private List<Walking> walking;
+    @OneToMany(mappedBy = "dogs")
+    private List<Walking> walkings = new ArrayList<Walking>();
+
+    public void addWalkings(Walking walking) {
+        this.walkings.add(walking);
+
+        //무한루프에 빠지지 않도록 체크
+        if(walking.getDog() != this) {
+            walking.setDog(this);
+        }
+    }
 
 
 
