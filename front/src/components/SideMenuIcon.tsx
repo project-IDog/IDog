@@ -10,6 +10,7 @@ const SideMenuIcon = ({title, imageIcon, movePage}: any) => {
                 <View style={styles.iconWrap}>
                     <Image
                         source={imageIcon}
+                        style={styles.sideMenuIcon}
                     />
                     <Text style={styles.text}>{title}</Text>
                 </View>
@@ -22,6 +23,10 @@ const styles = StyleSheet.create({
     iconWrap:{
         marginHorizontal:responsiveWidth(4),
         marginTop:25,
+    },
+    sideMenuIcon:{
+        width:44,
+        height:44,
     },
     text:{
         fontSize:10,

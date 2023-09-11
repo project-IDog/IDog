@@ -17,6 +17,9 @@ const WalkLayout = StyleSheet.create({
         color:"#535458",
         marginTop:3,
     },
+    boldCalendarTitle:{
+        color:"#EE8A72",
+    },
     calendarWrap:{
         marginHorizontal:responsiveWidth(4),
         borderTopWidth:1,
