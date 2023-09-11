@@ -58,7 +58,10 @@ const WalkLayout = StyleSheet.create({
         color:"#4C4C4C",
     },
     centerDateText:{
-
+        
+    },
+    redDayText:{
+        color:"#CB6E8D",
     },
 
     timerWrap:{

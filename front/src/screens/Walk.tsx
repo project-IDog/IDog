@@ -1,3 +1,4 @@
+import {useState, useRef, useEffect} from "react"
 import {View, Text, TouchableOpacity, Image} from "react-native"
 import dayjs from "dayjs"
 import CommonLayout from "../components/CommonLayout"
@@ -12,12 +13,62 @@ import WalkLayout from "../styles/walkLayout"
 
 const Walk = () => {
     let now = dayjs();
-    const todayMonth = now.format("MM");
-    const todayDay = now.format("DD");
-    console.log(todayMonth);
-    console.log(todayDay);
-    const days = ["S", "M", "T", "W", "T", "F", "S"];
-    const dates = [3,4,5,todayDay,7,8,9];
+    const todayDate = now.format("DD");
+    const todayDay = now.get("day");
+
+    const [hour, setHour] = useState<number>(0);
+    const [minute, setMinute] = useState<number>(0);
+    const [second, setSecond] = useState<number>(0);
+    const timerId = useRef<any>(null);
+
+    const minusDate = (offset: number) => {
+        return dayjs().subtract(offset, "day").get('date');
+    }
+
+    const plusDate = (offset: number) => {
+        return dayjs().add(offset, "day").get('date');
+    }
+
+    const minusDay = (offset: number) => {
+        let temp = dayjs().subtract(offset, "day").get('day');
+        if(temp < 0){
+            return 7 - (-1) * temp;
+        }else{
+            return temp;
+        }
+    }
+
+    const plusDay = (offset: number) => {
+        let temp = dayjs().add(offset, "day").get('day');
+        if(temp < 0){
+            return 7 - (-1) * temp;
+        }else{
+            return temp;
+        }
+    }
+
+    const startTimer = () => {
+        timerId.current = setInterval(() => {
+            setSecond((prevSecond) => prevSecond + 1);
+        }, 1000);
+    }
+
+    const finishTimer = () => {
+        clearInterval(timerId.current);
+    }
+
+    const days = [minusDay(3), minusDay(2), minusDay(1), todayDay, plusDay(1), plusDay(2), plusDay(3)];
+    const dates = [minusDate(3),minusDate(2),minusDate(1),todayDate,plusDate(1),plusDate(2),plusDate(3)];
+    useEffect(() => {
+        if(second > 59){
+            setMinute((prevMinute) => prevMinute + 1);
+            setSecond(0);
+        }
+        if(minute > 59){
+            setHour((prevHour) => prevHour + 1);
+            setMinute(0);
+        }
+    }, [timerId, second])
     return(
         <>
             <CommonLayout>
@@ -39,9 +90,31 @@ const Walk = () => {
                                     <View key={index}>
                                         {
                                             index == 3 ?
-                                            <Text style={[WalkLayout.dayText, WalkLayout.centerDayText]}>{day}</Text>
+                                                (day === 0 || day === 6) ?
+                                                <Text style={[WalkLayout.dayText, WalkLayout.centerDayText, WalkLayout.redDayText]}>
+                                                    {
+                                                        day === 0 ? "S" : day===6 ? "S" : ""
+                                                    }
+                                                </Text>
+                                                :
+                                                <Text style={[WalkLayout.dayText, WalkLayout.centerDayText]}>
+                                                    {
+                                                        day === 0 ? "S" : day===1 ? "M" : day===2 ? "T" : day===3 ? "W" : day===4 ? "T" : day===5 ? "F" : day===6 ? "S" : ""
+                                                    }
+                                                </Text>
                                             :
-                                            <Text style={WalkLayout.dayText}>{day}</Text>
+                                            (day === 0 || day === 6) ?
+                                                <Text style={[WalkLayout.dayText, WalkLayout.redDayText]}>
+                                                    {
+                                                        day === 0 ? "S" : day===6 ? "S" : ""
+                                                    }
+                                                </Text>
+                                                :
+                                                <Text style={[WalkLayout.dayText]}>
+                                                    {
+                                                        day === 0 ? "S" : day===1 ? "M" : day===2 ? "T" : day===3 ? "W" : day===4 ? "T" : day===5 ? "F" : day===6 ? "S" : ""
+                                                    }
+                                                </Text>
                                         }
                                     </View>
                                 )
@@ -82,19 +155,33 @@ const Walk = () => {
                                     source={TimerImg}
                                     style={WalkLayout.timerImg}
                                 />
-                                <Text style={WalkLayout.timerText}>0:00:00</Text>
+                                <Text style={WalkLayout.timerText}>
+                                    {
+                                        second < 10 ?
+                                            minute < 10?
+                                            `${hour} : 0${minute} : 0${second}`
+                                            :
+                                            `${hour} : ${minute} : 0${second}`
+                                        :
+                                            minute < 10?
+                                            `${hour} : 0${minute} : ${second}`
+                                            :
+                                            `${hour} : ${minute} : ${second}`
+                                    }
+                                </Text>
                             </View>
                             <View style={WalkLayout.todayTimerButtonWrap}>
-                                <TouchableOpacity activeOpacity={0.7}>
+                                <TouchableOpacity activeOpacity={0.7} onPress={startTimer}>
                                     <View style={WalkLayout.startButton}><Text style={WalkLayout.startButtonText}>산책 시작</Text></View>
                                 </TouchableOpacity>
-                                <TouchableOpacity activeOpacity={0.7}>
+                                <TouchableOpacity activeOpacity={0.7} onPress={finishTimer}>
                                     <View style={WalkLayout.finishButton}><Text style={WalkLayout.finishButtonText}>산책 종료</Text></View>
                                 </TouchableOpacity>
                             </View>
                         </View>
                         <View style={WalkLayout.listWrap}>
                             <Text style={WalkLayout.weekListTitle}>이번주 내 반려견 산책</Text>
+                            
                         </View>
                     </View>
                 </View>
