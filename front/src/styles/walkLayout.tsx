@@ -32,7 +32,16 @@ const WalkLayout = StyleSheet.create({
         marginTop:17,
     },
     dayText:{
-        
+        width:responsiveWidth(13),
+        textAlign:"center",
+        fontSize:11,
+        fontWeight:"600",
+        color:"#4C4C4C",
+    },
+    centerDayText:{
+        backgroundColor:"#EE8A72",
+        borderRadius:50,
+        color:"#FFF",
     },
     datesWrap:{
         display:"flex",
@@ -40,6 +49,130 @@ const WalkLayout = StyleSheet.create({
         justifyContent:"space-between",
         marginTop:12,
         marginBottom:18,
+    },
+    dateText:{
+        width:responsiveWidth(13),
+        textAlign:"center",
+        fontSize:11,
+        fontWeight:"600",
+        color:"#4C4C4C",
+    },
+    centerDateText:{
+
+    },
+
+    timerWrap:{
+        marginTop:35,
+        paddingBottom:32,
+        backgroundColor:"#F7F8FC",
+    },
+    timerTitleWrap:{
+        width:responsiveWidth(92),
+        paddingHorizontal:responsiveWidth(4),
+        paddingTop:33,
+    },
+    timerMainTitle:{
+        fontSize:18,
+        fontWeight:"700",
+        color:"#3B3F42",
+        textAlign:"center",
+    },
+    timerSubTitle:{
+        fontSize:10,
+        fontWeight:"400",
+        color:"#535458",
+        marginTop:6,
+        textAlign:"center",
+    },
+
+    contentFlexWrap:{
+        display:"flex",
+        flexDirection:"row",
+        justifyContent:"space-between",
+        paddingHorizontal:responsiveWidth(4),
+        marginTop:18,
+    },
+    contentWrap:{
+        width:responsiveWidth(45),
+        paddingHorizontal:responsiveWidth(1),
+        borderRadius:15,
+        height:214,
+        backgroundColor:"#FFF",
+        display:"flex",
+        flexDirection:"column",
+        justifyContent:"center",
+        alignItems:"center",
+    },
+
+    todayTimerTitle:{
+        fontSize:12,
+        fontWeight:"700",
+        color:"#8F8F8F",
+    },
+    timer:{
+        paddingVertical:21,
+    },
+    timerImg:{
+        width:100,
+        height:100,
+    },
+    timerText:{
+        position:"relative",
+        top:"-50%",
+        fontSize:16,
+        fontWeight:"700",
+        color:"#909090",
+        textAlign:"center",
+    },
+    todayTimerButtonWrap:{
+        display:"flex",
+        flexDirection:"row",
+        justifyContent:"center",
+        marginTop:-28,
+    },
+    startButton:{
+        width:76,
+        height:30,
+        backgroundColor:"#EE8A72",
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius:50,
+    },
+    startButtonText:{
+        fontSize:12,
+        fontWeight:"500",
+        color:"#FAFAFA",
+    },
+    finishButton:{
+        width:76,
+        height:30,
+        backgroundColor:"#EFEFEF",
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius:50,
+        marginLeft:4,
+    },
+    finishButtonText:{
+        fontSize:12,
+        fontWeight:"500",
+        color:"#EE8A72",
+    },
+    listWrap:{
+        width:responsiveWidth(45),
+        paddingHorizontal:responsiveWidth(1),
+        borderRadius:15,
+        backgroundColor:"#FFF",
+        display:"flex",
+        flexDirection:"column",
+        justifyContent:"center",
+        alignItems:"center",
+    },
+    weekListTitle:{
+        fontSize:12,
+        fontWeight:"700",
+        color:"#8F8F8F",
     }
 })
 
