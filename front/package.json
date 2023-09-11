@@ -19,6 +19,7 @@
     "@react-navigation/native-stack": "^6.9.13",
     "@react-navigation/stack": "^6.3.17",
     "aws-sdk": "^2.1450.0",
+    "dayjs": "^1.11.9",
     "expo": "~49.0.8",
     "expo-auth-session": "~5.0.2",
     "expo-crypto": "~12.4.1",
