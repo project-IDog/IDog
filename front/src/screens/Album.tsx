@@ -79,8 +79,8 @@ const Album = ({navigation} : any) => {
     }
   }
 
-  const activeStatusModal = () => {
-    setStatusModalState(true);
+  const updateActiveStatusModal = (status: Boolean) => {
+    setStatusModalState(status);
   }
 
   // s3 클라이언트 초기화
@@ -169,7 +169,7 @@ const Album = ({navigation} : any) => {
           </View>
         </View>
         
-        <TouchableOpacity activeOpacity={0.7} onPress={activeStatusModal}>
+        <TouchableOpacity activeOpacity={0.7} onPress={() => updateActiveStatusModal(true)}>
           <View style={AlbumLayout.statusMessageWrap}>
             <Image
               source={GrayPenIcon}
@@ -216,14 +216,15 @@ const Album = ({navigation} : any) => {
 
         </View>
         <View style={{marginTop:6}}></View>
+        <Footer/>
         {
           statusModalState ?
-          <StatusCommentModal/>
+          <StatusCommentModal updateActiveStatusModal={updateActiveStatusModal}/>
           :
           <></>
         }
-        <Footer/>
       </CommonLayout>
+      
     </>
     // <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
     //   <Button title="Pick an image from gallery" onPress={pickImage} />
