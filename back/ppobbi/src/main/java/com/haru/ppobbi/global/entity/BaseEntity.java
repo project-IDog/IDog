@@ -11,10 +11,8 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 public abstract class BaseEntity {
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date")
     private LocalDateTime createDate;
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modify_date")
     private LocalDateTime modifyDate;
     @Column(name = "canceled")
