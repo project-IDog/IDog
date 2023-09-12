@@ -1,7 +1,6 @@
-import { TouchableOpacity, View, Text, Image, Button } from "react-native";
+import { TouchableOpacity, View, Text, Image } from "react-native";
 import IconButton from "../components/IconButton";
 import Footer from "../components/Footer";
-
 import MainLayout from "../styles/mainLayout";
 
 import CommonLayout from "../components/CommonLayout";

@@ -1,5 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as Sentry from "@sentry/react-native"
+import {sentry_dsn} from "@env";
 
 import Main from "./src/screens/Main"
 import Album from "./src/screens/Album"
@@ -17,6 +19,12 @@ import Login from "./src/screens/Login";
 
 const App = () => {
   const Stack = createNativeStackNavigator();
+
+  Sentry.init({
+    dsn: sentry_dsn,
+    tracesSampleRate: 1.0,
+  });
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
@@ -39,4 +47,4 @@ const App = () => {
 }
 
 
-export default App;
+export default Sentry.wrap(App);
