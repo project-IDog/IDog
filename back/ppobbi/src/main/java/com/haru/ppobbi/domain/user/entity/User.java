@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,4 +32,15 @@ public class User extends BaseEntity {
     private String userWallet;
 
     private String userPrivateKey;
+
+    @Builder
+    public User(Integer userNo, String userId, String userToken, String userName, String userWallet,
+        String userPrivateKey) {
+        this.userNo = userNo;
+        this.userId = userId;
+        this.userToken = userToken;
+        this.userName = userName;
+        this.userWallet = userWallet;
+        this.userPrivateKey = userPrivateKey;
+    }
 }
