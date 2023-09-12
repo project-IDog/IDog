@@ -48,7 +48,7 @@ public class Dog extends BaseEntity {
     @Column(name = "dog_nft")
     private String dogNft;
 
-    @OneToMany(mappedBy = "dogs")
+    @OneToMany(mappedBy = "dog")
     private List<Walking> walkings = new ArrayList<Walking>();
 
     public void addWalkings(Walking walking) {

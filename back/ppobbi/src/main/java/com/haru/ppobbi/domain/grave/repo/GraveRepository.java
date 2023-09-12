@@ -2,11 +2,9 @@ package com.haru.ppobbi.domain.grave.repo;
 
 import com.haru.ppobbi.domain.grave.entity.Grave;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public interface GraveRepository extends JpaRepository<Grave, Integer> {
     /**
      * graveNo를 조건으로 하는 Grave 조회

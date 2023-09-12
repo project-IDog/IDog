@@ -24,9 +24,6 @@ public class Walking extends BaseEntity {
     @Column(name = "user_no")
     private Integer userNo;
 
-    @Column(name = "dog_no")
-    private Integer dogNo;
-
     @Column(name = "walking_starttime")
     private Integer walkingStarttime;
 
