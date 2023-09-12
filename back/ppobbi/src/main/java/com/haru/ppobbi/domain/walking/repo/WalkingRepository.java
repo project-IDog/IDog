@@ -1,4 +1,8 @@
 package com.haru.ppobbi.domain.walking.repo;
 
-public interface WalkingRepository {
+import com.haru.ppobbi.domain.walking.entity.Walking;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface WalkingRepository extends JpaRepository<Walking, Integer> {
+
 }
