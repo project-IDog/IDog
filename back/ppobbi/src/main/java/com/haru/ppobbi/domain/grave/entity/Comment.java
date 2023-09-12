@@ -9,8 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer commentNo;
@@ -31,4 +32,12 @@ public class Comment extends BaseEntity {
     private Grave grave;
 
     private String commentContent;
+
+    @Builder
+    public Comment(Integer commentNo, User user, Grave grave, String commentContent) {
+        this.commentNo = commentNo;
+        this.user = user;
+        this.grave = grave;
+        this.commentContent = commentContent;
+    }
 }
