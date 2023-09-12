@@ -28,7 +28,6 @@ public class Challenge extends BaseEntity {
     private String challengeDesc;
     @Column(name = "challenge_complete_cnt")
     private Integer challengeCompleteCnt;
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "challenge_complete_time")
     private LocalDateTime challengeCompleteTime;
     @Column(name = "challenge_image_url")

@@ -26,12 +26,10 @@ public class UserChallenge extends BaseEntity {
     private Integer userNo;
     @Column(name = "user_challenge_cnt")
     private Integer userChallengeCnt;
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "user_challenge_time")
     private LocalDateTime userChallengeTime;
     @Column(name = "user_challenge_iscomplete")
     private Integer userChallengeIscomplete;
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "completed_date")
     private LocalDateTime completedDate;
 }

@@ -12,7 +12,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "graves")
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Grave extends BaseEntity {
@@ -26,4 +26,12 @@ public class Grave extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_no")
     private User user;
+
+    public void setDog(Dog dog){
+        this.dog = dog;
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
 }
