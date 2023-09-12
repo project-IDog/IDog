@@ -3,6 +3,7 @@ package com.haru.ppobbi.domain.grave.service;
 import com.haru.ppobbi.domain.grave.dto.GraveRequestDto;
 import com.haru.ppobbi.domain.grave.entity.Grave;
 import com.haru.ppobbi.domain.grave.repo.GraveRepository;
+import com.haru.ppobbi.global.constant.BaseConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
