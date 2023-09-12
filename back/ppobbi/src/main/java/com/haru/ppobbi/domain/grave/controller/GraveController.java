@@ -19,20 +19,21 @@ public class GraveController {
     private final GraveService graveService;
 
     @PostMapping()
-    public ResponseEntity<Grave> registGrave(@RequestBody GraveRequestDto graveRequestDto){
+    public ResponseEntity<ResponseDto<?>> registGrave(@RequestBody GraveRequestDto graveRequestDto){
         Grave grave = graveService.registGrave(graveRequestDto);
-        return null;
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.create(GraveResponseMessage.CREATE_SUCCESS.message()));
     }
 
     @GetMapping("/{graveNo}")
     public ResponseEntity<ResponseDto<Grave>> getGraveInfo(@PathVariable Integer graveNo){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(GraveResponseMessage.OK.message(), graveService.selectGrave(graveNo)));
+                .body(ResponseDto.create(GraveResponseMessage.READ_SUCCESSS.message(), graveService.selectGrave(graveNo)));
     }
 
     @GetMapping()
     public ResponseEntity<ResponseDto<List<Grave>>> getAllGraves(){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(GraveResponseMessage.OK.message(), graveService.selectGraves()));
+                .body(ResponseDto.create(GraveResponseMessage.READ_SUCCESSS.message(), graveService.selectGraves()));
     }
 }
