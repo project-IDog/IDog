@@ -41,7 +41,7 @@ const Main = ({navigation}: any) => {
             <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Walk')}>
               <View style={MainLayout.walkRootButton}><Text style={MainLayout.walkRootButtonText}>산책루트 확인하기</Text></View>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.7}>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('CreateWalletMain')}>
               <Text style={MainLayout.ifNoAuthText}>회원이 아니신가요?</Text>
             </TouchableOpacity>
           </View>
