@@ -16,6 +16,8 @@ import CreateFeed from './src/screens/CreateFeed'
 import DetailFeed from './src/screens/DetailFeed'
 import Walk from './src/screens/Walk';
 import Login from "./src/screens/Login";
+import CreateWalletMain from "./src/screens/CreateWalletMain";
+import AgreeWallet from "./src/screens/AgreeWallet";
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -41,6 +43,9 @@ const App = () => {
         <Stack.Screen name="DetailFeed" component={DetailFeed} />
         <Stack.Screen name="Walk" component={Walk} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="CreateWalletMain" component={CreateWalletMain} />
+        <Stack.Screen name="AgreeWallet" component={AgreeWallet} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
