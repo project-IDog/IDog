@@ -16,5 +16,9 @@ public abstract class BaseEntity {
     @Column(name = "modify_date")
     private LocalDateTime modifyDate;
     @Column(name = "canceled")
-    private int canceled;
+    private Integer canceled;
+
+    public void setCanceled(Integer canceled){
+        this.canceled = canceled;
+    }
 }
