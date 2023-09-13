@@ -40,7 +40,7 @@ const SideMenu = (props: any) => {
                         <SideMenuIcon title="포토앨범" imageIcon={PhotoAlbumIcon} movePage="Album"></SideMenuIcon>
                         {/* <SideMenuIcon title="진료일정등록" imageIcon={MedicalIcon}></SideMenuIcon> */}
                         <SideMenuIcon title="산책루트" imageIcon={WalkRootIcon} movePage="Walk"></SideMenuIcon>
-                        {/* <SideMenuIcon title="추모공원" imageIcon={TribeIcon}></SideMenuIcon> */}
+                        <SideMenuIcon title="추모공원" imageIcon={TribeIcon}></SideMenuIcon>
                     </View>
                 </View>
 
