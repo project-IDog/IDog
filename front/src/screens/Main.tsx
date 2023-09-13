@@ -14,63 +14,74 @@ import VaccineIcon from "../../assets/images/vaccine-icon.png";
 import AdoptionIcon from "../../assets/images/adoption-icon.png";
 import PhotoAlbumIcon from "../../assets/images/photo-album-icon.png";
 
-const Main = ({navigation}: any) => {
-  return (
-    <>
-      <CommonLayout>
-        <MainHeader></MainHeader>
+import WidgetTest from "./WidgetTest";
+const Main = ({ navigation }: any) => {
+	return (
+		<>
+			<CommonLayout>
+				<MainHeader></MainHeader>
 
-        <View style={MainLayout.walkMainWrap}>
-          <Text style={MainLayout.walkMainTitle}>
-            함께걷는 내 반려견{"\n"}
-            평생 지켜줄 수 있도록{"\n"}
-            <Text style={MainLayout.walkBoldText}>IDog</Text> 와 함께
-          </Text>
-          <Text style={MainLayout.walkMainDesc}>
-            IDog은 내 반려견의 프로필을 NFT화하여{"\n"}
-            사육방지를 조장하고 반려견과의 추억을 모으는 플랫폼입니다.
-          </Text>
-        </View>
+				<View style={MainLayout.walkMainWrap}>
+					<Text style={MainLayout.walkMainTitle}>
+						함께걷는 내 반려견{"\n"}
+						평생 지켜줄 수 있도록{"\n"}
+						<Text style={MainLayout.walkBoldText}>IDog</Text> 와 함께
+					</Text>
+					<Text style={MainLayout.walkMainDesc}>
+						IDog은 내 반려견의 프로필을 NFT화하여{"\n"}
+						사육방지를 조장하고 반려견과의 추억을 모으는 플랫폼입니다.
+					</Text>
+				</View>
 
-        <View>
-          <View style={MainLayout.walkMainImg}>
-            <Image
-              source={MainImg}
-            />
-          </View>
-          <View style={MainLayout.walkButtonWrap}>
-            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Walk')}>
-              <View style={MainLayout.walkRootButton}><Text style={MainLayout.walkRootButtonText}>산책루트 확인하기</Text></View>
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.7}>
-              <Text style={MainLayout.ifNoAuthText}>회원이 아니신가요?</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+				<View>
+					<WidgetTest />
+					<View style={MainLayout.walkMainImg}>
+						<Image source={MainImg} />
+					</View>
+					<View style={MainLayout.walkButtonWrap}>
+						<TouchableOpacity
+							activeOpacity={0.7}
+							onPress={() => navigation.navigate("Walk")}
+						>
+							<View style={MainLayout.walkRootButton}>
+								<Text style={MainLayout.walkRootButtonText}>
+									산책루트 확인하기
+								</Text>
+							</View>
+						</TouchableOpacity>
+						<TouchableOpacity activeOpacity={0.7}>
+							<Text style={MainLayout.ifNoAuthText}>회원이 아니신가요?</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
 
-        <View style={MainLayout.traceWrap}>
-          <View>
-            <Image
-              source={TraceMainImg}
-              style={MainLayout.traceMainImg}
-            />
-          </View>
-          <View style={MainLayout.traceInfo}>
-            <Text style={MainLayout.traceTitle}>
-              평생을 함께,{"\n"}
-              <Text style={MainLayout.boldTraceInfo}>반려견의 흔적</Text>을{"\n"}
-              남길 수 있다면
-            </Text>
-            <Text style={MainLayout.traceDesc}>
-              내 반려견 <Text style={MainLayout.boldTraceDesc}>프로필 등록</Text>하셨나요?{"\n"}
-              IDog에서 내 반려견의 정보를{"\n"}
-              관리하세요.
-            </Text>
-            <TouchableOpacity activeOpacity={0.7}>
-              <View style={MainLayout.createProfileButton}><Text style={MainLayout.createProfileButtonText}>프로필 등록하기</Text></View>
-            </TouchableOpacity>
-          </View>
-        </View>
+				<View style={MainLayout.traceWrap}>
+					<View>
+						<Image source={TraceMainImg} style={MainLayout.traceMainImg} />
+					</View>
+					<View style={MainLayout.traceInfo}>
+						<Text style={MainLayout.traceTitle}>
+							평생을 함께,{"\n"}
+							<Text style={MainLayout.boldTraceInfo}>반려견의 흔적</Text>을
+							{"\n"}
+							남길 수 있다면
+						</Text>
+						<Text style={MainLayout.traceDesc}>
+							내 반려견{" "}
+							<Text style={MainLayout.boldTraceDesc}>프로필 등록</Text>하셨나요?
+							{"\n"}
+							IDog에서 내 반려견의 정보를{"\n"}
+							관리하세요.
+						</Text>
+						<TouchableOpacity activeOpacity={0.7}>
+							<View style={MainLayout.createProfileButton}>
+								<Text style={MainLayout.createProfileButtonText}>
+									프로필 등록하기
+								</Text>
+							</View>
+						</TouchableOpacity>
+					</View>
+				</View>
 
 				<View style={MainLayout.tribeWrap}>
 					<Image source={SleepMainImg} style={MainLayout.tribeMainImg} />
