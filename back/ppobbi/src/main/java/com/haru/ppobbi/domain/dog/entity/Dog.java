@@ -2,10 +2,7 @@ package com.haru.ppobbi.domain.dog.entity;
 
 import com.haru.ppobbi.domain.walking.entity.Walking;
 import com.haru.ppobbi.global.entity.BaseEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -59,6 +56,17 @@ public class Dog extends BaseEntity {
             walking.setDog(this);
         }
     }
+
+    @Builder
+    public Dog(Integer userNo, String dogName, String dogBreed, LocalDateTime dogBriteDate, Character dogSex) {
+        this.userNo = userNo;
+        this.dogName = dogName;
+        this.dogBreed = dogBreed;
+        this.dogBriteDate = dogBriteDate;
+        this.dogSex = dogSex;
+    }
+
+    //nft 업데이트
 
 
 
