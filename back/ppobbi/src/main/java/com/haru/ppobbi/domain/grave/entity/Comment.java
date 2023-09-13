@@ -27,17 +27,16 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "user_no")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "grave_no")
-    private Grave grave;
+    @Column(name = "grave_no")
+    private Integer graveNo;
 
+    @Column(name = "comment_content")
     private String commentContent;
 
     @Builder
-    public Comment(Integer commentNo, User user, Grave grave, String commentContent) {
-        this.commentNo = commentNo;
+    public Comment(User user, Integer graveNo, String commentContent){
         this.user = user;
-        this.grave = grave;
+        this.graveNo = graveNo;
         this.commentContent = commentContent;
     }
 }
