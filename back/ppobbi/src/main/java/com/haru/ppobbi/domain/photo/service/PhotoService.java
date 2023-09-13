@@ -28,7 +28,7 @@ public interface PhotoService {
      * @param userNO 조회할 User 기본 키
      * @return {@code List<Photo>}
      */
-    public List<Photo> selectPhotoByUserNo(Integer userNO);
+    public List<Photo> selectPhotosByUserNo(Integer userNO);
 
     /**
      * dogNo를 받아 모든 Photo 조회
@@ -36,7 +36,7 @@ public interface PhotoService {
      * @param dogNo 조회할 Dog 기본 키
      * @return {@code List<Photo>}
      */
-    public List<Photo> selectPhotobyDogNo(Integer dogNo);
+    public List<Photo> selectPhotosByDogNo(Integer dogNo);
 
     /**
      * photoNo를 받아 Photo 삭제

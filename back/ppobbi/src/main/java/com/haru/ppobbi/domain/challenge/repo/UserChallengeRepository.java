@@ -13,7 +13,7 @@ public interface UserChallengeRepository extends JpaRepository<UserChallenge, In
      * @param canceled 삭제 여부
      * @return {@code List<UserChallenge>}
      */
-    public List<UserChallenge> findAllByUserNoaAndCanceled(Integer userNo, Integer canceled);
+    public List<UserChallenge> findAllByUserNoAndCanceled(Integer userNo, Integer canceled);
 
     /**
      * userChallengeNo를 조건으로 하는 UserChallenge 단일 조회
