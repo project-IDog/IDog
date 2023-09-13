@@ -2,13 +2,9 @@ package com.haru.ppobbi.domain.grave.entity;
 
 import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.global.entity.BaseEntity;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+
+import javax.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
