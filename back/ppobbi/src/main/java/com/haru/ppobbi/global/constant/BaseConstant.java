@@ -12,5 +12,4 @@ public final class BaseConstant {
 
     public static final Character MALE = 'M';
     public static final Character FEMALE = 'F';
-    public static final Character NEUTER = 'N';
 }
