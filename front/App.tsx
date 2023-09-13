@@ -18,6 +18,7 @@ import Walk from './src/screens/Walk';
 import Login from "./src/screens/Login";
 import CreateWalletMain from "./src/screens/CreateWalletMain";
 import AgreeWallet from "./src/screens/AgreeWallet";
+import CreateWalletPassword from "./src/screens/CreateWalletPassword";
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -45,6 +46,7 @@ const App = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="CreateWalletMain" component={CreateWalletMain} />
         <Stack.Screen name="AgreeWallet" component={AgreeWallet} />
+        <Stack.Screen name="CreateWalletPassword" component={CreateWalletPassword} />
 
       </Stack.Navigator>
     </NavigationContainer>
