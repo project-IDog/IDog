@@ -44,4 +44,12 @@ public interface PhotoService {
      * @param photoNo 삭제할 Photo 기본 키
      */
     public void deletePhoto(Integer photoNo);
+
+    /**
+     * photoNo를 받아 goat 설정 값을 반대로 설정
+     * @author Geon
+     * @param photoNo goat 설정할 Photo 기본 키
+     * @return Photo
+     */
+    public Photo setGoatPhoto(Integer photoNo);
 }

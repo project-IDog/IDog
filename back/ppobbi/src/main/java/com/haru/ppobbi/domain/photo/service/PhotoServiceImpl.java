@@ -46,11 +46,21 @@ public class PhotoServiceImpl implements PhotoService{
 
     @Override
     public void deletePhoto(Integer photoNo) {
-        Optional<Photo> photo = photoRepository.findById(photoNo);
-        if(photo.isPresent()){
-            Photo entity = photo.get();
-            entity.setCanceled(BaseConstant.CANCELED);
-            photoRepository.save(entity);
+        Photo photo =photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
+        if(photo != null){
+            photo.setCanceled(BaseConstant.CANCELED);
+            photoRepository.save(photo);
         }
+    }
+
+    @Override
+    public Photo setGoatPhoto(Integer photoNo) {
+        Photo photo = photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
+        if(photo.getPhotoIsGoat().equals(BaseConstant.GOAT)){
+            photo.setPhotoIsGoat(BaseConstant.NOTGOAT);
+        }else{
+            photo.setPhotoIsGoat(BaseConstant.GOAT);
+        }
+        return photoRepository.save(photo);
     }
 }

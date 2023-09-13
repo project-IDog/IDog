@@ -49,4 +49,11 @@ public class PhotoController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(PhotoResponseMessage.READ_SUCCESS.message(), photoService.selectPhotosByDogNo(dogNo)));
     }
+
+    @PutMapping("/{photoNo}")
+    public ResponseEntity<ResponseDto<?>> updatePhotoGoat(@PathVariable Integer photoNo){
+        photoService.setGoatPhoto(photoNo);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.create(PhotoResponseMessage.UPDATE_SUCCESS.message()));
+    }
 }
