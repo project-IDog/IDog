@@ -1,7 +1,11 @@
 package com.haru.ppobbi.domain.user.service;
 
-import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpRequestDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpOrInRequestDto;
+import org.json.simple.parser.ParseException;
 
 public interface UserService {
-    void signUp(SignUpRequestDto signUpRequestDto);
+
+    void signUpOrIn(SignUpOrInRequestDto signUpRequestDto)
+        throws ParseException, JsonProcessingException;
 }

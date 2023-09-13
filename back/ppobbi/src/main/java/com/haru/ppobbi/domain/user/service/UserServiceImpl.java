@@ -1,12 +1,25 @@
 package com.haru.ppobbi.domain.user.service;
 
-import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpRequestDto;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpOrInRequestDto;
+import com.haru.ppobbi.domain.user.entity.User;
+import com.haru.ppobbi.domain.user.repo.UserRepository;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 @RequiredArgsConstructor
@@ -14,27 +27,58 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
-    private OAuth2ClientProperties clientProperties;
+    private final UserRepository userRepository;
+    private final RestTemplate restTemplate;
 
+    @Transactional
     @Override
-    public void signUp(SignUpRequestDto signUpRequestDto) {
-        OAuth2AuthenticationToken authToken = signUpRequestDto.getAuthToken();
-        String accessToken = authToken.getPrincipal().getAttribute("access_token");
-        String IDToken = authToken.getPrincipal().getAttribute("id_token");
+    public void signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto)
+        throws ParseException, JsonProcessingException {
+        String idToken = signUpOrInRequestDto.getIdToken();
+        Map<String, Object> userAttribute = getUserAttribute(idToken);
 
-        log.debug("[DEBUG/SIGNUP] user access token : {}", accessToken);
-        log.debug("[DEBUG/SIGNUP] user id token : {}", IDToken);
+        User user = convertUserAttributeToUser(userAttribute);
+        User foundUser = userRepository.findByUserId(user.getUserId());
 
-        if(checkExistUser(accessToken)) { // TODO: 이미 존재하는 사용자이면 저장 X
-            
-        } else { // TODO: 존재하지 않는 사용자이면 저장
+        log.debug("[DEBUG/signUpOrIn] : user : {}", user);
 
+        if (foundUser == null) {
+            userRepository.save(user);
         }
+
+        //TODO: access token 발급
     }
 
-    private boolean checkExistUser(String accessToken) { // TODO: DB에 사용자 정보 존재하는지 체크
+    private User convertUserAttributeToUser(Map<String, Object> userAttribute) {
+        return User.builder()
+            .userName((String) userAttribute.get("name"))
+            .userId((String) userAttribute.get("email"))
+            .build();
+    }
 
+    private Map<String, Object> getUserAttribute(String idToken)
+        throws ParseException, JsonProcessingException {
+        log.debug("[DEBUG/getUserAttribute] idToken : {}", idToken);
 
-        return false;
+        Map<String, Object> userAttribute;
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        String googleApi = "https://oauth2.googleapis.com/tokeninfo";
+        String targetURL = UriComponentsBuilder.fromHttpUrl(googleApi)
+            .queryParam("id_token", idToken).build().toUriString();
+        log.debug("[DEBUG/getUserAttribute] targetURL : {}", targetURL);
+
+        ResponseEntity<String> response = restTemplate.exchange(targetURL,
+            HttpMethod.GET,
+            entity,
+            String.class);
+
+        log.debug("[DEBUG/response] response : {}", response);
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonBody = (JSONObject) jsonParser.parse(response.getBody());
+
+        userAttribute = new ObjectMapper().readValue(jsonBody.toString(), Map.class);
+        return userAttribute;
     }
 }
