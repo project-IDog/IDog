@@ -41,7 +41,7 @@ public class PhotoServiceImpl implements PhotoService{
 
     @Override
     public List<Photo> selectPhotobyDogNo(Integer dogNo) {
-        return photoRepository.findAllByDogDogNoAAndCanceled(dogNo, BaseConstant.NOTCANCELED);
+        return photoRepository.findAllByDogDogNoAndCanceled(dogNo, BaseConstant.NOTCANCELED);
     }
 
     @Override

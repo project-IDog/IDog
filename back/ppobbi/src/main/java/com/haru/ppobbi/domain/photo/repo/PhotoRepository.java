@@ -31,6 +31,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Integer> {
      * @param canceled 삭제 여부
      * @return {@code List<Photo>}
      */
-    public List<Photo> findAllByDogDogNoAAndCanceled(Integer dogNo, Integer canceled);
+    public List<Photo> findAllByDogDogNoAndCanceled(Integer dogNo, Integer canceled);
 
 }
