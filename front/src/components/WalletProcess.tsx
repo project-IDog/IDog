@@ -4,6 +4,10 @@ import LockIcon from "../../assets/images/lock-icon.png"
 import WalletIcon from "../../assets/images/wallet-icon.png"
 import SecurityIcon from "../../assets/images/security-icon.png"
 
+import WhiteLockIcon from "../../assets/images/white-lock-icon.png"
+import WhiteWalletIcon from "../../assets/images/white-wallet-icon.png"
+import WhiteSecurityIcon from "../../assets/images/white-security-icon.png"
+
 import WalletProcessLayout from "../styles/walletProcessLayout"
 
 const WalletProcess = () => {
