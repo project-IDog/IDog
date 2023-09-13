@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import Dog4 from "../components/RipDog/Dog4";
 import Bg from "../../assets/images/Rip/bg-night.png";
 import Object1 from "../components/RipDog/LeftToRight/Object1";
@@ -23,41 +23,20 @@ const Test = () => {
 	const buildingWidth = 0; // Building 이미지의 너비. 실제 이미지의 너비에 따라 변경해야 합니다.
 
 	const buildingXPosition = useRef(new Animated.Value(0)).current;
-	const animationRef = useRef(null); // 애니메이션 참조 저장을 위한 ref
-
-	const [isAnimating, setIsAnimating] = useState(true); // 애니메이션 상태
 
 	const animateBuilding = () => {
-		if (animationRef.current) {
-			animationRef.current.stop();
-		}
-
-		if (isAnimating) {
-			const remainingDistance = screenWidth - buildingXPosition._value; // 남은 거리 계산
-			animationRef.current = Animated.loop(
-				Animated.timing(buildingXPosition, {
-					toValue: screenWidth,
-					duration: (5000 * remainingDistance) / screenWidth, // 남은 거리에 대한 시간 조절
-					useNativeDriver: true,
-					easing: Easing.linear,
-				}),
-			);
-
-			animationRef.current.start(() => {
-				buildingXPosition.setValue(0);
-			});
-		} else {
-			buildingXPosition.stopAnimation(); // 애니메이션 멈추기
-		}
+		Animated.loop(
+			Animated.timing(buildingXPosition, {
+				toValue: screenWidth, // 화면의 너비만큼 이동하도록 설정
+				duration: 5000,
+				useNativeDriver: true,
+				easing: Easing.linear,
+			}),
+		).start(() => {
+			buildingXPosition.setValue(0); // 애니메이션이 끝나면 위치를 초기화
+		});
 	};
 
-	const handleButtonPress = () => {
-		setIsAnimating(!isAnimating);
-	};
-
-	useEffect(() => {
-		animateBuilding();
-	}, [isAnimating]);
 	return (
 		<>
 			<View style={styles.object1}>

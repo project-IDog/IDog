@@ -20,7 +20,7 @@ export default function ControllingAnimationProgress() {
 			}),
 		);
 		loopedAnimation.start();
-		translateXValue.current.setValue(400); // 초기 위치: 오른쪽
+		// translateXValue.current.setValue(400); // 초기 위치: 오른쪽
 
 		Animated.timing(translateXValue.current, {
 			toValue: -400, // 종료 위치: 왼쪽
@@ -29,6 +29,7 @@ export default function ControllingAnimationProgress() {
 			useNativeDriver: true,
 		}).start();
 	}, []);
+
 
 	return (
 		<View style={{ flex: 1 }}>

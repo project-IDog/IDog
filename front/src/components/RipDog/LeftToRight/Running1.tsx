@@ -14,7 +14,7 @@ export default function ControllingAnimationProgress() {
 		const loopedAnimation = Animated.loop(
 			Animated.timing(animationProgress.current, {
 				toValue: 1,
-				duration: 1200,
+				duration: 1000,
 				easing: Easing.linear,
 				useNativeDriver: true,
 			}),
@@ -23,8 +23,8 @@ export default function ControllingAnimationProgress() {
 		translateXValue.current.setValue(400); // 초기 위치: 오른쪽
 
 		Animated.timing(translateXValue.current, {
-			toValue: 200, // 종료 위치: 왼쪽
-			duration: 3000, // 이동하는 데 걸리는 시간
+			toValue: -400, // 종료 위치: 왼쪽
+			duration: 8000, // 이동하는 데 걸리는 시간
 			easing: Easing.linear,
 			useNativeDriver: true,
 		}).start();

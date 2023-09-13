@@ -7,9 +7,7 @@ import Object1 from "../components/RipDog/LeftToRight/Object1";
 import Object2 from "../components/RipDog/LeftToRight/Object2";
 
 import Ground from "../components/RipDog/BottomToTop/Ground";
-import Bush from "../components/RipDog/BottomToTop/Bush";
 import Dog5 from "../components/RipDog/Dog5";
-import Sky from "../components/RipDog/BottomToTop/Sky";
 import Building from "../components/RipDog/BottomToTop/Building";
 import { View, StyleSheet, Image } from "react-native";
 import Grass from "../components/RipDog/BottomToTop/Grass";

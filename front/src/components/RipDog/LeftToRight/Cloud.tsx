@@ -38,7 +38,7 @@ export default function ControllingAnimationProgress() {
 
 const styles = StyleSheet.create({
 	doggie: { 
-		zIndex: 7,
+		zIndex: 5,
 		position: "absolute",
 		height: "100%",
 		width: "150%",
