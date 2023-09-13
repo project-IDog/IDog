@@ -14,7 +14,6 @@ import VaccineIcon from "../../assets/images/vaccine-icon.png";
 import AdoptionIcon from "../../assets/images/adoption-icon.png";
 import PhotoAlbumIcon from "../../assets/images/photo-album-icon.png";
 
-import WidgetTest from "./WidgetTest";
 const Main = ({ navigation }: any) => {
 	return (
 		<>
@@ -34,7 +33,6 @@ const Main = ({ navigation }: any) => {
 				</View>
 
 				<View>
-					<WidgetTest />
 					<View style={MainLayout.walkMainImg}>
 						<Image source={MainImg} />
 					</View>
