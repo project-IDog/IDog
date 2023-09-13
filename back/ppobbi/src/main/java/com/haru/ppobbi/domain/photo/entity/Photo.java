@@ -26,12 +26,19 @@ public class Photo extends BaseEntity {
     private String photoUrl;
     @Column(name = "photo_comment")
     private String photoComment;
+    @Column(name = "photo_is_goat")
+    private Integer photoIsGoat;
 
     @Builder
-    public Photo(Dog dog, Integer userNo, String photoUrl, String photoComment){
+    public Photo(Dog dog, Integer userNo, String photoUrl, String photoComment, Integer photoIsGoat){
         this.dog = dog;
         this.userNo = userNo;
         this.photoUrl = photoUrl;
         this.photoComment = photoComment;
+        this.photoIsGoat = photoIsGoat;
+    }
+
+    public void setPhotoIsGoat(Integer photoIsGoat) {
+        this.photoIsGoat = photoIsGoat;
     }
 }
