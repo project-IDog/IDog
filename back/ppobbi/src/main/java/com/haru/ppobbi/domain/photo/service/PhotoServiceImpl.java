@@ -35,12 +35,12 @@ public class PhotoServiceImpl implements PhotoService{
     }
 
     @Override
-    public List<Photo> selectPhotoByUserNo(Integer userNO) {
+    public List<Photo> selectPhotosByUserNo(Integer userNO) {
         return photoRepository.findAllByUserNoAndCanceled(userNO, BaseConstant.NOTCANCELED);
     }
 
     @Override
-    public List<Photo> selectPhotobyDogNo(Integer dogNo) {
+    public List<Photo> selectPhotosByDogNo(Integer dogNo) {
         return photoRepository.findAllByDogDogNoAndCanceled(dogNo, BaseConstant.NOTCANCELED);
     }
 

@@ -28,7 +28,7 @@ public class PhotoController {
     @GetMapping("/user/{userNo}")
     public ResponseEntity<ResponseDto<List<Photo>>> getAllAlbum(@PathVariable Integer userNo){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(PhotoResponseMessage.READ_SUCCESS.message(), photoService.selectPhotoByUserNo(userNo)));
+                .body(ResponseDto.create(PhotoResponseMessage.READ_SUCCESS.message(), photoService.selectPhotosByUserNo(userNo)));
     }
 
     @GetMapping("/{photoNo}")
@@ -47,6 +47,6 @@ public class PhotoController {
     @GetMapping("/dog/{dogNo}")
     public ResponseEntity<ResponseDto<List<Photo>>> getAlbum(@PathVariable Integer dogNo){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(PhotoResponseMessage.READ_SUCCESS.message(), photoService.selectPhotobyDogNo(dogNo)));
+                .body(ResponseDto.create(PhotoResponseMessage.READ_SUCCESS.message(), photoService.selectPhotosByDogNo(dogNo)));
     }
 }
