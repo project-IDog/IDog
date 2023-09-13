@@ -28,7 +28,6 @@ const WalletProcessLayout = StyleSheet.create({
     icon:{
         width:20,
         height:20,
-        textAlign:"center",
     },
     iconText:{
         fontSize:10,
