@@ -29,10 +29,9 @@ public class UserController {
     public ResponseEntity<ResponseDto<?>> signUpOrIn(
         @RequestBody SignUpOrInRequestDto signUpRequestDto)
         throws ParseException, JsonProcessingException {
-        log.debug("[DEBUG/signUpOrIn] Controller ");
         userService.signUpOrIn(signUpRequestDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(
+        return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(SIGN_IN_SUCCESS.getMessage(),
                 SignUpOrInResponseDto.builder()
                     .build())
