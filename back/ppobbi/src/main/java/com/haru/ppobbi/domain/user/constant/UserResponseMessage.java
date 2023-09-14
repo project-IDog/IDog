@@ -1,6 +1,8 @@
 package com.haru.ppobbi.domain.user.constant;
 
-public enum UserResponseMessage {
+import com.haru.ppobbi.global.dto.ResponseMessage;
+
+public enum UserResponseMessage implements ResponseMessage {
     SIGN_IN_SUCCESS("로그인 완료");
 
     private final String message;
@@ -9,7 +11,8 @@ public enum UserResponseMessage {
         this.message = message;
     }
 
-    public String getMessage() {
+    @Override
+    public String message() {
         return this.message;
     }
 }

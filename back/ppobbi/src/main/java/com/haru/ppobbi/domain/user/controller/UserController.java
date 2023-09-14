@@ -32,9 +32,8 @@ public class UserController {
         userService.signUpOrIn(signUpRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(
-            ResponseDto.create(SIGN_IN_SUCCESS.getMessage(),
-                SignUpOrInResponseDto.builder()
-                    .build())
+            ResponseDto.create(SIGN_IN_SUCCESS,
+                SignUpOrInResponseDto.builder().build())
         );
     }
 }
