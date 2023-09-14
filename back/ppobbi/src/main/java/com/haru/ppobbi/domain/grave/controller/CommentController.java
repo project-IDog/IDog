@@ -22,19 +22,19 @@ public class CommentController {
     public ResponseEntity<ResponseDto<?>> registComment(@RequestBody CommentRequestDto commentRequestDto){
         Comment comment = commentService.registComment(commentRequestDto);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(CommentResponseMessage.CREATE_SUCCESS.message()));
+                .body(ResponseDto.create(CommentResponseMessage.CREATE_SUCCESS));
     }
 
     @GetMapping("/{graveNo}")
     public ResponseEntity<ResponseDto<List<Comment>>> getComments(@PathVariable Integer graveNo){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(CommentResponseMessage.READ_SUCCESS.message(), commentService.selectComments(graveNo)));
+                .body(ResponseDto.create(CommentResponseMessage.READ_SUCCESS, commentService.selectComments(graveNo)));
     }
 
     @DeleteMapping("/{commentNo}")
     public ResponseEntity<ResponseDto<?>> deleteComment(@PathVariable Integer commentNo){
         commentService.deleteComment(commentNo);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(CommentResponseMessage.DELETE_SUCCESS.message()));
+                .body(ResponseDto.create(CommentResponseMessage.DELETE_SUCCESS));
     }
 }
