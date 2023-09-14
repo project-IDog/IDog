@@ -1,19 +1,48 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Widget.Front.AppWidget.Container"
-    android:theme="@style/AppTheme.AppWidgetContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    >
     <TextView
-        style="@style/Widget.Front.AppWidget.InnerView"
         android:id="@+id/appwidget_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/appwidget_text"
-        android:textSize="24sp"
-        android:textStyle="bold|italic"
-        android:layout_margin="8dp"
-        android:contentDescription="@string/appwidget_text" />
+        android:text="Default Text"/>
+
+    <Button
+        android:id="@+id/profile"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginRight="10dp"
+        android:background="#ff4500"
+        android:text="프로필"
+        />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toEndOf="@id/profile"
+        android:layout_marginRight="10dp"
+        android:background="#ff3"
+        android:text="재생"
+        />
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toEndOf="@id/button1"
+        android:background="#ff3"
+        android:text="정지"
+        />
+
+    <Button
+        android:id="@+id/timer"
+        android:layout_width="110dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/button1"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/profile"
+        android:background="#ff3"
+        android:text="시간"
+        />
 </RelativeLayout>

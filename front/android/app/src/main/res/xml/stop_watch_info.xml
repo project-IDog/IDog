@@ -6,7 +6,7 @@
     android:previewImage="@drawable/example_appwidget_preview"
     android:initialLayout="@layout/stop_watch"
     android:description="@string/app_widget_description"
-    android:resizeMode="none"
+    android:resizeMode="horizontal"
     android:widgetCategory="home_screen"
     android:previewLayout="@layout/stop_watch"
     android:targetCellHeight="1"
