@@ -1,3 +1,4 @@
+import React, {useState} from "react";
 import {View, Text, TouchableOpacity, Image, TextInput } from "react-native"
 import Checkbox from 'expo-checkbox';
 
@@ -9,7 +10,8 @@ import WalletLoading from "../components/WalletLoading";
 
 import CreateWalletPasswordLayout from "../styles/createWalletPasswordLayout";
 
-const CreateWalletPassword = () => {
+const CreateWalletPassword = ({navigation}: any) => {
+    const [isChecked, setIsChecked] = useState<Boolean>(false);
     return(
         <>
             <CommonLayout>
@@ -37,19 +39,22 @@ const CreateWalletPassword = () => {
                     <View style={CreateWalletPasswordLayout.checkWrap}>
                         <Checkbox
                             style={CreateWalletPasswordLayout.checkbox}
+                            value={isChecked}
+                            onValueChange={setIsChecked}
+                            color={isChecked ? "#9D9D9D" : "#9D9D9D"}
                         />
                         <Text style={CreateWalletPasswordLayout.checkInfo}>POPPY WALLET은 비밀번호를 복구해드릴 수 없습니다. 이를 이해하고 확인하였습니다.</Text>
                     </View>
                 </View>
 
                 <View style={CreateWalletPasswordLayout.buttonWrap}>
-                    <TouchableOpacity activeOpacity={0.7}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('ProtectWallet')}>
                         <View style={CreateWalletPasswordLayout.newCreateButton}><Text style={CreateWalletPasswordLayout.newCreateButtonText}>비밀번호 생성하기</Text></View>
                     </TouchableOpacity>
                 </View>
                 <Footer/>
             </CommonLayout>
-            <WalletLoading/>
+            {/* <WalletLoading/> */}
         </>
     );
 }
