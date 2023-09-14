@@ -1,6 +1,6 @@
 package com.haru.ppobbi.domain.user.controller;
 
-import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.SIGN_UP_SUCCESS;
+import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.*;
 
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpRequestDto;
 import com.haru.ppobbi.domain.user.service.UserService;
