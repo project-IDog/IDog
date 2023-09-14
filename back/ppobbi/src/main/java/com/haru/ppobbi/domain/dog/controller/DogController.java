@@ -1,6 +1,7 @@
 package com.haru.ppobbi.domain.dog.controller;
 
-import com.haru.ppobbi.domain.dog.constant.DogResponseMessage;
+import static com.haru.ppobbi.domain.dog.constant.DogResponseMessage.*;
+
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
 import com.haru.ppobbi.domain.dog.entity.Breed;
 import com.haru.ppobbi.domain.dog.entity.Dog;
@@ -27,7 +28,7 @@ public class DogController {
         log.info("DogController - registDog : 통화걸기 (영상통화 미팅룸 생성)");
         dogService.registDog(dogSaveRequestDto);
         return  ResponseEntity.status(HttpStatus.CREATED)
-                .body(ResponseDto.create(DogResponseMessage.CREATE_DOG));
+                .body(ResponseDto.create(CREATE_DOG));
     }
 
     @GetMapping("/{userNo}")
@@ -35,7 +36,7 @@ public class DogController {
         log.info("DogController - getAllDogs : 통화걸기 (영상통화 미팅룸 생성)");
         List<Dog> dogList = dogService.selectDogsByUserNo(userNo);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(DogResponseMessage.READ_ALL_DOG_BY_USER, dogList));
+                .body(ResponseDto.create(READ_ALL_DOG_BY_USER, dogList));
     }
 
     @GetMapping("/{dogNo}")
@@ -43,7 +44,7 @@ public class DogController {
         log.info("DogController - getOneDog : 통화걸기 (영상통화 미팅룸 생성)");
         Dog dog = dogService.selectDogByDogNo(dogNo);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(DogResponseMessage.READ_ONE_DOG, dog));
+                .body(ResponseDto.create(READ_ONE_DOG, dog));
     }
 
     @GetMapping("/breed")
@@ -51,7 +52,7 @@ public class DogController {
         log.info("DogController - getALLBreeds : 통화걸기 (영상통화 미팅룸 생성)");
         List<Breed> breedList = dogService.selectAllBreeds();
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(DogResponseMessage.READ_ALL_BREED, breedList));
+                .body(ResponseDto.create(READ_ALL_BREED, breedList));
     }
 
     @GetMapping("/breed/{keyword}")
@@ -59,7 +60,7 @@ public class DogController {
         log.info("DogController - getALLBreedsByKeyword : 통화걸기 (영상통화 미팅룸 생성)");
         List<Breed> breedList = dogService.selectAllBreedsByKeyword(keyword);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(DogResponseMessage.READ_ALL_BREED_BY_KEYWORD, breedList));
+                .body(ResponseDto.create(READ_ALL_BREED_BY_KEYWORD, breedList));
     }
 
 

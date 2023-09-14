@@ -1,6 +1,7 @@
 package com.haru.ppobbi.domain.challenge.controller;
 
-import com.haru.ppobbi.domain.challenge.constant.ChallengeResponseMessage;
+import static com.haru.ppobbi.domain.challenge.constant.ChallengeResponseMessage.*;
+
 import com.haru.ppobbi.domain.challenge.entity.UserChallenge;
 import com.haru.ppobbi.domain.challenge.service.UserChallengeService;
 import com.haru.ppobbi.global.dto.ResponseDto;
@@ -25,13 +26,13 @@ public class UserChallengeController {
         Integer userNo = 1; // 로그인 구현 후 연결 !!
         List<UserChallenge> userChallengeList = userChallengeService.selectUserChallenges(userNo);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(ChallengeResponseMessage.READ_SUCCESS, userChallengeList));
+                .body(ResponseDto.create(READ_SUCCESS, userChallengeList));
     }
 
     @GetMapping("/{userChallengeNo}")
     public ResponseEntity<ResponseDto<UserChallenge>> getUserChallengeInfo(@PathVariable Integer userChallengeNo){
         UserChallenge userChallenge = userChallengeService.selectUserChallenge(userChallengeNo);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(ChallengeResponseMessage.READ_SUCCESS, userChallenge));
+                .body(ResponseDto.create(READ_SUCCESS, userChallenge));
     }
 }
