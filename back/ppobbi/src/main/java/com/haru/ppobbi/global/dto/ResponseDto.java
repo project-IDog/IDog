@@ -13,11 +13,11 @@ public class ResponseDto<T> {
     private String message;
     private T data;
 
-    public static <T> ResponseDto<T> create(String message){
-        return new ResponseDto<>(message, null);
+    public static <T> ResponseDto<T> create(ResponseMessage rm){
+        return new ResponseDto<>(rm.message(), null);
     }
 
-    public static <T> ResponseDto<T> create(String message, T data){
-        return new ResponseDto<>(message, data);
+    public static <T> ResponseDto<T> create(ResponseMessage rm, T data){
+        return new ResponseDto<>(rm.message(), data);
     }
 }

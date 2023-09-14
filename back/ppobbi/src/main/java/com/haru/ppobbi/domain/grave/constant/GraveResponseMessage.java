@@ -1,6 +1,8 @@
 package com.haru.ppobbi.domain.grave.constant;
 
-public enum GraveResponseMessage {
+import com.haru.ppobbi.global.dto.ResponseMessage;
+
+public enum GraveResponseMessage implements ResponseMessage {
     CREATE_SUCCESS("무덤 생성 완료"),
     CREATE_FAIL("무덤 생성 실패"),
     READ_SUCCESSS("무덤 조회 성공"),
@@ -13,6 +15,7 @@ public enum GraveResponseMessage {
         this.message = message;
     }
 
+    @Override
     public String message() {
         return this.message;
     }

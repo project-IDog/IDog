@@ -6,12 +6,18 @@ import com.haru.ppobbi.domain.challenge.entity.UserChallenge;
 import java.util.List;
 
 public interface ChallengeService {
-
+    /**
+     * 모든 Challenge 조회
+     * @author Geon
+     * @return {@code List<Challenge>}
+     */
     public List<Challenge> selectChallenges();
 
+    /**
+     * challengNo를 받아 Challenge 단일 조회
+     * @author Geon
+     * @param challengeNo 조회할 Challenge 기본 키
+     * @return Challenge
+     */
     public Challenge selectChallenge(Integer challengeNo);
-
-    public List<UserChallenge> selectUserChallenges(Integer userNo);
-
-    public UserChallenge selectUserChallenge(Integer userNo, Integer challengeNo);
 }
