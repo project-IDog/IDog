@@ -1,6 +1,8 @@
 package com.haru.ppobbi.domain.user.entity;
 
 import com.haru.ppobbi.domain.user.constant.UserRole;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserInfoRequestDto;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserRefreshTokenDto;
 import com.haru.ppobbi.global.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +40,8 @@ public class User extends BaseEntity {
 
     private String userMessage;
 
+    private String userProfileImg;
+
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
 
@@ -47,14 +51,24 @@ public class User extends BaseEntity {
     @Builder
     public User(Integer userNo, String userId, String userRefreshToken, String userName,
         String userWallet,
-        String userMessage, String userPrivateKey, UserRole userRole) {
+        String userMessage, String userProfileImg, String userPrivateKey, UserRole userRole) {
         this.userNo = userNo;
         this.userId = userId;
         this.userRefreshToken = userRefreshToken;
         this.userName = userName;
         this.userWallet = userWallet;
         this.userMessage = userMessage;
+        this.userProfileImg = userProfileImg;
         this.userPrivateKey = userPrivateKey;
         this.userRole = userRole;
+    }
+
+    public void updateUserInfo(UpdateUserInfoRequestDto updateUserInfoRequestDto) {
+        this.userProfileImg = updateUserInfoRequestDto.getUserProfileImg();
+        this.userName = updateUserInfoRequestDto.getUserName();
+    }
+
+    public void updateUserRefreshToken(UpdateUserRefreshTokenDto updateUserRefreshTokenDto) {
+        this.userRefreshToken = updateUserRefreshTokenDto.getRefreshToken();
     }
 }

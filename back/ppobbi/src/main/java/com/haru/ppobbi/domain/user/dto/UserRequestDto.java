@@ -12,8 +12,27 @@ public class UserRequestDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SignUpOrInRequestDto {
-        private String idToken;
         private String authorizationCode;
+        private String idToken;
         private String accessToken;
+        private String refreshToken;
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateUserInfoRequestDto {
+        private String userName;
+        private String userProfileImg;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateUserRefreshTokenDto {
+        private String refreshToken;
+    }
+
 }
