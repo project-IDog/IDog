@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class OauthTokenProvider {
+public class OAuth2TokenProvider {
 
     private final RestTemplate restTemplate;
 
