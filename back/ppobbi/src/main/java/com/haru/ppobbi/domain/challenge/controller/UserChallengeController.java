@@ -25,13 +25,13 @@ public class UserChallengeController {
         Integer userNo = 1; // 로그인 구현 후 연결 !!
         List<UserChallenge> userChallengeList = userChallengeService.selectUserChallenges(userNo);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(ChallengeResponseMessage.READ_SUCCESS.message(), userChallengeList));
+                .body(ResponseDto.create(ChallengeResponseMessage.READ_SUCCESS, userChallengeList));
     }
 
     @GetMapping("/{userChallengeNo}")
     public ResponseEntity<ResponseDto<UserChallenge>> getUserChallengeInfo(@PathVariable Integer userChallengeNo){
         UserChallenge userChallenge = userChallengeService.selectUserChallenge(userChallengeNo);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(ChallengeResponseMessage.READ_SUCCESS.message(), userChallenge));
+                .body(ResponseDto.create(ChallengeResponseMessage.READ_SUCCESS, userChallenge));
     }
 }

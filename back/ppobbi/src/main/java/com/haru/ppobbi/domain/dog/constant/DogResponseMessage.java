@@ -1,6 +1,8 @@
 package com.haru.ppobbi.domain.dog.constant;
 
-public enum DogResponseMessage {
+import com.haru.ppobbi.global.dto.ResponseMessage;
+
+public enum DogResponseMessage implements ResponseMessage {
     
     CREATE_DOG("강아지 프로필 등록 완료"),
     READ_ALL_DOG_BY_USER("사용자의 모든 강아지 목록 조회 완료"),
@@ -14,7 +16,8 @@ public enum DogResponseMessage {
         this.message = message;
     }
 
-    public String getMessage() {
+    @Override
+    public String message() {
         return this.message;
     }
 }

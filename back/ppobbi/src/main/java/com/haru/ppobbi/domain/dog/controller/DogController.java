@@ -27,7 +27,7 @@ public class DogController {
         log.info("DogController - registDog : 통화걸기 (영상통화 미팅룸 생성)");
         dogService.registDog(dogSaveRequestDto);
         return  ResponseEntity.status(HttpStatus.CREATED)
-                .body(ResponseDto.create(DogResponseMessage.CREATE_DOG.getMessage()));
+                .body(ResponseDto.create(DogResponseMessage.CREATE_DOG));
     }
 
     @GetMapping("/{userNo}")
@@ -35,7 +35,7 @@ public class DogController {
         log.info("DogController - getAllDogs : 통화걸기 (영상통화 미팅룸 생성)");
         List<Dog> dogList = dogService.selectDogsByUserNo(userNo);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(DogResponseMessage.READ_ALL_DOG_BY_USER.getMessage(), dogList));
+                .body(ResponseDto.create(DogResponseMessage.READ_ALL_DOG_BY_USER, dogList));
     }
 
     @GetMapping("/{dogNo}")
@@ -43,7 +43,7 @@ public class DogController {
         log.info("DogController - getOneDog : 통화걸기 (영상통화 미팅룸 생성)");
         Dog dog = dogService.selectDogByDogNo(dogNo);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(DogResponseMessage.READ_ONE_DOG.getMessage(), dog));
+                .body(ResponseDto.create(DogResponseMessage.READ_ONE_DOG, dog));
     }
 
     @GetMapping("/breed")
@@ -51,7 +51,7 @@ public class DogController {
         log.info("DogController - getALLBreeds : 통화걸기 (영상통화 미팅룸 생성)");
         List<Breed> breedList = dogService.selectAllBreeds();
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(DogResponseMessage.READ_ALL_BREED.getMessage(), breedList));
+                .body(ResponseDto.create(DogResponseMessage.READ_ALL_BREED, breedList));
     }
 
     @GetMapping("/breed/{keyword}")
@@ -59,7 +59,7 @@ public class DogController {
         log.info("DogController - getALLBreedsByKeyword : 통화걸기 (영상통화 미팅룸 생성)");
         List<Breed> breedList = dogService.selectAllBreedsByKeyword(keyword);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseDto.create(DogResponseMessage.READ_ALL_BREED_BY_KEYWORD.getMessage(), breedList));
+                .body(ResponseDto.create(DogResponseMessage.READ_ALL_BREED_BY_KEYWORD, breedList));
     }
 
 

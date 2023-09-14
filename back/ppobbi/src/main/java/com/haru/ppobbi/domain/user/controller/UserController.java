@@ -27,7 +27,7 @@ public class UserController {
         @RequestHeader("Authorization") SignUpRequestDto signUpRequestDto) {
         userService.signUp(signUpRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-            ResponseDto.create(SIGN_UP_SUCCESS.getMessage())
+            ResponseDto.create(SIGN_UP_SUCCESS)
         );
     }
 }
