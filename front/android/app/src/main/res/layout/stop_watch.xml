@@ -12,12 +12,11 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <Button
+        <ImageView
             android:id="@+id/profile"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:background="#ff4500"
-            android:text="프로필" />
+            android:src="@drawable/example_appwidget_preview" />
 
     </LinearLayout>
 
@@ -35,14 +34,14 @@
             android:gravity="center">
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/playButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/timer"
                 android:text="재생" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/stopButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="30dp"
@@ -50,12 +49,14 @@
                 android:text="정지" />
         </LinearLayout>
 
-        <Button
+        <TextView
             android:id="@+id/timer"
             android:layout_width="110dp"
             android:layout_height="40dp"
             android:layout_marginTop="30dp"
             android:background="#ff3"
-            android:text="시간" />
+            android:text="00:00:00"
+            android:gravity="center"
+            android:textSize="18sp" />
     </LinearLayout>
 </LinearLayout>

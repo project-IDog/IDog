@@ -26,6 +26,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme" >
+        <service android:name=".TimerService" />
         <receiver
             android:name=".StopWatch"
             android:exported="false" >
