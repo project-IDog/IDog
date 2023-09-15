@@ -66,9 +66,11 @@ module.exports = {
     // options below to some value.
     //
     development: {
-     host: "127.0.0.1",     // Localhost (default: none)
-     port: 8545,            // Standard Ethereum port (default: none)
-     network_id: "*",       // Any network (default: none)
+      host: "127.0.0.1",     // Localhost (default: none)
+      port: 7545,            // Standard Ethereum port (default: none)
+      network_id: "*",       // Any network (default: none)
+      // gas: 4000000, // Adjust the gas limit as per your requirements
+      // gasPrice: 10000000000, // Set the gas price to an appropriate value
     },
     //
     // An additional network, but with some advanced options…
@@ -92,11 +94,20 @@ module.exports = {
     //   timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
     //   skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     // },
-    polygon: {
+    // polygon: {
+    //     provider: () => new HDWalletProvider(MNEMONIC, POLYGON_PROVIDER),
+    //     network_id: 137, // Sepolia's network ID
+    //     gas: 4000000, // Adjust the gas limit as per your requirements
+    //     gasPrice: 10000000000, // Set the gas price to an appropriate value
+    //     confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
+    //     timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+    //     skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    //   },
+    mumbai: {
         provider: () => new HDWalletProvider(MNEMONIC, POLYGON_PROVIDER),
-        network_id: 137, // Sepolia's network ID
-        // gas: 4000000, // Adjust the gas limit as per your requirements
-        // gasPrice: 10000000000, // Set the gas price to an appropriate value
+        network_id: 80001, // Sepolia's network ID
+        gas: 4000000, // Adjust the gas limit as per your requirements
+        gasPrice: 10000000000, // Set the gas price to an appropriate value
         confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
         timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
         skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
