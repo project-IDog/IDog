@@ -3,23 +3,26 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as Sentry from "@sentry/react-native"
 import {sentry_dsn} from "@env";
 
-import Main from "./src/screens/Main"
-import Album from "./src/screens/Album"
-import SideMenu from "./src/components/SideMenu"
-import Profile from "./src/screens/Profile"
-import CreateProfile from "./src/screens/CreateProfile"
-import EditProfile from "./src/screens/EditProfile"
-import MyPage from './src/screens/MyPage'
-import EditMyPage from './src/screens/EditMyPage'
-import Adoption from './src/screens/Adoption'
-import CreateFeed from './src/screens/CreateFeed'
-import DetailFeed from './src/screens/DetailFeed'
-import Walk from './src/screens/Walk';
+import Main from "./src/screens/Main";
+import Album from "./src/screens/Album";
+import SideMenu from "./src/components/SideMenu";
+import Profile from "./src/screens/Profile";
+import CreateProfile from "./src/screens/CreateProfile";
+import EditProfile from "./src/screens/EditProfile";
+import MyPage from "./src/screens/MyPage";
+import EditMyPage from "./src/screens/EditMyPage";
+import Adoption from "./src/screens/Adoption";
+import CreateFeed from "./src/screens/CreateFeed";
+import DetailFeed from "./src/screens/DetailFeed";
+import Walk from "./src/screens/Walk";
 import Login from "./src/screens/Login";
+import Ani from "./src/screens/Ani";
+import Three from "./src/screens/Memorial Park";
 import CreateWalletMain from "./src/screens/CreateWalletMain";
 import AgreeWallet from "./src/screens/AgreeWallet";
 import CreateWalletPassword from "./src/screens/CreateWalletPassword";
 import ProtectWallet from "./src/screens/ProtectWallet";
+
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -49,6 +52,8 @@ const App = () => {
         <Stack.Screen name="AgreeWallet" component={AgreeWallet} />
         <Stack.Screen name="CreateWalletPassword" component={CreateWalletPassword} />
         <Stack.Screen name="ProtectWallet" component={ProtectWallet} />
+		<Stack.Screen name="Ani" component={Ani} />
+		<Stack.Screen name="Three" component={Three} />
       </Stack.Navigator>
     </NavigationContainer>
   );
