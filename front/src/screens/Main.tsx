@@ -1,7 +1,6 @@
-import { TouchableOpacity, View, Text, Image, Button } from "react-native";
+import { TouchableOpacity, View, Text, Image } from "react-native";
 import IconButton from "../components/IconButton";
 import Footer from "../components/Footer";
-
 import MainLayout from "../styles/mainLayout";
 
 import CommonLayout from "../components/CommonLayout";
@@ -47,7 +46,10 @@ const Main = ({ navigation }: any) => {
 								</Text>
 							</View>
 						</TouchableOpacity>
-						<TouchableOpacity activeOpacity={0.7}>
+						<TouchableOpacity
+							activeOpacity={0.7}
+							onPress={() => navigation.navigate("CreateWalletMain")}
+						>
 							<Text style={MainLayout.ifNoAuthText}>회원이 아니신가요?</Text>
 						</TouchableOpacity>
 					</View>

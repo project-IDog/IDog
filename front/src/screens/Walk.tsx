@@ -1,5 +1,5 @@
 import {useState, useRef, useEffect} from "react"
-import {View, Text, TouchableOpacity, Image} from "react-native"
+import {View, Text, TouchableOpacity, Image, ScrollView} from "react-native"
 import dayjs from "dayjs"
 import CommonLayout from "../components/CommonLayout"
 import WhiteHeader from "../components/WhiteHeader"
@@ -9,6 +9,9 @@ import WeekTimeItem from "../components/weekTimeItem"
 
 import WalkMainImg from "../../assets/images/walk-main-img.png"
 import TimerImg from "../../assets/images/timer.png"
+import MyPetThumbnail1 from "../../assets/images/my-pet-thumbnail1.png"
+import MyPetThumbnail2 from "../../assets/images/my-pet-thumbnail2.png"
+import BottomArrowIcon from "../../assets/images/bottom-arrow-icon.png"
 
 import WalkLayout from "../styles/walkLayout"
 
@@ -24,6 +27,17 @@ const Walk = ({navigation}: any) => {
     const [weekList, setWeekList] = useState<Object[]>(
         [
 
+        ]
+    );
+
+    const [myPetList, setMyPetList] = useState<Object[]>(
+        [
+            {
+                url:MyPetThumbnail1
+            },
+            {
+                url:MyPetThumbnail2
+            }
         ]
     );
 
@@ -153,6 +167,39 @@ const Walk = ({navigation}: any) => {
                             })
                         }
                     </View>
+                </View>
+
+                <View style={WalkLayout.choiceWrap}>
+                    <View style={WalkLayout.titleFlexWrap}>
+                        <View>
+                            <Text style={WalkLayout.nameTitle}>김싸피님,</Text>
+                            <Text style={WalkLayout.mainTitle}>함께 나갈 반려견을 선택해주세요</Text>
+                        </View>
+                        <TouchableOpacity activeOpacity={0.7}>
+                            <View style={WalkLayout.tabWrap}>
+                                <Text style={WalkLayout.tabText}>산책 빈도 보기</Text>
+                                <Image
+                                    source={BottomArrowIcon}
+                                    style={WalkLayout.tabImage}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <ScrollView horizontal={true} style={WalkLayout.myPetContent}>
+                        {
+                            myPetList.map((myPetImage: Object, index: number) => {
+                                return(
+                                    <TouchableOpacity activeOpacity={0.7}>
+                                        <View key={index} style={WalkLayout.myPetItem}>
+                                            <Image
+                                                source={myPetImage.url}
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            })
+                        }
+                    </ScrollView>
                 </View>
 
 
