@@ -22,7 +22,7 @@ import CreateWalletMain from "./src/screens/CreateWalletMain";
 import AgreeWallet from "./src/screens/AgreeWallet";
 import CreateWalletPassword from "./src/screens/CreateWalletPassword";
 import ProtectWallet from "./src/screens/ProtectWallet";
-
+import Ipfs from "./src/screens/Ipfs";
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -52,12 +52,14 @@ const App = () => {
         <Stack.Screen name="AgreeWallet" component={AgreeWallet} />
         <Stack.Screen name="CreateWalletPassword" component={CreateWalletPassword} />
         <Stack.Screen name="ProtectWallet" component={ProtectWallet} />
-		<Stack.Screen name="Ani" component={Ani} />
-		<Stack.Screen name="Three" component={Three} />
+		    <Stack.Screen name="Ani" component={Ani} />
+		    <Stack.Screen name="Three" component={Three} />
+        <Stack.Screen name="Ipfs" component={Ipfs} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
 
 
 export default Sentry.wrap(App);
