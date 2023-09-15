@@ -64,13 +64,13 @@ const SideMenu = (props: any) => {
 							movePage="Walk"
 						></SideMenuIcon>
 						{/* <SideMenuIcon title="추모공원" imageIcon={TribeIcon}></SideMenuIcon> */}
-						<SideMenuIcon
+						{/* <SideMenuIcon
 							title="Ani"
 							imageIcon={TribeIcon}
 							movePage="Ani"
-						></SideMenuIcon>
+						></SideMenuIcon> */}
 						<SideMenuIcon
-							title="3D테스트"
+							title="추모공원"
 							imageIcon={TribeIcon}
 							movePage="Three"
 						></SideMenuIcon>

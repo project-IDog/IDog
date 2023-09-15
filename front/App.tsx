@@ -15,7 +15,7 @@ import DetailFeed from "./src/screens/DetailFeed";
 import Walk from "./src/screens/Walk";
 import Login from "./src/screens/Login";
 import Ani from "./src/screens/Ani";
-import Three from "./src/screens/Three";
+import Three from "./src/screens/Memorial Park";
 
 const App = () => {
 	const Stack = createNativeStackNavigator();
