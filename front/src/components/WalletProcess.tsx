@@ -17,7 +17,7 @@ const WalletProcess = () => {
                 <View style={WalletProcessLayout.iconCenterWrap}>
                     <View style={WalletProcessLayout.iconWrap}>
                         <Image
-                            source={LockIcon}
+                            source={WhiteLockIcon}
                             style={WalletProcessLayout.icon}
                         />
                     </View>
@@ -27,7 +27,7 @@ const WalletProcess = () => {
                 <View style={WalletProcessLayout.iconCenterWrap}>
                     <View style={WalletProcessLayout.iconWrap}>
                         <Image
-                            source={WalletIcon}
+                            source={WhiteWalletIcon}
                             style={WalletProcessLayout.icon}
                         />
                     </View>
@@ -37,7 +37,7 @@ const WalletProcess = () => {
                 <View style={WalletProcessLayout.iconCenterWrap}>
                     <View style={WalletProcessLayout.iconWrap}>
                         <Image
-                            source={SecurityIcon}
+                            source={WhiteSecurityIcon}
                             style={WalletProcessLayout.icon}
                         />
                     </View>

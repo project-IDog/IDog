@@ -1,5 +1,5 @@
 import {useState, useRef, useEffect} from "react"
-import {View, Text, TouchableOpacity, Image} from "react-native"
+import {View, Text, TouchableOpacity, Image, ScrollView} from "react-native"
 import dayjs from "dayjs"
 import CommonLayout from "../components/CommonLayout"
 import WhiteHeader from "../components/WhiteHeader"
@@ -153,6 +153,16 @@ const Walk = ({navigation}: any) => {
                             })
                         }
                     </View>
+                </View>
+
+                <View>
+                    <ScrollView>
+                        <View>
+                            {/* <Image
+                                source={}
+                            /> */}
+                        </View>
+                    </ScrollView>
                 </View>
 
 
