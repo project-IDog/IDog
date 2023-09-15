@@ -1,6 +1,11 @@
 import React, {useState} from "react";
 import {View, Text, TouchableOpacity, Image, TextInput } from "react-native"
 import Checkbox from 'expo-checkbox';
+import "react-native-get-random-values";
+import { ethers } from "ethers";
+import CryptoJS from "react-native-crypto-js";
+import * as SecureStore from 'expo-secure-store';
+import {RPC_URL, SECRET_SALT, NFT_STORAGE} from "@env"
 
 import CommonLayout from "../components/CommonLayout";
 import ColorHeader from "../components/ColorHeader";
@@ -11,7 +16,72 @@ import WalletLoading from "../components/WalletLoading";
 import CreateWalletPasswordLayout from "../styles/createWalletPasswordLayout";
 
 const CreateWalletPassword = ({navigation}: any) => {
+    const [isLoading, setIsLoading] = useState<Boolean>(false);
     const [isChecked, setIsChecked] = useState<Boolean>(false);
+
+    const RPC_URL = process.env.RPC_URL;
+    const SECRET_SALT = process.env.SECRET_SALT;
+    const NFT_STORAGE = process.env.NFT_STORAGE;
+
+    const createWallet = async () => {
+        if(!isLoading){
+            setIsChecked(true);
+        }
+
+        try {
+            const rpcUrl = RPC_URL;
+            const provider = new ethers.JsonRpcProvider(rpcUrl);
+            const newWallet = ethers.Wallet.createRandom(provider);
+            const newMnemonic = await newWallet.mnemonic;
+        
+            const encrypted = await encryptValue(newMnemonic?.phrase, SECRET_SALT);
+            save("encryptedMnemonic", encrypted);
+
+            const getMnemonic = await getValueFor("encryptedMnemonic");
+
+            const decrypted = decryptValue(getMnemonic, SECRET_SALT);
+
+            const newAccount = await ethers.HDNodeWallet.fromPhrase(decrypted);
+            
+            await navigation.navigate('ProtectWallet');
+            
+            return newMnemonic;
+        } catch (error) {
+            console.error("Error generating wallet:", error);
+        }finally{
+            setIsLoading(false);
+            setIsChecked(false);
+        }
+    };
+
+    const encryptValue = (value: any, secretkey: any) => {
+        const ciphertext = CryptoJS.AES.encrypt(value, secretkey).toString();
+        return ciphertext;
+    };
+
+    const decryptValue = (encrypted: any, secretkey: any) => {
+        const bytes = CryptoJS.AES.decrypt(encrypted, secretkey);
+        const originalText = bytes.toString(CryptoJS.enc.Utf8);
+        return originalText;
+    };
+
+    const save = async (key: any, value: any) => {
+        try {
+            await SecureStore.setItemAsync(key, value);
+        } catch (error) {
+            console.log("Failed to save to store:", error);
+        }
+    };
+    
+    const getValueFor = async (key: any) => {
+        let result = await SecureStore.getItemAsync(key);
+        if (result) {
+            return result;
+        } else {
+            console.log("No values stored under that key.");
+        }
+    };
+
     return(
         <>
             <CommonLayout>
@@ -48,13 +118,18 @@ const CreateWalletPassword = ({navigation}: any) => {
                 </View>
 
                 <View style={CreateWalletPasswordLayout.buttonWrap}>
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('ProtectWallet')}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={createWallet}>
                         <View style={CreateWalletPasswordLayout.newCreateButton}><Text style={CreateWalletPasswordLayout.newCreateButtonText}>비밀번호 생성하기</Text></View>
                     </TouchableOpacity>
                 </View>
                 <Footer/>
             </CommonLayout>
-            {/* <WalletLoading/> */}
+            {
+                isChecked ?
+                <WalletLoading/>
+                :
+                <></>
+            }
         </>
     );
 }
