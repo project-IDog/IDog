@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
 public class UserRequestDto {
 
@@ -12,8 +11,28 @@ public class UserRequestDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SignUpRequestDto {
-
-        private OAuth2AuthenticationToken authToken;
+    public static class SignUpOrInRequestDto {
+        private String authorizationCode;
+        private String idToken;
+        private String accessToken;
+        private String refreshToken;
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateUserInfoRequestDto {
+        private String userName;
+        private String userProfileImg;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateUserRefreshTokenDto {
+        private String refreshToken;
+    }
+
 }

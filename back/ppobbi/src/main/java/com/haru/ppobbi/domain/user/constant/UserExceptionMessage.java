@@ -2,13 +2,12 @@ package com.haru.ppobbi.domain.user.constant;
 
 import com.haru.ppobbi.global.dto.ResponseMessage;
 
-public enum UserResponseMessage implements ResponseMessage {
-    SIGN_IN_SUCCESS("로그인 완료"),
-    GET_USER_INFO_SUCCESS("사용자 정보 조회 성공");
+public enum UserExceptionMessage implements ResponseMessage {
+    USER_NOT_FOUND_EXCEPTION("사용자가 존재하지 않음");
 
     private final String message;
 
-    UserResponseMessage(String message) {
+    UserExceptionMessage(String message) {
         this.message = message;
     }
 
