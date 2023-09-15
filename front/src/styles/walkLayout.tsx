@@ -17,6 +17,9 @@ const WalkLayout = StyleSheet.create({
         color:"#535458",
         marginTop:3,
     },
+    boldCalendarTitle:{
+        color:"#EE8A72",
+    },
     calendarWrap:{
         marginHorizontal:responsiveWidth(4),
         borderTopWidth:1,
@@ -58,11 +61,57 @@ const WalkLayout = StyleSheet.create({
         color:"#4C4C4C",
     },
     centerDateText:{
+        
+    },
+    redDayText:{
+        color:"#CB6E8D",
+    },
 
+    choiceWrap:{
+        paddingHorizontal:responsiveWidth(4),
+        marginTop:40,
+    },
+    titleFlexWrap:{
+        display:"flex",
+        flexDirection:"row",
+        justifyContent:"space-between",
+        alignItems:"flex-end",
+    },
+    nameTitle:{
+        fontSize:18,
+        fontWeight:"700",
+        color:"#545454",
+    },
+    mainTitle:{
+        fontSize:12,
+        fontWeight:"500",
+        color:"#545454",
+        marginTop:4,
+    },
+    tabWrap:{
+        display:"flex",
+        flexDirection:"row",
+        alignItems:"center",
+    },
+    tabText:{
+        fontSize:12,
+        fontWeight:"500",
+        color:"#D9D9D9",
+    },
+    tabImage:{
+        width:10,
+        height:10,
+        marginLeft:4,
+    },
+    myPetContent:{
+        marginTop:20,
+    },
+    myPetItem:{
+        marginHorizontal:responsiveWidth(1),
     },
 
     timerWrap:{
-        marginTop:35,
+        marginTop:38,
         paddingBottom:32,
         backgroundColor:"#F7F8FC",
     },
@@ -168,11 +217,22 @@ const WalkLayout = StyleSheet.create({
         flexDirection:"column",
         justifyContent:"center",
         alignItems:"center",
+        paddingVertical:responsiveHeight(4),
     },
     weekListTitle:{
         fontSize:12,
         fontWeight:"700",
         color:"#8F8F8F",
+        marginBottom:7,
+    },
+    totalTimeText:{
+        fontSize:10,
+        fontWeight:"500",
+        color:"#8F8F8F",
+        marginTop:12,
+    },
+    boldTotalTimeText:{
+        fontWeight:"700",
     }
 })
 

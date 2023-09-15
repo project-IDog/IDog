@@ -5,7 +5,7 @@ const Footer = () => {
         <>
             <View style={styles.footerWrap}>
                 <Text style={styles.footerTitle}>ABOUT US</Text>
-                <Text style={styles.footerInfo}>상호 : OOO 전화: 02-3429-5100</Text>
+                <Text style={styles.footerInfo}>상호 : IDog, 전화: 02-3429-5100</Text>
                 <Text style={styles.footerInfo}>주소 : 서울특별시 강남구 테헤란로 212</Text>
                 <Text style={styles.footerInfo}>평일 상담시간 : 09:00 ~ 18:00</Text>
                 <Text style={styles.footerInfo}>이메일 : ssafy@ssafy.com</Text>
