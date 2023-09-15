@@ -1,6 +1,7 @@
 package com.haru.ppobbi.domain.user.service;
 
 
+import static com.haru.ppobbi.domain.user.constant.UserExceptionMessage.USER_NOT_FOUND_EXCEPTION;
 import static org.springframework.security.oauth2.core.OAuth2ErrorCodes.INVALID_TOKEN;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,8 +10,10 @@ import com.haru.ppobbi.domain.user.constant.UserRole;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpOrInRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserInfoRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserRefreshTokenDto;
+import com.haru.ppobbi.domain.user.dto.UserResponseDto.UserInfoResponseDto;
 import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.domain.user.repo.UserRepository;
+import com.haru.ppobbi.global.error.NotFoundException;
 import com.haru.ppobbi.global.error.TokenException;
 import com.haru.ppobbi.global.util.jwt.JwtTokenProvider;
 import com.haru.ppobbi.global.util.oauth.OAuth2TokenProvider;
@@ -85,6 +88,15 @@ public class UserServiceImpl implements UserService {
 
             userRepository.save(foundUser);
         }
+    }
+
+    @Override
+    public UserInfoResponseDto getUserInfo(String accessToken) {
+
+        User user = userRepository.findByUserId(accessToken)
+            .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
+
+        return null;
     }
 
     // authorization code 검증
@@ -171,7 +183,6 @@ public class UserServiceImpl implements UserService {
         } catch (HttpClientErrorException e) {
             throw new TokenException(INVALID_TOKEN);
         }
-
         log.debug("[DEBUG/response] response : {}", response);
 
         // Response To Json 파싱
