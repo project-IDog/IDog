@@ -25,7 +25,7 @@ const CreateWalletPassword = ({navigation}: any) => {
 
     const createWallet = async () => {
         if(!isLoading){
-            setIsChecked(true);
+            setIsLoading(true);
         }
 
         try {
@@ -125,7 +125,7 @@ const CreateWalletPassword = ({navigation}: any) => {
                 <Footer/>
             </CommonLayout>
             {
-                isChecked ?
+                isLoading ?
                 <WalletLoading/>
                 :
                 <></>
