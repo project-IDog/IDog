@@ -3,7 +3,7 @@ import { Button, View, Text, Image } from "react-native";
 import { NFT_STORAGE_KEY } from "@env";
 import * as ImagePicker from "expo-image-picker";
 import { Platform } from "react-native";
-import { NFTStorage } from "nft.storage";
+// import { NFTStorage } from "nft.storage";
 
 const Ipfs = () => {
 	const [imageUri, setImage] = useState<string | null>(null);
@@ -66,11 +66,11 @@ const Ipfs = () => {
 			},
 		};
 
-		const client = new NFTStorage({ token: apiKey });
-		const metadata = await client.store(nft);
+		// const client = new NFTStorage({ token: apiKey });
+		// const metadata = await client.store(nft);
 
-		console.log("NFT data stored!");
-		console.log("Metadata URI: ", metadata.url);
+		// console.log("NFT data stored!");
+		// console.log("Metadata URI: ", metadata.url);
 	};
 
 	return (
