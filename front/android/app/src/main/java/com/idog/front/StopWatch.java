@@ -40,18 +40,19 @@ public class StopWatch extends AppWidgetProvider {
         super.onReceive(context, intent);
         Log.d("StopWatch", "Received intent: " + intent.getAction());
         if ("PLAY_ACTION".equals(intent.getAction())) {
+            Log.d("WATCH_PLAY_ACTION", "WATCH_PLAY ACTION CLICK");
             startTime = System.currentTimeMillis();
-
             Intent serviceIntent = new Intent(context, TimerService.class);
             serviceIntent.setAction("PLAY_ACTION");
             context.startService(serviceIntent);
         } else if ("STOP_ACTION".equals(intent.getAction())) {
+            Log.d("WATCH_STOP_ACTION", "WATCH_STOP ACTION CLICK");
             elapsedTime += System.currentTimeMillis() - startTime;
-
             Intent serviceIntent = new Intent(context, TimerService.class);
             serviceIntent.setAction("STOP_ACTION");
             context.startService(serviceIntent);
         } else if (TimerService.ACTION_UPDATE.equals(intent.getAction())) {
+            Log.d("WATCH_WHAT_ACTION", "WATCH_WHAT ACTION CLICK");
             elapsedTime += System.currentTimeMillis() - startTime;
             startTime = System.currentTimeMillis();
 
@@ -62,7 +63,7 @@ public class StopWatch extends AppWidgetProvider {
                     (elapsedTime / 3600000),
                     (elapsedTime / 60000) % 60,
                     (elapsedTime / 1000) % 60);
-
+            Log.d("TIME", timeStr);
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
             views.setTextViewText(R.id.timer, timeStr);
 
@@ -72,15 +73,17 @@ public class StopWatch extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
+        Log.d("UPDATEWIDGET", "WIDGET_LOAD");
 
         Intent playIntent = new Intent(context, StopWatch.class);
         playIntent.setAction("PLAY_ACTION");
-        PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, 1, playIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
         views.setOnClickPendingIntent(R.id.playButton, playPendingIntent);
 
         Intent stopIntent = new Intent(context, StopWatch.class);
         stopIntent.setAction("STOP_ACTION");
-        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 2, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.stopButton, stopPendingIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);

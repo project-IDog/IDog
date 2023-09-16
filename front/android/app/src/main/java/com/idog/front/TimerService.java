@@ -30,7 +30,7 @@ public class TimerService extends Service {
         Log.d("TimerService", "Starting timer");
         Intent intent = new Intent(this, StopWatch.class);
         intent.setAction(TimerService.ACTION_UPDATE);
-        updateIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        updateIntent = PendingIntent.getBroadcast(this, 3, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         long interval = 1000; // 1 second
