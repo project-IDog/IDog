@@ -47,6 +47,14 @@
                 android:layout_marginLeft="30dp"
                 android:background="@drawable/timer"
                 android:text="정지" />
+
+            <Button
+                android:id="@+id/resetButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/timer"
+                android:text="초기화" />
         </LinearLayout>
 
         <TextView
