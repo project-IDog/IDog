@@ -2,7 +2,7 @@ package com.haru.ppobbi.domain.user.service;
 
 
 import static com.haru.ppobbi.domain.user.constant.UserExceptionMessage.USER_NOT_FOUND_EXCEPTION;
-import static org.springframework.security.oauth2.core.OAuth2ErrorCodes.INVALID_TOKEN;
+import static com.haru.ppobbi.global.util.oauth.constant.OAuth2ExceptionMessage.INVALID_TOKEN;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
                 entity,
                 String.class);
         } catch (HttpClientErrorException e) {
-            throw new TokenException(INVALID_TOKEN);
+            throw new TokenException(INVALID_TOKEN.message());
         }
         log.debug("[DEBUG/response] response : {}", response);
 
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
             jsonBody = (JSONObject) jsonParser.parse(response.getBody());
             userAttribute = new ObjectMapper().readValue(jsonBody.toString(), Map.class);
         } catch (ParseException | JsonProcessingException e) {
-            throw new TokenException(INVALID_TOKEN);
+            throw new TokenException(INVALID_TOKEN.message());
         }
         return userAttribute;
     }
