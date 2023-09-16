@@ -63,12 +63,16 @@ public class User extends BaseEntity {
         this.userRole = userRole;
     }
 
-    public void updateUserInfo(UpdateUserInfoRequestDto updateUserInfoRequestDto) {
-        this.userProfileImg = updateUserInfoRequestDto.getUserProfileImg();
-        this.userName = updateUserInfoRequestDto.getUserName();
+    public void updateUserInfo(String userProfileImg, String userName) {
+        this.userProfileImg = userProfileImg;
+        this.userName = userName;
     }
 
-    public void updateUserRefreshToken(UpdateUserRefreshTokenDto updateUserRefreshTokenDto) {
-        this.userRefreshToken = updateUserRefreshTokenDto.getRefreshToken();
+    public void updateUserRefreshToken(String userRefreshToken) {
+        this.userRefreshToken = userRefreshToken;
+    }
+
+    public void updateUserMessage(String userMessage) {
+        this.userMessage = userMessage;
     }
 }
