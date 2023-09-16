@@ -14,7 +14,7 @@ const Login = () => {
 	// Google 인증 요청을 위한 훅 초기화
 	// promptAsync: 인증 요청 보냄.
 	const [request, response, promptAsync] = Google.useAuthRequest({
-		webClientId: WEB_CLIENT_ID,
+		// webClientId: WEB_CLIENT_ID,
 		androidClientId: ANDROID_CLIENT_ID,
 	});
 

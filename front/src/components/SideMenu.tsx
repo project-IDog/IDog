@@ -69,6 +69,24 @@ const SideMenu = (props: any) => {
 						></SideMenuIcon>
 					</View>
 				</View>
+				<View style={SideMenuLayout.authButtonWrap}>
+					<TouchableOpacity
+						activeOpacity={0.7}
+						style={SideMenuLayout.googleAuthButton}
+						onPress={() => navigation.navigate("Login")}
+					>
+						<View>
+							<Text style={SideMenuLayout.googleAuthButtonText}>로그인</Text>
+						</View>
+					</TouchableOpacity>
+					<TouchableOpacity
+						activeOpacity={0.7}
+						style={SideMenuLayout.moveMypageButton}
+						onPress={() => navigation.navigate("MyPage")}
+					>
+						<Text style={SideMenuLayout.moveMypageButtonText}>마이페이지</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		</>
 	);
