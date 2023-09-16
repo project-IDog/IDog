@@ -8,15 +8,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haru.ppobbi.domain.user.constant.UserRole;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpOrInRequestDto;
-import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserInfoRequestDto;
-import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserRefreshTokenDto;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
+import com.haru.ppobbi.domain.user.dto.UserResponseDto.SignUpOrInResponseDto;
 import com.haru.ppobbi.domain.user.dto.UserResponseDto.UserInfoResponseDto;
 import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.domain.user.repo.UserRepository;
 import com.haru.ppobbi.global.error.NotFoundException;
 import com.haru.ppobbi.global.error.TokenException;
-import com.haru.ppobbi.global.util.jwt.JwtTokenProvider;
-import com.haru.ppobbi.global.util.oauth.OAuth2TokenProvider;
+import com.haru.ppobbi.global.util.oauth.OAuth2TokenHandler;
 import com.haru.ppobbi.global.util.oauth.OAuth2UserInfo;
 import java.util.Map;
 import java.util.Optional;
@@ -32,8 +31,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -46,8 +43,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final OAuth2TokenProvider oauthTokenProvider;
+    private final OAuth2TokenHandler oauthTokenProvider;
 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String clientId;
@@ -61,9 +57,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto)
-        throws ParseException, JsonProcessingException {
+    public SignUpOrInResponseDto signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto) {
         String idToken = signUpOrInRequestDto.getIdToken();
+        String accessToken = signUpOrInRequestDto.getAccessToken();
         String refreshToken = signUpOrInRequestDto.getRefreshToken();
         Map<String, Object> userAttribute = getUserAttribute(idToken);
 
@@ -76,72 +72,52 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
         } else {
             User foundUser = optionalUser.get();
-
-            foundUser.updateUserInfo(UpdateUserInfoRequestDto.builder()
-                .userName(user.getUserName())
-                .userProfileImg(user.getUserProfileImg())
-                .build());
-
-            foundUser.updateUserRefreshToken(UpdateUserRefreshTokenDto.builder()
-                .refreshToken(refreshToken)
-                .build());
-
+            foundUser.updateUserInfo(user.getUserName(), user.getUserProfileImg());
+            foundUser.updateUserRefreshToken(refreshToken);
             userRepository.save(foundUser);
         }
+        return SignUpOrInResponseDto.builder()
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .build();
     }
 
     @Override
     public UserInfoResponseDto getUserInfo(String accessToken) {
-
-        User user = userRepository.findByUserId(accessToken)
+        String loggedInUser = oauthTokenProvider.validateAccessTokenAndGetUserId(accessToken);
+        User user = userRepository.findByUserId(loggedInUser)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
-        return null;
+        return UserInfoResponseDto.builder()
+            .userId(user.getUserId())
+            .userName(user.getUserName())
+            .userWallet(user.getUserWallet())
+            .userMessage(user.getUserMessage())
+            .userProfileImg(user.getUserProfileImg())
+            .userPrivateKey(user.getUserPrivateKey())
+            .build();
     }
 
-    // authorization code 검증
-//    @Transactional
-//    @Override
-//    public void signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto)
-//        throws ParseException, JsonProcessingException {
-//        String authorizationCode = signUpOrInRequestDto.getAuthorizationCode();
-//
-//        HttpEntity<MultiValueMap<String, String>> tokenRequest = makeHttpRequest(authorizationCode);
-//        String googleApiURL = "https://oauth2.googleapis.com/tokeninfo";
-//
-////        String targetURL = UriComponentsBuilder.fromHttpUrl(googleApiURL)
-////            .queryParam("grant_type", "authorization_code")
-////            .queryParam("client_id", clientId)
-////            .queryParam("redirect_uri", redirectURI)
-////            .queryParam("code", authorizationCode)
-////            .queryParam("client_secret", clientSecret)
-////            .build().toUriString();
-////
-////        HttpHeaders headers = new HttpHeaders();
-////        HttpEntity<String> entity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<String> response = restTemplate.exchange(googleApiURL,
-//            HttpMethod.POST,
-//            tokenRequest,
-//            String.class);
-//
-//        log.debug("[DEBUG/signUpOrIn] response : {}", response);
-//    }
+    @Transactional
+    @Override
+    public void deleteUser(String accessToken) {
+        String loggedInUser = oauthTokenProvider.validateAccessTokenAndGetUserId(accessToken);
+        User user = userRepository.findByUserId(loggedInUser)
+            .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
-    // authorization code 검증 용
-    private HttpEntity<MultiValueMap<String, String>> makeHttpRequest(String authorizationCode) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", clientId);
-        params.add("redirect_uri", redirectURI);
-        params.add("code", authorizationCode);
-        params.add("client_secret", clientSecret);
+        userRepository.delete(user);
+    }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+    @Override
+    @Transactional
+    public void updateUserMessage(String accessToken,
+        UpdateUserMessageRequestDto updateUserMessageRequestDto) {
+        String loggedInUser = oauthTokenProvider.validateAccessTokenAndGetUserId(accessToken);
+        User user = userRepository.findByUserId(loggedInUser)
+            .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
-        HttpEntity<MultiValueMap<String, String>> tokenRequest = new HttpEntity<>(params, headers);
-        return tokenRequest;
+        String message = updateUserMessageRequestDto.getUserMessage();
+        user.updateUserMessage(message);
     }
 
     private User convertUserAttributeToUser(Map<String, Object> userAttribute,
@@ -157,8 +133,7 @@ public class UserServiceImpl implements UserService {
             .build();
     }
 
-    private Map<String, Object> getUserAttribute(String idToken)
-        throws ParseException, JsonProcessingException {
+    private Map<String, Object> getUserAttribute(String idToken) {
         log.debug("[DEBUG/getUserAttribute] idToken : {}", idToken);
 
         Map<String, Object> userAttribute;
@@ -187,9 +162,13 @@ public class UserServiceImpl implements UserService {
 
         // Response To Json 파싱
         JSONParser jsonParser = new JSONParser();
-        JSONObject jsonBody = (JSONObject) jsonParser.parse(response.getBody());
-
-        userAttribute = new ObjectMapper().readValue(jsonBody.toString(), Map.class);
+        JSONObject jsonBody;
+        try {
+            jsonBody = (JSONObject) jsonParser.parse(response.getBody());
+            userAttribute = new ObjectMapper().readValue(jsonBody.toString(), Map.class);
+        } catch (ParseException | JsonProcessingException e) {
+            throw new TokenException(INVALID_TOKEN);
+        }
         return userAttribute;
     }
 }

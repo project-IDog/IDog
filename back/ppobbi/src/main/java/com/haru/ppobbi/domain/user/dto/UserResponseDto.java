@@ -11,7 +11,6 @@ public class UserResponseDto {
     @Builder
     public static class SignUpOrInResponseDto {
 
-        private String grantType;
         private String accessToken;
         private String refreshToken;
     }
