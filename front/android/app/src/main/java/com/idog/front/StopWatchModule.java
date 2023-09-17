@@ -3,19 +3,29 @@ package com.idog.front;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.bridge.WritableMap;
 public class StopWatchModule extends ReactContextBaseJavaModule {
     private static ReactApplicationContext reactContext;
 
     public StopWatchModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.reactContext = reactContext;
+        StopWatchModule.reactContext = reactContext;
     }
 
+    public static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData) {
+        if (StopWatchModule.reactContext != null) {
+            StopWatchModule.reactContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit(eventName, eventData);
+        }
+    }
     @Override
     public String getName() {
         return "StopWatchModule";
@@ -23,8 +33,8 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getNumber(int appWidgetId) {
-        SharedPreferences prefs = this.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
+        SharedPreferences prefs = StopWatchModule.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
         int number = prefs.getInt("number_" + appWidgetId, 0);
-        Log.d("StopWatchModule", "This is a simple log from Native Module!");
+        Log.d("StopWatchModule Number", "This is a simple log from Native Module!" + number + " prefs : " + prefs);
     }
 }

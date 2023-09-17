@@ -10,6 +10,10 @@ import android.content.Intent;
 import android.content.ComponentName;
 import android.util.Log;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.WritableMap;
+
 /**
  * Implementation of App Widget functionality.
  */
@@ -19,6 +23,9 @@ public class StopWatch extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
+            WritableMap map = Arguments.createMap();
+            map.putInt("appWidgetId", appWidgetId);
+            StopWatchModule.emitDeviceEvent("onAppWidgetUpdate", map);
         }
     }
 
@@ -36,7 +43,9 @@ public class StopWatch extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         Log.d("StopWatch", "Received intent: " + intent.getAction());
+        Log.d("Context : ", "Context : " + context);
         int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        Log.d("appWidgetId", "appWidgetId : " + appWidgetId);
         SharedPreferences prefs = context.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
         if ("PLAY_ACTION".equals(intent.getAction())) {
             Log.d("WATCH_PLAY_ACTION", "WATCH_PLAY ACTION CLICK");

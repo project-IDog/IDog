@@ -73,6 +73,15 @@ const SideMenu = (props: any) => {
 					<TouchableOpacity
 						activeOpacity={0.7}
 						style={SideMenuLayout.googleAuthButton}
+						onPress={() => navigation.navigate("WidgetText")}
+					>
+						<View>
+							<Text style={SideMenuLayout.googleAuthButtonText}>위젯</Text>
+						</View>
+					</TouchableOpacity>
+					<TouchableOpacity
+						activeOpacity={0.7}
+						style={SideMenuLayout.googleAuthButton}
 						onPress={() => navigation.navigate("Login")}
 					>
 						<View>
