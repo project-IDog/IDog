@@ -33,13 +33,26 @@ const Walk = ({navigation}: any) => {
     const [myPetList, setMyPetList] = useState<Object[]>(
         [
             {
+                id:1,
                 url:MyPetThumbnail1
             },
             {
+                id:2,
                 url:MyPetThumbnail2
             }
         ]
     );
+    const [selectedImages, setSelectedImages] = useState<number[]>([]);
+
+    const toggleImageSelection = (id: number) => {
+        const isSelected = selectedImages.includes(id);
+    
+        if (isSelected) {
+            setSelectedImages(selectedImages.filter((imageId) => imageId !== id));
+        } else {
+            setSelectedImages([...selectedImages, id]);
+        }
+    };
 
     const minusDate = (offset: number) => {
         return dayjs().subtract(offset, "day").get('date');
@@ -188,11 +201,15 @@ const Walk = ({navigation}: any) => {
                     <ScrollView horizontal={true} style={WalkLayout.myPetContent}>
                         {
                             myPetList.map((myPetImage: Object, index: number) => {
-                                return(
-                                    <TouchableOpacity activeOpacity={0.7}>
-                                        <View key={index} style={WalkLayout.myPetItem}>
+                                return(     
+                                    <TouchableOpacity activeOpacity={0.7} onPress={() => toggleImageSelection(myPetImage.id)}>
+                                        <View style={WalkLayout.myPetItem}>
                                             <Image
                                                 source={myPetImage.url}
+                                                style={{
+                                                    borderWidth: 4,
+                                                    borderColor: selectedImages.includes(myPetImage.id) ? '#EE8A72' : 'transparent',
+                                                }}
                                             />
                                         </View>
                                     </TouchableOpacity>
