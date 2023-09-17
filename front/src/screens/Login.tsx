@@ -8,8 +8,24 @@ import { useEffect } from "react";
 
 // 로그인 버튼 누르면 웹 브라우저가 열리고, 구글 로그인 페이지로 이동함.
 WebBrowser.maybeCompleteAuthSession();
+import { NativeModules } from "react-native";
+const { StopWatchModule } = NativeModules;
 
 const Login = () => {
+	const [widgetData, setWidgetData] = React.useState(null);
+	const [widgetName, setWidgetName] = React.useState(null);
+	const getWidgetData = async () => {
+		const widgetName = StopWatchModule.getModuleName(() => {
+			setWidgetName(widgetName);
+		});
+		const widgetData = await StopWatchModule.getNumber(1);
+		setWidgetData(widgetData);
+	};
+
+	// useEffect(() => {
+	// 	getWidgetData(1);
+	// }, []);
+
 	// 안드로이드, 웹 클라이언트 아이디를 사용하여 인증 요청 보냄.
 	// Google 인증 요청을 위한 훅 초기화
 	// promptAsync: 인증 요청 보냄.
@@ -73,6 +89,9 @@ const Login = () => {
 					promptAsync();
 				}}
 			/>
+			{/* <Text>{widgetData}</Text> */}
+			<Text>{widgetName}</Text>
+			<Button title="get widget data" onPress={() => getWidgetData()} />
 			<Button title="logout" onPress={() => handleLogout()} />
 		</View>
 	);
