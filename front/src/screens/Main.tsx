@@ -17,6 +17,19 @@ import PhotoAlbumIcon from "../../assets/images/photo-album-icon.png";
 
 const Main = ({ navigation }: any) => {
 	const {LoginStore} = IndexStore();
+
+	const authHandling = (pageName: string) => {
+		if(pageName === 'Three'){
+			navigation.navigate(pageName);
+			return;
+		}
+
+		if(LoginStore.isLogged){
+			navigation.navigate(pageName);
+		}else{
+			alert("해당 서비스는 로그인 후 이용가능합니다.");
+		}
+	}
 	return (
 		<>
 			<CommonLayout>
@@ -41,7 +54,7 @@ const Main = ({ navigation }: any) => {
 					<View style={MainLayout.walkButtonWrap}>
 						<TouchableOpacity
 							activeOpacity={0.7}
-							onPress={() => navigation.navigate("Walk")}
+							onPress={() => authHandling('Walk')}
 						>
 							<View style={MainLayout.walkRootButton}>
 								<Text style={MainLayout.walkRootButtonText}>
@@ -76,7 +89,7 @@ const Main = ({ navigation }: any) => {
 							IDog에서 내 반려견의 정보를{"\n"}
 							관리하세요.
 						</Text>
-						<TouchableOpacity activeOpacity={0.7}>
+						<TouchableOpacity activeOpacity={0.7} onPress={() => authHandling('Profile')}>
 							<View style={MainLayout.createProfileButton}>
 								<Text style={MainLayout.createProfileButtonText}>
 									프로필 등록하기
@@ -94,7 +107,7 @@ const Main = ({ navigation }: any) => {
 							반려견과 함께했던 모든 추억이 잊혀지지 않고{"\n"}
 							기억될 수 있도록 온라인 추모공원에서 관리해드려요
 						</Text>
-						<TouchableOpacity activeOpacity={0.7}>
+						<TouchableOpacity activeOpacity={0.7} onPress={() => authHandling('Three')}>
 							<View style={MainLayout.moveTribeButton}>
 								<Text style={MainLayout.moveTribeButtonText}>
 									온라인 추모공원 둘러보기
@@ -121,11 +134,13 @@ const Main = ({ navigation }: any) => {
 							desc="반려견 평생소장"
 							title="프로필 제작"
 							iconImage={NftCardIcon}
+							movePage="Profile"
 						/>
 						<IconButton
 							desc="반려견 다이어리"
 							title="진료기록"
 							iconImage={VaccineIcon}
+							movePage="Profile"
 						/>
 					</View>
 					<View style={MainLayout.flexButtonWrap}>
@@ -133,11 +148,13 @@ const Main = ({ navigation }: any) => {
 							desc="간편한 소유권 증명"
 							title="입양절차"
 							iconImage={AdoptionIcon}
+							movePage="Adoption"
 						/>
 						<IconButton
 							desc="포토앨범"
 							title="사진첩"
 							iconImage={PhotoAlbumIcon}
+							movePage="Album"
 						/>
 					</View>
 				</View>
