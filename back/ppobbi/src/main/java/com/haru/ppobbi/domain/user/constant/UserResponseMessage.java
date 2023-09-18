@@ -4,7 +4,10 @@ import com.haru.ppobbi.global.dto.ResponseMessage;
 
 public enum UserResponseMessage implements ResponseMessage {
     SIGN_IN_SUCCESS("로그인 완료"),
-    GET_USER_INFO_SUCCESS("사용자 정보 조회 성공");
+    GET_USER_INFO_SUCCESS("회원 정보 조회 완료"),
+    DELETE_USER_SUCCESS("회원 탈퇴 완료"),
+    UPDATE_USER_MESSAGE_SUCCESS("회원 상태 메시지 수정 완료")
+    ;
 
     private final String message;
 
