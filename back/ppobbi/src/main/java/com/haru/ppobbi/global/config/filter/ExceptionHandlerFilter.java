@@ -1,9 +1,12 @@
 package com.haru.ppobbi.global.config.filter;
 
+import com.fasterxml.jackson.core.io.UTF8Writer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haru.ppobbi.global.error.TokenException;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.codec.Utf8;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -12,12 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try{
             filterChain.doFilter(request, response);
-        }catch(NullPointerException | TokenException e){
+        }catch(TokenException e){
             setErrorResponse(response, e);
         }
     }
@@ -26,6 +30,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
          ObjectMapper objectMapper = new ObjectMapper();
          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
          response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+         response.setCharacterEncoding("utf-8");
          ErrorResponse errorResponse = new ErrorResponse(error.getMessage());
          try{
              response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
