@@ -36,6 +36,7 @@ public class OAuth2TokenHandler {
             return (String) jsonBody.get("email");
         } catch (HttpClientErrorException e) {
             String errorMessage = e.getMessage();
+            log.debug("error: {}", errorMessage);
             if (errorMessage.contains("invalid_token")) {
                 throw new TokenException(INVALID_TOKEN.message());
             } else if (errorMessage.contains("expired_token")) {

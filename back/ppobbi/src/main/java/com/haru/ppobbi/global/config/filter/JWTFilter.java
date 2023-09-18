@@ -31,7 +31,7 @@ public class JWTFilter implements Filter {
             request.setAttribute("userEmail", userEmail);
             chain.doFilter(request, response);
         }catch (NullPointerException e){
-            throw new TokenException(INVALID_TOKEN.message());
+            throw new TokenException(NOTFOUND_TOKEN.message());
         }
 
     }
