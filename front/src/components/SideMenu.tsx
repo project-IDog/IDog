@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import SideMenuIcon from "./SideMenuIcon";
 import SideMenuLayout from "../styles/sideMenuLayout";
+import LoginStore from "../stores/LoginStore";
 
 import CloseIcon from "../../assets/images/close-icon.png";
 import NftCardIcon from "../../assets/images/line-nft-card-icon.png";
@@ -14,6 +15,13 @@ import TribeIcon from "../../assets/images/line-tribe-icon.png";
 
 const SideMenu = (props: any) => {
 	const navigation = useNavigation();
+	const authMoveMypage = () => {
+		if(LoginStore.isLogged){
+			navigation.navigate("MyPage");
+		}else{
+			alert("로그인 후 이용하실 수 있는 서비스입니다.");
+		}
+	}
 	return (
 		<>
 			<View style={SideMenuLayout.sideMenuWrap}>
@@ -91,7 +99,7 @@ const SideMenu = (props: any) => {
 					<TouchableOpacity
 						activeOpacity={0.7}
 						style={SideMenuLayout.moveMypageButton}
-						onPress={() => navigation.navigate("MyPage")}
+						onPress={authMoveMypage}
 					>
 						<Text style={SideMenuLayout.moveMypageButtonText}>마이페이지</Text>
 					</TouchableOpacity>
