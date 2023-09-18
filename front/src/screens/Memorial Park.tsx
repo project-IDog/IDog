@@ -53,7 +53,7 @@ const Test: React.FC = () => {
 	// 사용 예
 	const selectedColors = memorialGradientColors[randomIndex];
 	const selectedCountColors = complementaryColorList[randomIndex];
-	const textColor = memorialGradientColors[randomIndex][3];
+	const textColor = memorialGradientColors[randomIndex][1];
 
 	const showLottieAnimation = (
 		aniOpacity: Animated.Value,
@@ -188,64 +188,127 @@ const Test: React.FC = () => {
 								Na. axcx
 							</Text>
 							<View style={[ripLayout.view2]}>
-								<View style={[ripLayout.viewProfile1]}>
-									<View style={[ripLayout.viewPorifile2]}>
-										<Image
-											style={[ripLayout.ripImage2]}
-											source={require("../../assets/dog.jpg")}
-										></Image>
-										<Text style={[{ color: selectedCountColors }]}>asdsad</Text>
-									</View>
-									<View style={[ripLayout.viewPorifile3]}>
-										<View style={[ripLayout.viewPorifile4]}>
-											<Text
-												style={[
-													{ color: textColor, fontSize: 18, marginRight: 20 },
-												]}
-											>
-												asds
-											</Text>
-											<Text
-												style={[
-													{ color: textColor, fontSize: 18, marginLeft: 20 },
-												]}
-											>
-												asds
-											</Text>
+								<View
+									style={[{ justifyContent: "center", marginVertical: 10 }]}
+								>
+									<View style={[ripLayout.viewProfile1]}>
+										<View style={[ripLayout.viewPorifile2]}>
+											<Image
+												style={[ripLayout.ripImage2]}
+												source={require("../../assets/dog.jpg")}
+											></Image>
+											{/* <Text style={[{ color: selectedCountColors }]}>asdsad</Text> */}
 										</View>
 										<View style={[ripLayout.viewPorifile3]}>
-											<Text>asds</Text>
+											<View style={[ripLayout.viewPorifile4]}>
+												<Text
+													style={[
+														{ color: textColor, fontSize: 25, display: "flex" },
+													]}
+												>
+													뽀삐
+												</Text>
+
+												<Text
+													style={[
+														{
+															color: textColor,
+															fontSize: 25,
+															display: "flex",
+															// marginRight: 15,
+														},
+													]}
+												>
+													리트리버
+												</Text>
+											</View>
+											<View style={[ripLayout.viewPorifile3]}>
+												<View
+													style={[
+														{
+															display: "flex",
+															justifyContent: "center",
+															alignItems: "center",
+														},
+													]}
+												>
+													<Text
+														style={[
+															{
+																color: textColor,
+																fontSize: 18,
+																display: "flex",
+																justifyContent: "center",
+																alignItems: "center",
+															},
+														]}
+													>
+														2015.03.02-2023.07.03
+													</Text>
+												</View>
+											</View>
+											<View style={[ripLayout.viewPorifile4]}>
+												<Text
+													style={[
+														{ color: "skyblue", fontSize: 25, display: "flex" },
+													]}
+												>
+													남
+												</Text>
+												<Text
+													style={[
+														{ color: textColor, fontSize: 25, display: "flex" },
+													]}
+												>
+													메모리얼 앨범
+												</Text>
+											</View>
+											<View style={[ripLayout.viewPorifile5]}>
+												<Image
+													style={[ripLayout.ripImage3]}
+													source={require("../../assets/dog.jpg")}
+												></Image>
+												<Image
+													style={[ripLayout.ripImage3]}
+													source={require("../../assets/dog.jpg")}
+												></Image>
+												<Image
+													style={[ripLayout.ripImage3]}
+													source={require("../../assets/dog.jpg")}
+												></Image>
+											</View>
 										</View>
 									</View>
-									<View style={[ripLayout.viewPorifile3]}>
-										<Text>asds</Text>
-									</View>
-									<View style={[ripLayout.viewPorifile3]}>
-										<Text>asds</Text>
-									</View>
 								</View>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									자동배포
-								</Text>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									자동배포
-								</Text>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									자동배포
-								</Text>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									자동배포
-								</Text>
 							</View>
 							<Text
-								style={[ripLayout.riptext2, , { color: selectedCountColors }]}
+								style={[
+									{
+										color: selectedCountColors,
+										fontSize: 24,
+										fontWeight: "900",
+										marginTop: 10,
+										textAlign: "left",
+									},
+								]}
 							>
 								댓글
 							</Text>
-							<View style={[ripLayout.view2]}>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									댓글
-								</Text>
+							<View style={[ripLayout.view3]}>
+								<View style={[{ marginHorizontal: 20, marginVertical: 20 }]}>
+									<Text
+										style={[
+											ripLayout.riptext2,
+											,
+											{ color: textColor, fontSize: 18 },
+										]}
+									>
+										뽀삐야 잘 지내고 있지? 그곳에서는 행복하렴
+									</Text>
+									<Text style={[{ color: textColor, fontSize: 13 }]}>
+										Winseo, 2023.09.13 11:11
+									</Text>
+								</View>
 							</View>
 							<Text
 								style={[ripLayout.riptext2, , { color: selectedCountColors }]}
@@ -253,9 +316,22 @@ const Test: React.FC = () => {
 								앨범
 							</Text>
 							<View style={[ripLayout.view2]}>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									앨범
-								</Text>
+								<View
+									style={[ripLayout.viewPorifile5, { marginHorizontal: 15 }]}
+								>
+									<Image
+										style={[ripLayout.ripImage4]}
+										source={require("../../assets/dog.jpg")}
+									></Image>
+									<Image
+										style={[ripLayout.ripImage4]}
+										source={require("../../assets/dog.jpg")}
+									></Image>
+									<Image
+										style={[ripLayout.ripImage4]}
+										source={require("../../assets/dog.jpg")}
+									></Image>
+								</View>
 							</View>
 						</LinearGradient>
 					</View>
