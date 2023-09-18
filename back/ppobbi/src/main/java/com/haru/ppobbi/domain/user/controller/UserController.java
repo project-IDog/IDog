@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,17 +41,17 @@ public class UserController {
 
     @GetMapping("")
     public ResponseEntity<ResponseDto<?>> getUserInfo(
-        @RequestHeader(value = "access-token") String accessToken) {
+        @RequestAttribute("userId") String userId) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(GET_USER_INFO_SUCCESS,
-                userService.getUserInfo(accessToken))
+                userService.getUserInfo(userId))
         );
     }
 
     @DeleteMapping("")
     public ResponseEntity<ResponseDto<?>> deleteUser(
-        @RequestHeader(value = "access-token") String accessToken) {
-        userService.deleteUser(accessToken);
+        @RequestAttribute("userId") String userId) {
+        userService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(DELETE_USER_SUCCESS)
         );
@@ -59,9 +59,9 @@ public class UserController {
 
     @PutMapping("/message")
     public ResponseEntity<ResponseDto<?>> updateUserMessage(
-        @RequestHeader(value = "access-token") String accessToken,
+        @RequestAttribute("userId") String userId,
         @RequestBody UpdateUserMessageRequestDto updateUserMessageRequestDto) {
-        userService.updateUserMessage(accessToken, updateUserMessageRequestDto);
+        userService.updateUserMessage(userId, updateUserMessageRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(UPDATE_USER_MESSAGE_SUCCESS)
         );
