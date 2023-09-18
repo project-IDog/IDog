@@ -83,9 +83,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoResponseDto getUserInfo(String accessToken) {
-        String loggedInUser = oauthTokenProvider.validateAccessTokenAndGetUserId(accessToken);
-        User user = userRepository.findByUserId(loggedInUser)
+    public UserInfoResponseDto getUserInfo(String userId) {
+        User user = userRepository.findByUserId(userId)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
         return UserInfoResponseDto.builder()
@@ -100,9 +99,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void deleteUser(String accessToken) {
-        String loggedInUser = oauthTokenProvider.validateAccessTokenAndGetUserId(accessToken);
-        User user = userRepository.findByUserId(loggedInUser)
+    public void deleteUser(String userId) {
+        User user = userRepository.findByUserId(userId)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
         userRepository.delete(user);
@@ -110,10 +108,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUserMessage(String accessToken,
+    public void updateUserMessage(String userId,
         UpdateUserMessageRequestDto updateUserMessageRequestDto) {
-        String loggedInUser = oauthTokenProvider.validateAccessTokenAndGetUserId(accessToken);
-        User user = userRepository.findByUserId(loggedInUser)
+        User user = userRepository.findByUserId(userId)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
         String message = updateUserMessageRequestDto.getUserMessage();

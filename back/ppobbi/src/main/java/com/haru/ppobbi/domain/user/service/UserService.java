@@ -9,10 +9,10 @@ public interface UserService {
 
     SignUpOrInResponseDto signUpOrIn(SignUpOrInRequestDto signUpRequestDto);
 
-    UserInfoResponseDto getUserInfo(String accessToken);
+    UserInfoResponseDto getUserInfo(String userId);
 
-    void deleteUser(String accessToken);
+    void deleteUser(String userId);
 
-    void updateUserMessage(String accessToken,
+    void updateUserMessage(String userId,
         UpdateUserMessageRequestDto updateUserMessageRequestDto);
 }

@@ -26,9 +26,9 @@ public class JWTFilter implements Filter {
             String bearer = httpRequest.getHeader("Authorization");
             log.debug("filter - bearer: {}", bearer);
             String accessToken = bearer.split(" ")[1];
-            String userEmail = oAuth2TokenHandler.validateAccessTokenAndGetUserId(accessToken);
-            log.debug("filter - userEmail: {}", userEmail);
-            request.setAttribute("userEmail", userEmail);
+            String userId = oAuth2TokenHandler.validateAccessTokenAndGetUserId(accessToken);
+            log.debug("filter - userId: {}", userId);
+            request.setAttribute("userId", userId);
             chain.doFilter(request, response);
         }catch (NullPointerException e){
             throw new TokenException(NOTFOUND_TOKEN.message());
