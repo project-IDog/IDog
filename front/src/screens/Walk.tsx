@@ -202,7 +202,7 @@ const Walk = ({navigation}: any) => {
                         {
                             myPetList.map((myPetImage: Object, index: number) => {
                                 return(     
-                                    <TouchableOpacity activeOpacity={0.7} onPress={() => toggleImageSelection(myPetImage.id)}>
+                                    <TouchableOpacity activeOpacity={0.7} onPress={() => toggleImageSelection(myPetImage.id)} key={index}>
                                         <View style={WalkLayout.myPetItem}>
                                             <Image
                                                 source={myPetImage.url}
