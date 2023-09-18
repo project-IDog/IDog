@@ -1,5 +1,6 @@
 package com.idog.front;
 
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -32,9 +33,17 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getNumber(int appWidgetId) {
-        SharedPreferences prefs = StopWatchModule.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
-        int number = prefs.getInt("number_" + appWidgetId, 0);
-        Log.d("StopWatchModule Number", "This is a simple log from Native Module!" + number + " prefs : " + prefs);
+    public void getNumber(int appWidgetId, Promise promise) {
+        try {
+            SharedPreferences prefs = StopWatchModule.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
+            int number = prefs.getInt("number_" + appWidgetId, 0);
+            Log.d("StopWatchModule Number", "This is a simple log from Native Module!" + number + " prefs : " + prefs);
+
+            // 값을 Promise로 반환합니다.
+            promise.resolve(number);
+        } catch (Exception e) {
+            promise.reject("GET_NUMBER_ERROR", e);
+        }
     }
+
 }

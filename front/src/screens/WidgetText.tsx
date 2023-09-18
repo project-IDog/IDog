@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { View, Text, Button } from "react-native";
 import { NativeModules, DeviceEventEmitter } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 const { StopWatchModule } = NativeModules;
 
@@ -11,7 +11,7 @@ const WidgetText = () => {
 
 	useEffect(() => {
 		const fetchStoredAppWidgetId = async () => {
-			const storedId = await AsyncStorage.getItem("appWidgetId");
+			const storedId = await SecureStore.getItemAsync("appWidgetId");
 			if (storedId) {
 				setAppWidgetId(storedId);
 			}
@@ -23,7 +23,10 @@ const WidgetText = () => {
 			"onAppWidgetUpdate",
 			async (data) => {
 				setAppWidgetId(data.appWidgetId);
-				await AsyncStorage.setItem("appWidgetId", data.appWidgetId.toString());
+				await SecureStore.setItemAsync(
+					"appWidgetId",
+					data.appWidgetId.toString(),
+				);
 			},
 		);
 
@@ -36,8 +39,12 @@ const WidgetText = () => {
 
 	const getWidgetData = async () => {
 		if (appWidgetId) {
-			const widgetData = await StopWatchModule.getNumber(appWidgetId);
-			console.warn("appWidgetId", appWidgetId + "widgetData", widgetData);
+			const widgetData = await StopWatchModule.getNumber(Number(appWidgetId));
+			console.warn(
+				"appWidgetId : ",
+				appWidgetId + " widgetData : ",
+				widgetData,
+			);
 			setWidgetData(widgetData);
 		} else {
 			console.warn("AppWidgetId is not yet available.");
