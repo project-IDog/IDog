@@ -8,7 +8,6 @@ import {
 	StyleSheet,
 	Image,
 	View,
-	ScrollView,
 } from "react-native";
 import ripLayout from "../styles/ripLayout";
 import LinearGradient from "react-native-linear-gradient";
@@ -19,8 +18,6 @@ const Test: React.FC = () => {
 	const ani3Opacity = useRef(new Animated.Value(0)).current;
 	const ani4Opacity = useRef(new Animated.Value(0)).current;
 	const bImageOpacity = useRef(new Animated.Value(0)).current;
-	const textOpacity = useRef(new Animated.Value(0)).current;
-
 	const memorialGradientColors = [
 		["rgba(255, 255, 255, 0)", "#2c3e50", "#34495e", "#7f8c8d"], // 차가운 회색 톤
 		["rgba(255, 255, 255, 0)", "#1f3a93", "#34495e", "#d35400"], // 진한 파란색과 오렌지의 조화
@@ -35,25 +32,15 @@ const Test: React.FC = () => {
 		["rgba(255, 255, 255, 0)", "#373b44", "#4286f4", "#67e6dc"], // 어두운 회색과 청록색의 대조
 	];
 
-	const complementaryColorList = [
-		"#cbb6a1",
-		"#cbb6a1",
-		"#a1c995",
-		"#d7c0b8",
-		"#ffcc99",
-		"#ae805b",
-		"#9c918d",
-		"#95e465",
-		"#b8b878",
-		"#c39c7d",
-		"#bd79fb",
-	];
-	const randomIndex = Math.floor(Math.random() * memorialGradientColors.length);
+	const getRandomColors = () => {
+		const randomIndex = Math.floor(
+			Math.random() * memorialGradientColors.length,
+		);
+		return memorialGradientColors[randomIndex];
+	};
 
 	// 사용 예
-	const selectedColors = memorialGradientColors[randomIndex];
-	const selectedCountColors = complementaryColorList[randomIndex];
-	const textColor = memorialGradientColors[randomIndex][3];
+	const selectedColors = getRandomColors();
 
 	const showLottieAnimation = (
 		aniOpacity: Animated.Value,
@@ -87,25 +74,7 @@ const Test: React.FC = () => {
 		});
 	};
 
-	//Text 애니메이션
-	const showTextAnimation = () => {
-		Animated.timing(textOpacity, {
-			toValue: 1,
-			duration: 1000,
-			useNativeDriver: true,
-		}).start(() => {
-			setTimeout(() => {
-				Animated.timing(textOpacity, {
-					toValue: 0,
-					duration: 1000,
-					useNativeDriver: true,
-				}).start();
-			}, 6000);
-		});
-	};
-
 	const startAnimations = () => {
-		showTextAnimation();
 		showLottieAnimation(ani1Opacity, () => {
 			showLottieAnimation(ani2Opacity, () => {
 				showLottieAnimation(ani3Opacity, () => {
@@ -116,16 +85,8 @@ const Test: React.FC = () => {
 	};
 
 	return (
-		<ScrollView
-			contentContainerStyle={{ paddingBottom: 50 }}
-			style={{ flex: 1 }}
-		>
-			<Animated.View style={[styles.animateText, { opacity: textOpacity }]}>
-				<Text style={[styles.aniText]}>
-					여러분과의 추억을 기릴 수 있습니다.
-				</Text>
-			</Animated.View>
-
+		<>
+			{/* 아래 스타일을 적용하여 중앙에 위치하도록 함 */}
 			<Animated.View style={[styles.centered, { opacity: ani1Opacity }]}>
 				<LottieView
 					source={require("../../assets/ani1.json")}
@@ -172,96 +133,29 @@ const Test: React.FC = () => {
 					resizeMode="contain"
 				/> */}
 				<View>
-					<Image
-						style={[ripLayout.ripImage]}
-						source={require("../../assets/dog.jpg")}
-					></Image>
 					<View style={[ripLayout.ripContent]}>
+						<View style={[ripLayout.ripview1]}>
+							<Image
+								style={[ripLayout.ripImage]}
+								source={require("../../assets/dog.jpg")}
+							></Image>
+						</View>
 						<LinearGradient
 							colors={selectedColors}
 							style={[ripLayout.gradient]}
 							locations={[0, 0.05, 0.5, 1]}
 						>
-							<Text
-								style={[ripLayout.riptext1, { color: selectedCountColors }]}
-							>
-								Na. axcx
-							</Text>
+							<Text style={[ripLayout.riptext1]}>Na. Max</Text>
+							<View style={[ripLayout.view2]}></View>
+							<Text style={[ripLayout.riptext2]}>hello</Text>
 							<View style={[ripLayout.view2]}>
-								<View style={[ripLayout.viewProfile1]}>
-									<View style={[ripLayout.viewPorifile2]}>
-										<Image
-											style={[ripLayout.ripImage2]}
-											source={require("../../assets/dog.jpg")}
-										></Image>
-										<Text style={[{ color: selectedCountColors }]}>asdsad</Text>
-									</View>
-									<View style={[ripLayout.viewPorifile3]}>
-										<View style={[ripLayout.viewPorifile4]}>
-											<Text
-												style={[
-													{ color: textColor, fontSize: 18, marginRight: 20 },
-												]}
-											>
-												asds
-											</Text>
-											<Text
-												style={[
-													{ color: textColor, fontSize: 18, marginLeft: 20 },
-												]}
-											>
-												asds
-											</Text>
-										</View>
-										<View style={[ripLayout.viewPorifile3]}>
-											<Text>asds</Text>
-										</View>
-									</View>
-									<View style={[ripLayout.viewPorifile3]}>
-										<Text>asds</Text>
-									</View>
-									<View style={[ripLayout.viewPorifile3]}>
-										<Text>asds</Text>
-									</View>
-								</View>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									자동배포
-								</Text>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									자동배포
-								</Text>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									자동배포
-								</Text>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									자동배포
-								</Text>
-							</View>
-							<Text
-								style={[ripLayout.riptext2, , { color: selectedCountColors }]}
-							>
-								댓글
-							</Text>
-							<View style={[ripLayout.view2]}>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									댓글
-								</Text>
-							</View>
-							<Text
-								style={[ripLayout.riptext2, , { color: selectedCountColors }]}
-							>
-								앨범
-							</Text>
-							<View style={[ripLayout.view2]}>
-								<Text style={[ripLayout.riptext2, , { color: textColor }]}>
-									앨범
-								</Text>
+								<Text style={[ripLayout.riptext2]}>hello</Text>
 							</View>
 						</LinearGradient>
 					</View>
 				</View>
 			</Animated.View>
-		</ScrollView>
+		</>
 	);
 };
 
@@ -272,26 +166,12 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		position: "absolute",
-		top: 150,
+		top: 200,
 		left: 0,
 		right: 0,
 		bottom: 0,
 		borderRadius: 50,
 		height: 300,
-	},
-	animateText: {
-		zIndex: 2,
-		top: 185,
-		left: 0,
-		right: 0,
-		bottom: 0,
-		position: "absolute",
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	aniText: {
-		fontSize: 18,
-		color: "black",
 	},
 	fullScreenCentered: {
 		zIndex: 2,
