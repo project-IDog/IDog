@@ -27,6 +27,7 @@ const Login = () => {
 			if (response?.type === "success") {
 				// 인증 요청에 대한 응답이 성공이면, 토큰을 이용하여 유저 정보를 가져옴.
 				await getUserInfo(response.authentication?.accessToken);
+				console.log(response);
 			}
 		} else {
 			// 유저 정보가 이미 있으면, 유저 정보를 가져옴.
