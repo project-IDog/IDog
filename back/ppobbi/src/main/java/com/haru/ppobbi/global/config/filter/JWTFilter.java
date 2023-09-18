@@ -45,7 +45,7 @@ public class JWTFilter implements Filter {
         String url = httpServletRequest.getServletPath();
         String method = httpServletRequest.getMethod();
 
-        if(url.equals("/api/grave")){
+        if(url.equals("/api/grave") && !method.equals("POST")){
             return true;
         }else if(url.equals("/api/user") && method.equals("POST")){
             return true;

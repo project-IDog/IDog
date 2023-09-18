@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class GraveRequestDto {
-    private Integer userNo;
     private Integer dogNo;
 }
