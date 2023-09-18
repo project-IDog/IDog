@@ -2,6 +2,8 @@ import { TouchableOpacity, View, Text, Image } from "react-native";
 import IconButton from "../components/IconButton";
 import Footer from "../components/Footer";
 import MainLayout from "../styles/mainLayout";
+import { useObserver } from "mobx-react";
+import IndexStore from "../stores/IndexStore";
 
 import CommonLayout from "../components/CommonLayout";
 import MainHeader from "../components/MainHeader";
@@ -14,6 +16,7 @@ import AdoptionIcon from "../../assets/images/adoption-icon.png";
 import PhotoAlbumIcon from "../../assets/images/photo-album-icon.png";
 
 const Main = ({ navigation }: any) => {
+	const {LoginStore} = IndexStore();
 	return (
 		<>
 			<CommonLayout>
@@ -102,10 +105,17 @@ const Main = ({ navigation }: any) => {
 				</View>
 
 				<View style={MainLayout.randingButtonWrap}>
+					{
+					LoginStore.isLogged ?
 					<Text style={MainLayout.randingTitle}>
 						<Text style={MainLayout.boldRandingTitle}>김싸피</Text> 님을 위한 내
 						반려견 서비스
 					</Text>
+					:
+					<Text style={MainLayout.randingTitle}>
+						<Text style={MainLayout.boldRandingTitle}>로그인 이후 사용이 가능</Text>한 서비스입니다.
+					</Text>
+					}
 					<View style={MainLayout.flexButtonWrap}>
 						<IconButton
 							desc="반려견 평생소장"
