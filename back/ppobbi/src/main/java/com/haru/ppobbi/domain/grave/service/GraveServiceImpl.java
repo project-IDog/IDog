@@ -25,10 +25,10 @@ public class GraveServiceImpl implements GraveService{
         // 죽은 강아지 가져오기
         Dog deadDog = dogRepository.findDogByDogNoAndCanceled(graveRequestDto.getDogNo(), BaseConstant.NOTCANCELED);
         // 그 강아지의 주인 가져오기
-        
+        User user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
         // 새 grave 객체 생성
         Grave grave = Grave.builder()
-                .user(null)
+                .user(user)
                 .dog(deadDog)
                 .build();
         return graveRepository.save(grave);

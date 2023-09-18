@@ -5,6 +5,8 @@ import com.haru.ppobbi.domain.dog.repo.DogRepository;
 import com.haru.ppobbi.domain.photo.dto.PhotoRequestDto;
 import com.haru.ppobbi.domain.photo.entity.Photo;
 import com.haru.ppobbi.domain.photo.repo.PhotoRepository;
+import com.haru.ppobbi.domain.user.entity.User;
+import com.haru.ppobbi.domain.user.repo.UserRepository;
 import com.haru.ppobbi.global.constant.BaseConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,13 +19,15 @@ import java.util.Optional;
 public class PhotoServiceImpl implements PhotoService{
     private final PhotoRepository photoRepository;
     private final DogRepository dogRepository;
+    private final UserRepository userRepository;
     @Override
-    public Photo registPhoto(PhotoRequestDto photoRequestDto) {
+    public Photo registPhoto(String userId, PhotoRequestDto photoRequestDto) {
         // 개 가져오기
         Dog dog = dogRepository.findDogByDogNoAndCanceled(photoRequestDto.getDogNo(), BaseConstant.NOTCANCELED);
+        User user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
         Photo photo = Photo.builder()
                 .dog(dog)
-                .userNo(photoRequestDto.getUserNo())
+                .userNo(user.getUserNo())
                 .photoUrl(photoRequestDto.getPhotoUrl())
                 .photoComment(photoRequestDto.getPhotoComment()).build();
         return photoRepository.save(photo);
