@@ -9,10 +9,11 @@ public interface PhotoService {
     /**
      * photoRequestDto 객체를 받아 등록
      * @author Geon
+     * @param userId 관련된 User 기본 키
      * @param photoRequestDto 등록할 photoRequestDto 객체
      * @return Photo
      */
-    public Photo registPhoto(PhotoRequestDto photoRequestDto);
+    public Photo registPhoto(String userId, PhotoRequestDto photoRequestDto);
 
     /**
      * photoNo를 받아 Photo 조회

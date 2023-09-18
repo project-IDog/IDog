@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PhotoRequestDto {
     private Integer dogNo;
-    private Integer userNo;
     private String photoUrl;
     private String photoComment;
 }
