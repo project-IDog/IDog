@@ -21,11 +21,11 @@ public class GraveServiceImpl implements GraveService{
     private final DogRepository dogRepository;
     private final UserRepository userRepository;
     @Override
-    public Grave registGrave(GraveRequestDto graveRequestDto) {
+    public Grave registGrave(String userId, GraveRequestDto graveRequestDto) {
         // 죽은 강아지 가져오기
         Dog deadDog = dogRepository.findDogByDogNoAndCanceled(graveRequestDto.getDogNo(), BaseConstant.NOTCANCELED);
         // 그 강아지의 주인 가져오기
-
+        
         // 새 grave 객체 생성
         Grave grave = Grave.builder()
                 .user(null)

@@ -8,17 +8,17 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
 public class FilterConfiguration {
     @Autowired
     private OAuth2TokenHandler oAuth2TokenHandler;
-
     @Bean
     public FilterRegistrationBean<ExceptionHandlerFilter> ExceptionHandlerFilter(){
         FilterRegistrationBean<ExceptionHandlerFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new ExceptionHandlerFilter());
         registrationBean.setOrder(1);
-        registrationBean.addUrlPatterns("/api/grave");
         return registrationBean;
     }
     @Bean
@@ -26,7 +26,6 @@ public class FilterConfiguration {
         FilterRegistrationBean<JWTFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new JWTFilter(oAuth2TokenHandler));
         registrationBean.setOrder(2);
-        registrationBean.addUrlPatterns("/api/grave");
         return registrationBean;
     }
 }

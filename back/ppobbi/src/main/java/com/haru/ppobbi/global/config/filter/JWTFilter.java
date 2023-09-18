@@ -21,8 +21,13 @@ public class JWTFilter implements Filter {
     private final OAuth2TokenHandler oAuth2TokenHandler;
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException, TokenException {
-        try{
+        try{;
             HttpServletRequest httpRequest = (HttpServletRequest) request;
+            if(goGoSSing(httpRequest)){ // 로그인 필요없는 경우 통과
+                log.debug("gogosing");
+                chain.doFilter(request, response);
+                return;
+            }
             String bearer = httpRequest.getHeader("Authorization");
             log.debug("filter - bearer: {}", bearer);
             String accessToken = bearer.split(" ")[1];
@@ -34,5 +39,18 @@ public class JWTFilter implements Filter {
             throw new TokenException(NOTFOUND_TOKEN.message());
         }
 
+    }
+
+    private boolean goGoSSing(HttpServletRequest httpServletRequest){
+        String url = httpServletRequest.getServletPath();
+        String method = httpServletRequest.getMethod();
+
+        if(url.equals("/api/grave") && !method.equals("POST")){
+            return true;
+        }else if(url.equals("/api/user") && method.equals("POST")){
+            return true;
+        }
+
+        return false;
     }
 }
