@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Image,
 	View,
@@ -10,6 +10,7 @@ import CommonLayout from "../components/CommonLayout";
 import ColorHeader from "../components/ColorHeader";
 import Footer from "../components/Footer";
 import StatusCommentModal from "../components/StatusCommentModal";
+import axios from "../utils/axios";
 
 import GrayPenIcon from "../../assets/images/gray-pen-icon.png";
 import MyPetPhoto from "../../assets/images/mypage-thumbnail-img.png";
@@ -88,7 +89,11 @@ const Album = ({ navigation }: any) => {
 		setStatusModalState(status);
 	};
 
-	
+	useEffect(() => {
+        axios.get('/photo/user/0').then((data) => {
+			console.log("data",data);
+		})
+    }, []);
 
 	return (
 		<>
@@ -103,7 +108,7 @@ const Album = ({ navigation }: any) => {
 						<TouchableOpacity
 							activeOpacity={0.7}
 							style={AlbumLayout.newFeedFlexWrap}
-							onPress={() => navigation.navigate("CreateFeed")}
+							onPress={() => navigation.navigate("ChoiceDog")}
 						>
 							<View style={AlbumLayout.newFeedIconWrap}>
 								<Image source={NewFeedIcon} />

@@ -24,6 +24,8 @@ import CreateWalletPassword from "./src/screens/CreateWalletPassword";
 import ProtectWallet from "./src/screens/ProtectWallet";
 import Ipfs from "./src/screens/Ipfs";
 import WidgetText from "./src/screens/WidgetText";
+import ChoiceDog from "./src/screens/ChoiceDog";
+
 const App = () => {
 	const Stack = createNativeStackNavigator();
 
@@ -59,6 +61,8 @@ const App = () => {
 				<Stack.Screen name="Three" component={Three} />
 				<Stack.Screen name="Ipfs" component={Ipfs} />
 				<Stack.Screen name="WidgetText" component={WidgetText} />
+				<Stack.Screen name="ChoiceDog" component={ChoiceDog} />
+
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
