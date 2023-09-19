@@ -100,7 +100,7 @@ const CreateFeed = ({navigation, route}: any) => {
 		}).then((data) => {
 			if(data.data.message === "사진 등록 완료"){
 				alert("앨범 등록이 완료되었습니다.");
-				navigation.navigate('Album');
+				navigation.replace('Album');
 			}
 		})
     }
