@@ -2,6 +2,7 @@ package com.haru.ppobbi.domain.photo.service;
 
 import com.haru.ppobbi.domain.dog.entity.Dog;
 import com.haru.ppobbi.domain.dog.repo.DogRepository;
+import com.haru.ppobbi.domain.photo.constant.PhotoResponseMessage;
 import com.haru.ppobbi.domain.photo.dto.PhotoRequestDto.RegistRequestDto;
 import com.haru.ppobbi.domain.photo.dto.PhotoResponseDto.PhotoInfoDto;
 import com.haru.ppobbi.domain.photo.entity.Photo;
@@ -9,6 +10,7 @@ import com.haru.ppobbi.domain.photo.repo.PhotoRepository;
 import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.domain.user.repo.UserRepository;
 import com.haru.ppobbi.global.constant.BaseConstant;
+import com.haru.ppobbi.global.error.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +28,12 @@ public class PhotoServiceImpl implements PhotoService{
     public Photo registPhoto(String userId, RegistRequestDto registRequestDto) {
         // 개 가져오기
         Dog dog = dogRepository.findDogByDogNoAndCanceled(registRequestDto.getDogNo(), BaseConstant.NOTCANCELED);
-        User user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
+        if(dog == null){
+            throw new NotFoundException(PhotoResponseMessage.CREATE_FAIL_NO_DOG.message());
+        }
         Photo photo = Photo.builder()
                 .dog(dog)
-                .userNo(user.getUserNo())
+                .userNo(dog.getUserNo())
                 .photoUrl(registRequestDto.getPhotoUrl())
                 .photoComment(registRequestDto.getPhotoComment()).build();
         return photoRepository.save(photo);
@@ -38,6 +42,9 @@ public class PhotoServiceImpl implements PhotoService{
     @Override
     public PhotoInfoDto selectPhoto(Integer photoNo) {
         Photo photo = photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
+        if(photo == null){
+            throw new NotFoundException(PhotoResponseMessage.READ_FAIL.message());
+        }
         Dog dog = photo.getDog();
         return PhotoInfoDto.builder()
                 .photoNo(photo.getPhotoNo())
@@ -70,20 +77,26 @@ public class PhotoServiceImpl implements PhotoService{
     @Override
     public void deletePhoto(Integer photoNo) {
         Photo photo =photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
-        if(photo != null){
-            photo.setCanceled(BaseConstant.CANCELED);
-            photoRepository.save(photo);
+        if(photo == null){
+            throw new RuntimeException(PhotoResponseMessage.DELETE_FAIL.message());
         }
+        photo.setCanceled(BaseConstant.CANCELED);
+        photoRepository.save(photo);
     }
 
     @Override
     public Photo setGoatPhoto(Integer photoNo) {
         Photo photo = photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
+        if(photo == null){
+            throw new RuntimeException(PhotoResponseMessage.UPDATE_FAIL.message());
+        }
+
         if(photo.getPhotoIsGoat().equals(BaseConstant.GOAT)){
             photo.setPhotoIsGoat(BaseConstant.NOTGOAT);
         }else{
             photo.setPhotoIsGoat(BaseConstant.GOAT);
         }
+
         return photoRepository.save(photo);
     }
 }
