@@ -1,3 +1,4 @@
+import {useState} from "react"
 import {View, Text, Image, TextInput, TouchableOpacity} from "react-native"
 import ExclamationMark from "../../assets/images/circle-exclamation-mark-icon.png"
 
