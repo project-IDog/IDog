@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.haru.ppobbi.domain.dog.constant.DogResponseMessage.DOG_NOT_FOUND_EXCEPTION;
+
 @Service
 @RequiredArgsConstructor
 public class GraveServiceImpl implements GraveService{
@@ -35,7 +37,8 @@ public class GraveServiceImpl implements GraveService{
         }
 
         // 죽은 강아지 가져오기
-        Dog deadDog = dogRepository.findDogByDogNoAndCanceled(registRequestDto.getDogNo(), BaseConstant.NOTCANCELED);
+        Dog deadDog = dogRepository.findDogByDogNoAndCanceled(registRequestDto.getDogNo(), BaseConstant.NOTCANCELED)
+                .orElseThrow(() -> new NotFoundException(DOG_NOT_FOUND_EXCEPTION.message()));
         if(deadDog == null){ // 조회된 강아지가 없을 경우
             throw new NotFoundException(GraveResponseMessage.CREATE_FAIL_NO_DOG.message());
         }else if(Objects.equals(deadDog.getDogIsDead(), BaseConstant.DEAD)){ // 강아지가 이미 죽었을 경우

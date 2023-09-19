@@ -5,6 +5,7 @@ import com.haru.ppobbi.domain.dog.entity.Breed;
 import com.haru.ppobbi.domain.dog.entity.Dog;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DogService {
 
@@ -46,6 +47,14 @@ public interface DogService {
      * @return {@code List<Breed>}
      */
     List<Breed> selectAllBreedsByKeyword(String keyword);
+
+    /**
+     * keyword 받아 검색조건에 해당하는 모든 견종 조회
+     * @author Sunhee
+     * @param keyword - 클라이언트로부터 받은 String
+     * @return {@code List<Breed>}
+     */
+//    Optional<Dog> checkUserDog();
 
 
 }
