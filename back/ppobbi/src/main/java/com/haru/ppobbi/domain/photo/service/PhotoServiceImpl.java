@@ -2,7 +2,8 @@ package com.haru.ppobbi.domain.photo.service;
 
 import com.haru.ppobbi.domain.dog.entity.Dog;
 import com.haru.ppobbi.domain.dog.repo.DogRepository;
-import com.haru.ppobbi.domain.photo.dto.PhotoRequestDto;
+import com.haru.ppobbi.domain.photo.dto.PhotoRequestDto.RegistRequestDto;
+import com.haru.ppobbi.domain.photo.dto.PhotoResponseDto.PhotoInfoDto;
 import com.haru.ppobbi.domain.photo.entity.Photo;
 import com.haru.ppobbi.domain.photo.repo.PhotoRepository;
 import com.haru.ppobbi.domain.user.entity.User;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,31 +23,48 @@ public class PhotoServiceImpl implements PhotoService{
     private final DogRepository dogRepository;
     private final UserRepository userRepository;
     @Override
-    public Photo registPhoto(String userId, PhotoRequestDto photoRequestDto) {
+    public Photo registPhoto(String userId, RegistRequestDto registRequestDto) {
         // 개 가져오기
-        Dog dog = dogRepository.findDogByDogNoAndCanceled(photoRequestDto.getDogNo(), BaseConstant.NOTCANCELED);
+        Dog dog = dogRepository.findDogByDogNoAndCanceled(registRequestDto.getDogNo(), BaseConstant.NOTCANCELED);
         User user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
         Photo photo = Photo.builder()
                 .dog(dog)
                 .userNo(user.getUserNo())
-                .photoUrl(photoRequestDto.getPhotoUrl())
-                .photoComment(photoRequestDto.getPhotoComment()).build();
+                .photoUrl(registRequestDto.getPhotoUrl())
+                .photoComment(registRequestDto.getPhotoComment()).build();
         return photoRepository.save(photo);
     }
 
     @Override
-    public Photo selectPhoto(Integer photoNo) {
-        return photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
+    public PhotoInfoDto selectPhoto(Integer photoNo) {
+        Photo photo = photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
+        Dog dog = photo.getDog();
+        return PhotoInfoDto.builder()
+                .photoNo(photo.getPhotoNo())
+                .userNo(photo.getUserNo())
+                .photoUrl(photo.getPhotoUrl())
+                .photoComment(photo.getPhotoComment())
+                .photoIsGoat(photo.getPhotoIsGoat())
+                .createDate(photo.getCreateDate())
+                .dogNo(dog.getDogNo())
+                .dogName(dog.getDogName())
+                .build();
     }
 
     @Override
-    public List<Photo> selectPhotosByUserNo(Integer userNO) {
-        return photoRepository.findAllByUserNoAndCanceled(userNO, BaseConstant.NOTCANCELED);
+    public List<PhotoInfoDto> selectPhotosByUserNo(Integer userNO) {
+        List<Photo> photoList = photoRepository.findAllByUserNoAndCanceled(userNO, BaseConstant.NOTCANCELED);
+        return photoList.stream()
+                .map(PhotoInfoDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Photo> selectPhotosByDogNo(Integer dogNo) {
-        return photoRepository.findAllByDogDogNoAndCanceled(dogNo, BaseConstant.NOTCANCELED);
+    public List<PhotoInfoDto> selectPhotosByDogNo(Integer dogNo) {
+        List<Photo> photoList = photoRepository.findAllByDogDogNoAndCanceled(dogNo, BaseConstant.NOTCANCELED);
+        return photoList.stream()
+                .map(PhotoInfoDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override
