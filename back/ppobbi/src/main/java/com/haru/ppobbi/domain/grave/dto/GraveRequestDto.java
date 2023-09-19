@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 public class GraveRequestDto {
     @Data
     @NoArgsConstructor
@@ -12,5 +14,6 @@ public class GraveRequestDto {
     @Builder
     public static class RegistRequestDto{
         private Integer dogNo;
+        private LocalDate dogDeathDate;
     }
 }

@@ -5,6 +5,7 @@ import com.haru.ppobbi.global.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +32,13 @@ public class Dog extends BaseEntity {
     private String dogBreed;
 
     @Column(name = "dog_birth_date")
-    private LocalDateTime dogBirthDate;
+    private LocalDate dogBirthDate;
 
     @Column(name = "dog_is_dead")
     private Integer dogIsDead;
 
     @Column(name = "dog_death_date")
-    private LocalDateTime dogDeathDate;
+    private LocalDate dogDeathDate;
 
     @Column(name = "dog_sex")
     private Character dogSex;
@@ -61,8 +62,12 @@ public class Dog extends BaseEntity {
         this.dogIsDead = dogIsDead;
     }
 
+    public void setDogDeathDate(LocalDate dogDeathDate){
+        this.dogDeathDate = dogDeathDate;
+    }
+
     @Builder
-    public Dog(Integer userNo, String dogName, String dogBreed, LocalDateTime dogBriteDate, Character dogSex) {
+    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBriteDate, Character dogSex) {
         this.userNo = userNo;
         this.dogName = dogName;
         this.dogBreed = dogBreed;

@@ -43,6 +43,8 @@ public class GraveServiceImpl implements GraveService{
         }
         // 강아지 사망 판정
         deadDog.setDogIsDead(BaseConstant.DEAD);
+        // 사망 일자 저장
+        deadDog.setDogDeathDate(registRequestDto.getDogDeathDate());
 
         // 새 grave 객체 생성
         Grave grave = Grave.builder()
