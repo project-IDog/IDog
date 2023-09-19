@@ -30,8 +30,8 @@ public class Dog extends BaseEntity {
     @Column(name = "dog_breed")
     private String dogBreed;
 
-    @Column(name = "dog_brith_date")
-    private LocalDateTime dogBriteDate;
+    @Column(name = "dog_birth_date")
+    private LocalDateTime dogBirthDate;
 
     @Column(name = "dog_is_dead")
     private Integer dogIsDead;
@@ -57,12 +57,16 @@ public class Dog extends BaseEntity {
         }
     }
 
+    public void setDogIsDead(Integer dogIsDead){
+        this.dogIsDead = dogIsDead;
+    }
+
     @Builder
     public Dog(Integer userNo, String dogName, String dogBreed, LocalDateTime dogBriteDate, Character dogSex) {
         this.userNo = userNo;
         this.dogName = dogName;
         this.dogBreed = dogBreed;
-        this.dogBriteDate = dogBriteDate;
+        this.dogBirthDate = dogBriteDate;
         this.dogSex = dogSex;
     }
 

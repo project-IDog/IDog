@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpServerErrorException;
 
 @RestControllerAdvice(annotations = RestController.class)
 public class RestControllerExceptionHandler {
@@ -35,5 +36,11 @@ public class RestControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
             ResponseDto.create(tokenException.getMessage())
         );
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ResponseDto<String>> handleAllUncaughtException(Exception exception){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ResponseDto.create(exception.getMessage()));
     }
 }
