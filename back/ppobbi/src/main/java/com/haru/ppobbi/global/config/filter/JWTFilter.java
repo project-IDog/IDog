@@ -1,29 +1,33 @@
 package com.haru.ppobbi.global.config.filter;
 
-import static com.haru.ppobbi.global.util.oauth.constant.OAuth2ExceptionMessage.*;
+import static com.haru.ppobbi.global.util.oauth.constant.OAuth2ExceptionMessage.NOTFOUND_TOKEN;
 
 import com.haru.ppobbi.global.error.TokenException;
-import com.haru.ppobbi.global.util.oauth.OAuth2TokenHandler;
-import lombok.NoArgsConstructor;
+import com.haru.ppobbi.global.util.jwt.JwtTokenProvider;
+import java.io.IOException;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JWTFilter implements Filter {
-    private final OAuth2TokenHandler oAuth2TokenHandler;
+
+    //    private final OAuth2TokenHandler oAuth2TokenHandler;
+    private final JwtTokenProvider jwtTokenProvider;
+
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException, TokenException {
-        try{;
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+        throws IOException, ServletException, TokenException {
+        try {
+            ;
             HttpServletRequest httpRequest = (HttpServletRequest) request;
-            if(goGoSSing(httpRequest)){ // 로그인 필요없는 경우 통과
+            if (goGoSSing(httpRequest)) { // 로그인 필요없는 경우 통과
                 log.debug("gogosing");
                 chain.doFilter(request, response);
                 return;
@@ -31,22 +35,27 @@ public class JWTFilter implements Filter {
             String bearer = httpRequest.getHeader("Authorization");
             log.debug("filter - bearer: {}", bearer);
             String accessToken = bearer.split(" ")[1];
-            String userId = oAuth2TokenHandler.validateAccessTokenAndGetUserId(accessToken);
-            log.debug("filter - userId: {}", userId);
-            request.setAttribute("userId", userId);
+
+            if (jwtTokenProvider.validateToken(accessToken)) {
+                log.debug("[JWTFilter - doFilter] validate 검증 완료!!");
+                String userId = jwtTokenProvider.getUserIdFromToken(accessToken);
+                log.debug("filter - userId: {}", userId);
+                request.setAttribute("userId", userId);
+            }
+
             chain.doFilter(request, response);
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new TokenException(NOTFOUND_TOKEN.message());
         }
 
     }
 
-    private boolean goGoSSing(HttpServletRequest httpServletRequest){
+    private boolean goGoSSing(HttpServletRequest httpServletRequest) {
         String url = httpServletRequest.getServletPath();
         String method = httpServletRequest.getMethod();
-        if(url.matches("/api/grave(.*)") && !method.equals("POST")){
+        if (url.matches("/api/grave(.*)") && !method.equals("POST")) {
             return true;
-        }else if(url.equals("/api/user") && method.equals("POST")){
+        } else if (url.equals("/api/user") && method.equals("POST")) {
             return true;
         }
 
