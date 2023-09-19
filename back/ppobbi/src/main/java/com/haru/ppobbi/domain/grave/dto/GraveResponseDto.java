@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class GraveResponseDto {
@@ -21,9 +22,9 @@ public class GraveResponseDto {
         // Dog 관련 정보들
         private Integer dogNo;
         private String dogName;
-        private LocalDateTime dogBirthDate;
+        private LocalDate dogBirthDate;
         private String dogBreed;
-        private LocalDateTime dogDeathDate;
+        private LocalDate dogDeathDate;
         private Character dogSex;
         private String dogNft;
 

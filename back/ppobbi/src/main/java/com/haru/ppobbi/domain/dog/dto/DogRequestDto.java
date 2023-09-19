@@ -2,6 +2,7 @@ package com.haru.ppobbi.domain.dog.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class DogRequestDto {
@@ -14,7 +15,7 @@ public class DogRequestDto {
         private Integer userNo;
         private String dogName;
         private String dogBreed;
-        private LocalDateTime dogBirthDate;
+        private LocalDate dogBirthDate;
         private Character dogSex;
         private String dogNft;
     }
