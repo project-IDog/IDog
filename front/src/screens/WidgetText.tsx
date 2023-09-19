@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { View, Text, Button } from "react-native";
 import { NativeModules, DeviceEventEmitter } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import CurrentAppState from "../components/CurrentAppState";
 const { StopWatchModule } = NativeModules;
 
 const WidgetText = () => {
@@ -53,6 +53,8 @@ const WidgetText = () => {
 				disabled={!appWidgetId}
 			/>
 			<Text>{appWidgetId}</Text>
+			<Text>Current state</Text>
+			<CurrentAppState />
 		</View>
 	);
 };

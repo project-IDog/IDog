@@ -10,7 +10,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
 	(config) => {
 		config.headers["Content-Type"] = "application/json; charset=utf-8";
-		SecureStore.getItemAsync("JWT").then((token) => {
+		SecureStore.getItemAsync("accessToken").then((token) => {
 			config.headers["Authorization"] = "Bearer " + token;
 		});
 		return config;

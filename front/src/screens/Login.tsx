@@ -20,6 +20,16 @@ const Login = () => {
 		if (response?.type === "success") {
 			const code = response.params?.code;
 			try {
+				// 테스트용 코드
+				await SecureStore.setItemAsync("accessToken", "testAccessToken");
+				await SecureStore.setItemAsync("refreshToken", "testRefreshToken");
+				LoginStore.isLogged = true;
+				LoginStore.userInfo = {
+					id: "testId",
+					name: "testName",
+					email: "testEmail",
+				};
+				// 이 사이 주석은 로그인이 되었을 시 지웁니다.
 				const { data } = await axios.post(
 					"/user",
 					{
@@ -35,7 +45,14 @@ const Login = () => {
 					},
 				);
 				console.warn(data.data.data);
-				await SecureStore.setItemAsync("JWT", data.data.data);
+				await SecureStore.setItemAsync(
+					"accessToken",
+					data.data.data.accessToken,
+				);
+				await SecureStore.setItemAsync(
+					"refreshToken",
+					data.data.data.refreshToken,
+				);
 				LoginStore.isLogged = true;
 			} catch (error) {
 				console.error(error);
@@ -44,13 +61,20 @@ const Login = () => {
 	};
 
 	const handleLogout = async () => {
-		LoginStore.isLogged = true;
-		await SecureStore.deleteItemAsync("JWT");
+		LoginStore.isLogged = false;
+		await SecureStore.deleteItemAsync("accessToken");
+		await SecureStore.deleteItemAsync("refreshToken");
+		await SecureStore.deleteItemAsync("loginStoreData");
 	};
 
 	const getSecureStorage = async () => {
-		const JWT = await SecureStore.getItemAsync("JWT");
-		console.warn(JSON.parse(JWT || "{}"));
+		const accessToken = await SecureStore.getItemAsync("accessToken");
+		const refreshToken = await SecureStore.getItemAsync("refreshToken");
+		const loginStoreData = await SecureStore.getItemAsync("loginStoreData");
+		console.warn("refreshToken : ", refreshToken);
+		console.warn("accessToken : ", accessToken);
+		console.warn("loginStoreData : ", loginStoreData);
+		console.warn("LoginStore : ", LoginStore);
 	};
 
 	// Google 인증 응답이 바뀔때마다 실행
