@@ -4,7 +4,7 @@
 
 ## :fire: Title
 
-:twisted_rightwards_arrows: Merge(Source Branch -> Target Branch): 간단한 설명 (#이슈번호)
+:twisted_rightwards_arrows: Merge(%{source_branch} -> %{target_branch}): 간단한 설명 (#이슈번호)
 <br>
 
 ## :fire: Merge Options 확인
