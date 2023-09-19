@@ -7,15 +7,15 @@ import static com.haru.ppobbi.global.util.oauth.constant.OAuth2ExceptionMessage.
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haru.ppobbi.domain.user.constant.UserRole;
+import com.haru.ppobbi.domain.user.dto.TokenInfo;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpOrInRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
-import com.haru.ppobbi.domain.user.dto.UserResponseDto.SignUpOrInResponseDto;
 import com.haru.ppobbi.domain.user.dto.UserResponseDto.UserInfoResponseDto;
 import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.domain.user.repo.UserRepository;
 import com.haru.ppobbi.global.error.NotFoundException;
 import com.haru.ppobbi.global.error.TokenException;
-import com.haru.ppobbi.global.util.oauth.OAuth2TokenHandler;
+import com.haru.ppobbi.global.util.jwt.JwtTokenProvider;
 import com.haru.ppobbi.global.util.oauth.OAuth2UserInfo;
 import java.util.Map;
 import java.util.Optional;
@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -43,28 +42,20 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
-    private final OAuth2TokenHandler oauthTokenProvider;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret;
-
-    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
-    private String redirectURI;
+    private final JwtTokenProvider jwtTokenProvider;
 
 
     @Transactional
     @Override
-    public SignUpOrInResponseDto signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto) {
+    public TokenInfo signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto) {
         String idToken = signUpOrInRequestDto.getIdToken();
-        String accessToken = signUpOrInRequestDto.getAccessToken();
-        String refreshToken = signUpOrInRequestDto.getRefreshToken();
         Map<String, Object> userAttribute = getUserAttribute(idToken);
 
-        User user = convertUserAttributeToUser(userAttribute, refreshToken);
+        User user = convertUserAttributeToUser(userAttribute);
         log.debug("### [DEBUG/UserService] 회원가입 user : {}", user);
+
+        // JWT Token 발급
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(user.getUserNo());
 
         // DB에 정보 없을 경우 회원가입, 있을 경우 프로필 사진/이름 업데이트
         Optional<User> optionalUser = userRepository.findByUserId(user.getUserId());
@@ -73,13 +64,9 @@ public class UserServiceImpl implements UserService {
         } else {
             User foundUser = optionalUser.get();
             foundUser.updateUserInfo(user.getUserName(), user.getUserProfileImg());
-            foundUser.updateUserRefreshToken(refreshToken);
             userRepository.save(foundUser);
         }
-        return SignUpOrInResponseDto.builder()
-            .accessToken(accessToken)
-            .refreshToken(refreshToken)
-            .build();
+        return tokenInfo;
     }
 
     @Override
@@ -117,8 +104,7 @@ public class UserServiceImpl implements UserService {
         user.updateUserMessage(message);
     }
 
-    private User convertUserAttributeToUser(Map<String, Object> userAttribute,
-        String refreshToken) {
+    private User convertUserAttributeToUser(Map<String, Object> userAttribute) {
         OAuth2UserInfo oAuth2UserInfo = new OAuth2UserInfo(userAttribute);
 
         return User.builder()
@@ -126,7 +112,6 @@ public class UserServiceImpl implements UserService {
             .userName(oAuth2UserInfo.getUserName())
             .userProfileImg(oAuth2UserInfo.getUserProfileImg())
             .userRole(UserRole.ROLE_USER)
-            .userRefreshToken(refreshToken)
             .build();
     }
 
