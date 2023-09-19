@@ -16,12 +16,12 @@ import TribeIcon from "../../assets/images/line-tribe-icon.png";
 const SideMenu = (props: any) => {
 	const navigation = useNavigation();
 	const authMoveMypage = () => {
-		if(LoginStore.isLogged){
+		if (LoginStore.isLogged) {
 			navigation.navigate("MyPage");
-		}else{
+		} else {
 			alert("로그인 후 이용하실 수 있는 서비스입니다.");
 		}
-	}
+	};
 	return (
 		<>
 			<View style={SideMenuLayout.sideMenuWrap}>
@@ -74,6 +74,11 @@ const SideMenu = (props: any) => {
 							title="추모공원"
 							imageIcon={TribeIcon}
 							movePage="Three"
+						></SideMenuIcon>
+						<SideMenuIcon
+							title="추모공원"
+							imageIcon={TribeIcon}
+							movePage="DogHeaven"
 						></SideMenuIcon>
 					</View>
 				</View>
