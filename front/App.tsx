@@ -17,7 +17,7 @@ import DetailFeed from "./src/screens/DetailFeed";
 import Walk from "./src/screens/Walk";
 import Login from "./src/screens/Login";
 import Ani from "./src/screens/Ani";
-import Three from "./src/screens/Memorial Park";
+import Three from "./src/screens/MemorialPark";
 import CreateWalletMain from "./src/screens/CreateWalletMain";
 import AgreeWallet from "./src/screens/AgreeWallet";
 import CreateWalletPassword from "./src/screens/CreateWalletPassword";

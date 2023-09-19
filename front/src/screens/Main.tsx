@@ -131,7 +131,6 @@ const Main = ({ navigation }: any) => {
 						/>
 					</View>
 				</View>
-
 				<Footer />
 			</CommonLayout>
 		</>
