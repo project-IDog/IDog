@@ -8,6 +8,14 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     /**
+     * commentNo를 조건으로 하는 Comment 조회
+     * @author Geon
+     * @param commentNo 조회할 Comment 기본 키
+     * @param canceled 삭제 여부
+     * @return Comment
+     */
+    public Comment findCommentByCommentNoAndCanceled(Integer commentNo, Integer canceled);
+    /**
      * graveNo를 조건으로 하는 Comment 조회
      * @author Geon
      * @param graveNo 조회할 Grave 기본 키
