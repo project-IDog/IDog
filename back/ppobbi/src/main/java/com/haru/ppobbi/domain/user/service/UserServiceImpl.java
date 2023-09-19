@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         log.debug("### [DEBUG/UserService] 회원가입 user : {}", user);
 
         // JWT Token 발급
-        TokenInfo tokenInfo = jwtTokenProvider.generateToken(user.getUserNo());
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(user.getUserId());
 
         // DB에 정보 없을 경우 회원가입, 있을 경우 프로필 사진/이름 업데이트
         Optional<User> optionalUser = userRepository.findByUserId(user.getUserId());
