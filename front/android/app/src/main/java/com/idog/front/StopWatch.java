@@ -3,25 +3,29 @@ package com.idog.front;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.ComponentName;
 import android.util.Log;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.WritableMap;
+
 /**
  * Implementation of App Widget functionality.
  */
 public class StopWatch extends AppWidgetProvider {
 
-    // 이 변수들을 추가하세요.
-    private static long startTime = 0;
-    private static long elapsedTime = 0;
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
+            WritableMap map = Arguments.createMap();
+            map.putInt("appWidgetId", appWidgetId);
+            StopWatchModule.emitDeviceEvent("onAppWidgetUpdate", map);
         }
     }
 
@@ -39,49 +43,53 @@ public class StopWatch extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         Log.d("StopWatch", "Received intent: " + intent.getAction());
+        Log.d("Context : ", "Context : " + context);
+        int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        Log.d("appWidgetId", "appWidgetId : " + appWidgetId);
+        SharedPreferences prefs = context.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
         if ("PLAY_ACTION".equals(intent.getAction())) {
-            startTime = System.currentTimeMillis();
-
-            Intent serviceIntent = new Intent(context, TimerService.class);
-            serviceIntent.setAction("PLAY_ACTION");
-            context.startService(serviceIntent);
+            Log.d("WATCH_PLAY_ACTION", "WATCH_PLAY ACTION CLICK");
+            int number = prefs.getInt("number_" + appWidgetId, 0);
+            prefs.edit().putInt("number_" + appWidgetId, number + 1).apply();
+            updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId);
         } else if ("STOP_ACTION".equals(intent.getAction())) {
-            elapsedTime += System.currentTimeMillis() - startTime;
-
-            Intent serviceIntent = new Intent(context, TimerService.class);
-            serviceIntent.setAction("STOP_ACTION");
-            context.startService(serviceIntent);
+            Log.d("WATCH_STOP_ACTION", "WATCH_STOP ACTION CLICK");
+            int number = prefs.getInt("number_" + appWidgetId, 0);
+            prefs.edit().putInt("number_" + appWidgetId, number + 10).apply();
+            updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId);
+        } else if ("RESET_ACTION".equals(intent.getAction())) {
+            Log.d("WATCH_RESET_ACTION", "WATCH_RESET_ACTION CLICK");
+            prefs.edit().putInt("number_" + appWidgetId, 0).apply();
+            updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId);
         } else if (TimerService.ACTION_UPDATE.equals(intent.getAction())) {
-            elapsedTime += System.currentTimeMillis() - startTime;
-            startTime = System.currentTimeMillis();
-
-            // 이제 위젯 UI를 업데이트하십시오.
-            // 시간을 문자열로 변환하는 로직은 단순화되었습니다.
-            // 이를 더 발전시켜 올바른 시간을 표시하도록 해야 합니다.
-            String timeStr = String.format("%02d:%02d:%02d",
-                    (elapsedTime / 3600000),
-                    (elapsedTime / 60000) % 60,
-                    (elapsedTime / 1000) % 60);
-
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
-            views.setTextViewText(R.id.timer, timeStr);
-
-            AppWidgetManager.getInstance(context).updateAppWidget(new ComponentName(context, StopWatch.class), views);
+            Log.d("WATCH_WHAT_ACTION", "WATCH_WHAT ACTION CLICK");
         }
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        SharedPreferences prefs = context.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
+        int number = prefs.getInt("number_" + appWidgetId, 0);
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
+        views.setTextViewText(R.id.timer, String.valueOf(number));
 
         Intent playIntent = new Intent(context, StopWatch.class);
         playIntent.setAction("PLAY_ACTION");
-        PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        playIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, 1, playIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.playButton, playPendingIntent);
 
         Intent stopIntent = new Intent(context, StopWatch.class);
         stopIntent.setAction("STOP_ACTION");
-        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        stopIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 2, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.stopButton, stopPendingIntent);
+
+        Intent resetIntent = new Intent(context, StopWatch.class);
+        resetIntent.setAction("RESET_ACTION");
+        resetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent resetPendingIntent = PendingIntent.getBroadcast(context, 3, resetIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        views.setOnClickPendingIntent(R.id.resetButton, resetPendingIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

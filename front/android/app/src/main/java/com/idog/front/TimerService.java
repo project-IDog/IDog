@@ -22,6 +22,8 @@ public class TimerService extends Service {
             startTimer();
         } else if ("STOP_ACTION".equals(intent.getAction())) {
             stopTimer();
+        } else if ("RESET_ACTION".equals(intent.getAction())) {
+            resetTimer();
         }
         return START_STICKY;
     }
@@ -30,7 +32,7 @@ public class TimerService extends Service {
         Log.d("TimerService", "Starting timer");
         Intent intent = new Intent(this, StopWatch.class);
         intent.setAction(TimerService.ACTION_UPDATE);
-        updateIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        updateIntent = PendingIntent.getBroadcast(this, 4, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         long interval = 1000; // 1 second
@@ -38,10 +40,15 @@ public class TimerService extends Service {
     }
 
     private void stopTimer() {
-        Log.d("TimerService", "Stopping timer..."); // 이 부분을 추가합니다.
+        Log.d("TimerService", "Stopping timer...");
         if (alarmManager != null && updateIntent != null) {
             alarmManager.cancel(updateIntent);
         }
+    }
+
+    private void resetTimer() {
+        Log.d("TimerService", "Reset timer...");
+        stopTimer();
     }
 
     @Override

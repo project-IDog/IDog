@@ -18,12 +18,24 @@ import CreateWalletPasswordLayout from "../styles/createWalletPasswordLayout";
 const CreateWalletPassword = ({navigation}: any) => {
     const [isLoading, setIsLoading] = useState<Boolean>(false);
     const [isChecked, setIsChecked] = useState<Boolean>(false);
+    const [password, setPassword] = useState<string>("");
+    const [checkPassword, setCheckPassword] = useState<string>("");
 
     const RPC_URL = process.env.RPC_URL;
     const SECRET_SALT = process.env.SECRET_SALT;
     const NFT_STORAGE = process.env.NFT_STORAGE;
 
     const createWallet = async () => {
+        if(!isChecked){
+            alert('비밀번호 복구불가 안내 문구에 체크해주세요.');
+            return;
+        }
+
+        if(password !== checkPassword){
+            alert('비밀번호를 다시 확인해주세요.');
+            return;
+        }
+
         if(!isLoading){
             setIsLoading(true);
         }
@@ -100,11 +112,15 @@ const CreateWalletPassword = ({navigation}: any) => {
                     <TextInput
                         placeholder="신규 비밀번호를 입력해주세요."
                         style={CreateWalletPasswordLayout.formInput}
+                        value={password}
+                        onChangeText={(text) => setPassword(text)}
                     />
                     <Text style={CreateWalletPasswordLayout.formTitle}>비밀번호 확인</Text>
                     <TextInput
                         placeholder="비밀번호 확인을 위해 다시 입력해주세요."
                         style={CreateWalletPasswordLayout.formInput}
+                        value={checkPassword}
+                        onChangeText={(text) => setCheckPassword(text)}
                     />
                     <View style={CreateWalletPasswordLayout.checkWrap}>
                         <Checkbox

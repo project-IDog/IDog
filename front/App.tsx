@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as Sentry from "@sentry/react-native"
-import {sentry_dsn} from "@env";
+import * as Sentry from "@sentry/react-native";
+import { sentry_dsn } from "@env";
 
 import Main from "./src/screens/Main";
 import Album from "./src/screens/Album";
@@ -23,43 +23,45 @@ import AgreeWallet from "./src/screens/AgreeWallet";
 import CreateWalletPassword from "./src/screens/CreateWalletPassword";
 import ProtectWallet from "./src/screens/ProtectWallet";
 import Ipfs from "./src/screens/Ipfs";
-
+import WidgetText from "./src/screens/WidgetText";
 const App = () => {
-  const Stack = createNativeStackNavigator();
+	const Stack = createNativeStackNavigator();
 
-  Sentry.init({
-    dsn: sentry_dsn,
-    tracesSampleRate: 1.0,
-  });
+	Sentry.init({
+		dsn: sentry_dsn,
+		tracesSampleRate: 1.0,
+	});
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
-        <Stack.Screen name="Main" component={Main} />
-        <Stack.Screen name="Album" component={Album} />
-        <Stack.Screen name="SideMenu" component={SideMenu} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="CreateProfile" component={CreateProfile} />
-        <Stack.Screen name="EditProfile" component={EditProfile} />
-        <Stack.Screen name="MyPage" component={MyPage} />
-        <Stack.Screen name="EditMyPage" component={EditMyPage} />
-        <Stack.Screen name="Adoption" component={Adoption} />
-        <Stack.Screen name="CreateFeed" component={CreateFeed} />
-        <Stack.Screen name="DetailFeed" component={DetailFeed} />
-        <Stack.Screen name="Walk" component={Walk} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="CreateWalletMain" component={CreateWalletMain} />
-        <Stack.Screen name="AgreeWallet" component={AgreeWallet} />
-        <Stack.Screen name="CreateWalletPassword" component={CreateWalletPassword} />
-        <Stack.Screen name="ProtectWallet" component={ProtectWallet} />
-		    <Stack.Screen name="Ani" component={Ani} />
-		    <Stack.Screen name="Three" component={Three} />
-        <Stack.Screen name="Ipfs" component={Ipfs} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-
-
+	return (
+		<NavigationContainer>
+			<Stack.Navigator initialRouteName="Main">
+				<Stack.Screen name="Main" component={Main} />
+				<Stack.Screen name="Album" component={Album} />
+				<Stack.Screen name="SideMenu" component={SideMenu} />
+				<Stack.Screen name="Profile" component={Profile} />
+				<Stack.Screen name="CreateProfile" component={CreateProfile} />
+				<Stack.Screen name="EditProfile" component={EditProfile} />
+				<Stack.Screen name="MyPage" component={MyPage} />
+				<Stack.Screen name="EditMyPage" component={EditMyPage} />
+				<Stack.Screen name="Adoption" component={Adoption} />
+				<Stack.Screen name="CreateFeed" component={CreateFeed} />
+				<Stack.Screen name="DetailFeed" component={DetailFeed} />
+				<Stack.Screen name="Walk" component={Walk} />
+				<Stack.Screen name="Login" component={Login} />
+				<Stack.Screen name="CreateWalletMain" component={CreateWalletMain} />
+				<Stack.Screen name="AgreeWallet" component={AgreeWallet} />
+				<Stack.Screen
+					name="CreateWalletPassword"
+					component={CreateWalletPassword}
+				/>
+				<Stack.Screen name="ProtectWallet" component={ProtectWallet} />
+				<Stack.Screen name="Ani" component={Ani} />
+				<Stack.Screen name="Three" component={Three} />
+				<Stack.Screen name="Ipfs" component={Ipfs} />
+				<Stack.Screen name="WidgetText" component={WidgetText} />
+			</Stack.Navigator>
+		</NavigationContainer>
+	);
+};
 
 export default Sentry.wrap(App);

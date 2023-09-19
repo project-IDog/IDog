@@ -1,8 +1,11 @@
+import {useEffect} from "react"
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native"
 import CommonLayout from "../components/CommonLayout"
 import ProfileItem from "../components/ProfileItem"
 import NftProfile from "../components/NftProfile"
 import Footer from "../components/Footer"
+
+import axios from "../utils/axios"
 
 import WhiteHeader from "../components/WhiteHeader"
 import SubMain from "../components/SubMain"
@@ -17,6 +20,13 @@ import PuppyThumbnail1 from "../../assets/images/puppy-thumbnail1.png"
 
 
 const Profile = ({navigation}:any) => {
+    useEffect(() => {
+        axios.get('/user').then((data) => {
+            if(String(data) === "session expire"){
+                navigation.navigate('Main');
+            }
+        })
+    }, [])
     return(
         <>
             <CommonLayout>
