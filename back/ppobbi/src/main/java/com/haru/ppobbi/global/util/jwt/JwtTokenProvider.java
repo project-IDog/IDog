@@ -28,7 +28,7 @@ public class JwtTokenProvider {
     @Value("${jwt.access-expired-in}")
     private long ACCESS_TOKEN_EXPIRED_IN;
 
-    @Value("{jwt.refresh-expired-in}")
+    @Value("${jwt.refresh-expired-in}")
     private long REFRESH_TOKEN_EXPIRED_IN;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
