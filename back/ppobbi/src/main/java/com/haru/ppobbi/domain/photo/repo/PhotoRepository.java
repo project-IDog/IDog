@@ -4,6 +4,7 @@ import com.haru.ppobbi.domain.photo.entity.Photo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PhotoRepository extends JpaRepository<Photo, Integer> {
     /**
@@ -22,7 +23,7 @@ public interface PhotoRepository extends JpaRepository<Photo, Integer> {
      * @param canceled 삭제 여부
      * @return Photo
      */
-    public Photo findPhotoByPhotoNoAndCanceled(Integer photoNo, Integer canceled);
+    public Optional<Photo> findPhotoByPhotoNoAndCanceled(Integer photoNo, Integer canceled);
 
     /**
      * dogNo를 조건으로 하는 모든 Photo 조회

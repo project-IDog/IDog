@@ -41,10 +41,8 @@ public class PhotoServiceImpl implements PhotoService{
 
     @Override
     public PhotoInfoDto selectPhoto(Integer photoNo) {
-        Photo photo = photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
-        if(photo == null){
-            throw new NotFoundException(PhotoResponseMessage.READ_FAIL.message());
-        }
+        Photo photo = photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED)
+                .orElseThrow(() -> new NotFoundException(PhotoResponseMessage.READ_FAIL.message()));
         Dog dog = photo.getDog();
         return PhotoInfoDto.builder()
                 .photoNo(photo.getPhotoNo())
@@ -76,20 +74,16 @@ public class PhotoServiceImpl implements PhotoService{
 
     @Override
     public void deletePhoto(Integer photoNo) {
-        Photo photo =photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
-        if(photo == null){
-            throw new NotFoundException(PhotoResponseMessage.DELETE_FAIL.message());
-        }
+        Photo photo =photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED)
+                .orElseThrow(() -> new NotFoundException(PhotoResponseMessage.DELETE_FAIL.message()));
         photo.setCanceled(BaseConstant.CANCELED);
         photoRepository.save(photo);
     }
 
     @Override
     public Photo setGoatPhoto(Integer photoNo) {
-        Photo photo = photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
-        if(photo == null){
-            throw new NotFoundException(PhotoResponseMessage.UPDATE_FAIL.message());
-        }
+        Photo photo = photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED)
+                .orElseThrow(() -> new NotFoundException(PhotoResponseMessage.UPDATE_FAIL.message()));
 
         if(photo.getPhotoIsGoat().equals(BaseConstant.GOAT)){
             photo.setPhotoIsGoat(BaseConstant.NOTGOAT);
