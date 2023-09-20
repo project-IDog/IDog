@@ -1,56 +1,36 @@
-import React, { useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	Button,
-	NativeModules,
-	DeviceEventEmitter,
-	AppState,
-} from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, Button } from "react-native";
+import { NativeModules, DeviceEventEmitter } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
 const { StopWatchModule } = NativeModules;
 
 const WidgetText = () => {
-	const [widgetData, setWidgetData] = useState<number>(0);
-	const [appWidgetId, setAppWidgetId] = useState<string | null>(null);
-	const [appState, setAppState] = useState<string>(AppState.currentState);
+	const [widgetData, setWidgetData] = React.useState<number | 0>(0);
+	const [appWidgetId, setAppWidgetId] = React.useState<String | null>(null);
 
 	useEffect(() => {
 		fetchStoredAppWidgetId();
 		const listener = DeviceEventEmitter.addListener(
 			"onAppWidgetUpdate",
-			async (data: { appWidgetId: string }) => {
+			async (data) => {
 				setAppWidgetId(data.appWidgetId);
-				await SecureStore.setItemAsync("appWidgetId", data.appWidgetId);
+				await SecureStore.setItemAsync(
+					"appWidgetId",
+					data.appWidgetId.toString(),
+				);
 			},
 		);
-
-		const subscription = AppState.addEventListener(
-			"change",
-			handleAppStateChange,
-		);
-
 		return () => {
 			if (listener) {
 				listener.remove();
-			}
-			if (subscription) {
-				subscription.remove();
 			}
 		};
 	}, []);
 
 	useEffect(() => {
 		getWidgetData();
-	}, [appWidgetId, appState]);
-
-	const handleAppStateChange = (nextAppState: string) => {
-		if (appState.match(/background/) && nextAppState === "active") {
-			getWidgetData();
-		}
-		setAppState(nextAppState);
-	};
+	}, [appWidgetId]);
 
 	const fetchStoredAppWidgetId = async () => {
 		const storedId = await SecureStore.getItemAsync("appWidgetId");
@@ -72,7 +52,6 @@ const WidgetText = () => {
 			console.warn("AppWidgetId is not yet available.");
 		}
 	};
-
 	const increaseBy1 = async () => {
 		if (appWidgetId) {
 			const updatedNumber = await StopWatchModule.updateNumber(
@@ -98,7 +77,7 @@ const WidgetText = () => {
 			const updatedNumber = await StopWatchModule.updateNumber(
 				Number(appWidgetId),
 				-widgetData,
-			);
+			); // Reset to 0
 			setWidgetData(updatedNumber);
 		}
 	};
