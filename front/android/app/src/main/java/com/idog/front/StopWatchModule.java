@@ -64,14 +64,13 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
             eventData.putInt("updatedNumber", updatedNumber);
             eventData.putInt("appWidgetId", appWidgetId);
 
-            // 이벤트를 React Native로 보냅니다.
             StopWatchModule.reactContext
                     .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                    .emit("numberUpdated", eventData);
+                    .emit("onAppWidgetUpdate", eventData);
             Intent intent = new Intent(StopWatchModule.reactContext, StopWatch.class);
             intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             int[] ids = {appWidgetId};
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, ids);
             StopWatchModule.reactContext.sendBroadcast(intent);
         } catch (Exception e) {
             promise.reject("UPDATE_NUMBER_ERROR", e);

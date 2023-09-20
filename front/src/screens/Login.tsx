@@ -84,7 +84,7 @@ const Login = () => {
 		const accessToken = await SecureStore.getItemAsync("accessToken");
 		const refreshToken = await SecureStore.getItemAsync("refreshToken");
 		for (let key in stores) {
-			console.warn(key, stores[key]);
+			console.log("key : ", key, "stores[key] : ", stores[key]);
 		}
 		console.warn("refreshToken : ", refreshToken);
 		console.warn("accessToken : ", accessToken);

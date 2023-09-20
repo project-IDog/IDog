@@ -22,7 +22,9 @@ const CurrentAppState = () => {
 		});
 
 		return () => {
-			subscription.remove();
+			if (subscription) {
+				subscription.remove();
+			}
 		};
 	}, []);
 
