@@ -2,6 +2,8 @@ package com.haru.ppobbi.domain.user.service;
 
 
 import static com.haru.ppobbi.domain.user.constant.UserExceptionMessage.USER_NOT_FOUND_EXCEPTION;
+import static com.haru.ppobbi.global.constant.BaseConstant.CANCELED;
+import static com.haru.ppobbi.global.constant.BaseConstant.NOTCANCELED;
 import static com.haru.ppobbi.global.util.oauth.constant.OAuth2ExceptionMessage.INVALID_TOKEN;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -63,7 +65,8 @@ public class UserServiceImpl implements UserService {
         log.debug("### [DEBUG/UserService] 회원가입 user : {}", user);
 
         // DB에 정보 없을 경우 회원가입, 있을 경우 프로필 사진/이름 업데이트
-        Optional<User> optionalUser = userRepository.findByUserId(user.getUserId());
+        Optional<User> optionalUser = userRepository.findUserByUserIdAndCanceled(user.getUserId(),
+            NOTCANCELED);
         if (optionalUser.isEmpty()) {
             userRepository.save(user);
         } else {
@@ -71,12 +74,13 @@ public class UserServiceImpl implements UserService {
             foundUser.updateUserInfo(user.getUserName(), user.getUserProfileImg());
             userRepository.save(foundUser);
         }
-        return userRepository.findByUserId(user.getUserId()).get();
+        return userRepository.findUserByUserIdAndCanceled(user.getUserId(),
+            NOTCANCELED).get();
     }
 
     @Override
     public UserInfoResponseDto getUserInfo(Integer userNo) {
-        User user = userRepository.findById(userNo)
+        User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
         return UserInfoResponseDto.builder()
@@ -92,17 +96,18 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(Integer userNo) {
-        User user = userRepository.findById(userNo)
+        User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
-        userRepository.delete(user);
+        user.setCanceled(CANCELED);
+        userRepository.save(user);
     }
 
     @Override
     @Transactional
     public void updateUserMessage(Integer userNo,
         UpdateUserMessageRequestDto updateUserMessageRequestDto) {
-        User user = userRepository.findById(userNo)
+        User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
         String message = updateUserMessageRequestDto.getUserMessage();
