@@ -6,6 +6,7 @@ import MainLayout from "../styles/mainLayout";
 import { useObserver } from "mobx-react";
 import IndexStore from "../stores/IndexStore";
 import axios from "../utils/axios"
+import * as SecureStore from 'expo-secure-store';
 
 import CommonLayout from "../components/CommonLayout";
 import MainHeader from "../components/MainHeader";
@@ -33,7 +34,19 @@ const Main = ({ navigation }: any) => {
 		}
 	}
 
-	
+	useEffect(() => {
+		axios.post('/user', {
+			"idToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdjMGI2OTEzZmUxMzgyMGEzMzMzOTlhY2U0MjZlNzA1MzVhOWEwYmYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI4MzA2MzY1MTA4My1rYWNzZGlxcGhjcTJxbTRtbjQwZmpqaGFnOXA1MG5vcS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF1ZCI6IjgzMDYzNjUxMDgzLWthY3NkaXFwaGNxMnFtNG1uNDBmampoYWc5cDUwbm9xLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAwMzQ3NTYzOTE3OTg3NTMxMjk3IiwiZW1haWwiOiJjY3k5ODAzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiaFlXV3YxNjdKbEVXU0czalJORVFsdyIsIm5hbWUiOiLstZzssKzsmIEiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSXJHMl90REh4aGh3NGtLazZ3bm43QndvOVI3SHoxaEMzR2JTNDVRb3luPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IuywrOyYgSIsImZhbWlseV9uYW1lIjoi7LWcIiwibG9jYWxlIjoia28iLCJpYXQiOjE2OTUxMDY5OTMsImV4cCI6MTY5NTExMDU5M30.R4mBHS32wxCeD81pxgHrkhW1Evl_mlL9s9OK9XvpzIPn7aeyV89FAI2mtJfrOSmpidvdOBe20CsYpI8MWIxRdMn8FlfcqoHInqjQOyYX6ISy697sn14wndwBxs5dH9oCIuUc2xxUy-UyWly0y58W1jqhzpZ2S1R3LIUKt0aoSne0fiSsG8pNp0lAB8EUv2Rr3wd-At8Yh0d80xdkByS2UzqueOW_HiDetudv2ygN-lD-7tboRvO_2l77PL9fliicutrEqN3G_a3-mLeOc1XPpLsbkLyzIR2kOAI1KMUMrGY56UlXpVNRlPwq-G-Sr59rIBmPm1LVHo7oskWkP9F4dA",
+			"accessToken": "ya29.a0AfB_byCMvcQstYT0zcZmWseljdLLqQkI8HlHVNpGPaRlk6w5gXflKB4uUDMYr4jjrVgMxBsGqQQmTDoYHZbIrILs_3bZUWMMxqWyt2YMSpJQDcJ5IB8j0jvVqMMSPRiOjx9ANcqd7dRKaAmSChsrvGPojKxnx_eC0P6qaCgYKASQSARASFQGOcNnCAsYm1LYyjHCSgMHOW1qsLQ0171",
+			"refreshToken": "1//0eBI9XD-NyEGRCgYIARAAGA4SNwF-L9IrAI6kKQPgbROx11Lgalg5-CYmnjjexWNIYpa5ehvZydBeZf6Qikgy8YSnairn8gvki74",
+		}).then(async (data) => {
+			console.log("userInfo 저장", data.data.data);
+
+			SecureStore.setItemAsync("accessToken", data.data.data.accessToken);
+			SecureStore.setItemAsync("refreshToken", data.data.data.refreshToken);
+		})
+	});
+
 	return (
 		<>
 			<CommonLayout>

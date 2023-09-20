@@ -3,7 +3,7 @@ import {View,Text,Image,TextInput,TouchableOpacity,Button,Platform} from "react-
 import CommonLayout from "../components/CommonLayout";
 import ColorHeader from "../components/ColorHeader";
 import Footer from "../components/Footer";
-import { useNavigation } from "@react-navigation/native";
+import * as SecureStore from 'expo-secure-store';
 
 import * as ImagePicker from "expo-image-picker";
 import { S3 } from "aws-sdk";
@@ -88,16 +88,20 @@ const CreateFeed = ({navigation, route}: any) => {
 	};
 
     const submitFeed = () => {
+		console.log(SecureStore.getItemAsync("accessToken"));
+		console.log(imageUri);
         uploadImage(imageUri);
 
 		axios.post('/photo', {
-			dogNo:selectedId,
-			userNo:0,
+			dogNo:5,
 			photoUrl:imageUri,
 			photoComment:comment,
 
 		}).then((data) => {
-			console.log(data);
+			if(data.data.message === "사진 등록 완료"){
+				alert("앨범 등록이 완료되었습니다.");
+				navigation.navigate('Album');
+			}
 		})
     }
 

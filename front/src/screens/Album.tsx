@@ -5,6 +5,7 @@ import {
 	Text,
 	TouchableOpacity,
 } from "react-native";
+import * as SecureStore from 'expo-secure-store';
 
 import CommonLayout from "../components/CommonLayout";
 import ColorHeader from "../components/ColorHeader";
@@ -21,40 +22,13 @@ import PhotoImg3 from "../../assets/images/photo-ex-img3.png";
 import PhotoImg4 from "../../assets/images/photo-ex-img4.png";
 import PhotoImg5 from "../../assets/images/photo-ex-img5.png";
 import PhotoImg6 from "../../assets/images/photo-ex-img6.png";
+import WhitePenIcon from "../../assets/images/pen-icon.png";
 
 import AlbumLayout from "../styles/albumLayout";
 
 const Album = ({ navigation }: any) => {
 	const [statusModalState, setStatusModalState] = useState<Boolean>(false);
-	const [feedList, setFeedList] = useState<Object[]>([
-		{
-			url: Image.resolveAssetSource(PhotoImg1),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg2),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg3),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg4),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg5),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg6),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg1),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg2),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg3),
-		},
-	]);
+	const [feedList, setFeedList] = useState<Object[]>([]);
 
 	const [feedActiveState, setFeedActiveState] = useState<Boolean>(false);
 	const [albumActiveState, setAlbumActiveState] = useState<Boolean>(true);
@@ -90,8 +64,10 @@ const Album = ({ navigation }: any) => {
 	};
 
 	useEffect(() => {
-        axios.get('/photo/user/0').then((data) => {
-			console.log("data",data);
+        axios.get('/photo/user/8').then((data) => {
+			if(data.data.message === "사진 조회 성공"){
+				setFeedList(data.data.data);
+			}
 		})
     }, []);
 
@@ -103,6 +79,14 @@ const Album = ({ navigation }: any) => {
 					<View style={AlbumLayout.profileWrap}>
 						<Text style={AlbumLayout.myNameTitle}>나의 닉네임</Text>
 						<Image source={MyPetPhoto} style={AlbumLayout.userPhoto} />
+						<TouchableOpacity activeOpacity={0.7} style={AlbumLayout.changeImageWrap}>
+							<View>
+								<Image
+									source={WhitePenIcon}
+									style={AlbumLayout.changeImageIcon}
+								/>
+							</View>
+						</TouchableOpacity>
 					</View>
 					<View style={AlbumLayout.newFeedWrap}>
 						<TouchableOpacity
@@ -162,10 +146,10 @@ const Album = ({ navigation }: any) => {
 								activeOpacity={0.7}
 								key={index}
 								onPress={() =>
-									navigation.push("DetailFeed", { selectImg: value.url })
+									navigation.push("DetailFeed", { selectImg: {uri:value.photoUrl}, comment: value.photoComment})
 								}
 							>
-								<Image source={value.url} style={AlbumLayout.photoItem} />
+								<Image source={{uri:value.photoUrl}} style={AlbumLayout.photoItem} />
 							</TouchableOpacity>
 						);
 					})}
