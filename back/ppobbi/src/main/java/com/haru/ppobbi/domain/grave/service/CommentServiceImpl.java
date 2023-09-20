@@ -47,10 +47,8 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public void deleteComment(Integer commentNo) {
-        Comment comment = commentRepository.findCommentByCommentNoAndCanceled(commentNo, BaseConstant.NOTCANCELED);
-        if(comment == null){
-            throw new NotFoundException(CommentResponseMessage.DELETE_FAIL.message());
-        }
+        Comment comment = commentRepository.findCommentByCommentNoAndCanceled(commentNo, BaseConstant.NOTCANCELED)
+                .orElseThrow(() -> new NotFoundException(CommentResponseMessage.DELETE_FAIL.message()));
         comment.setCanceled(BaseConstant.CANCELED);
         commentRepository.save(comment);
     }

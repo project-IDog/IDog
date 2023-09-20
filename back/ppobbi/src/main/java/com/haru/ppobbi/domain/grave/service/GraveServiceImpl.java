@@ -57,10 +57,8 @@ public class GraveServiceImpl implements GraveService{
 
     @Override
     public GraveInfoDto selectGrave(Integer graveNo) {
-        Grave grave = graveRepository.findGraveByGraveNo(graveNo);
-        if(grave == null){
-            throw new NotFoundException(GraveResponseMessage.READ_FAIL.message());
-        }
+        Grave grave = graveRepository.findGraveByGraveNo(graveNo)
+                .orElseThrow(() -> new NotFoundException(GraveResponseMessage.READ_FAIL.message()));
         User user = grave.getUser();
         Dog dog = grave.getDog();
         return GraveInfoDto.builder()
