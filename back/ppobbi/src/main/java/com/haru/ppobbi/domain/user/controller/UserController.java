@@ -5,8 +5,10 @@ import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.GET_USER_
 import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.SIGN_IN_SUCCESS;
 import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.UPDATE_USER_MESSAGE_SUCCESS;
 
+import com.haru.ppobbi.domain.user.dto.TokenInfo;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpOrInRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
+import com.haru.ppobbi.domain.user.dto.UserResponseDto.UserInfoResponseDto;
 import com.haru.ppobbi.domain.user.service.UserService;
 import com.haru.ppobbi.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("")
-    public ResponseEntity<ResponseDto<?>> signUpOrIn(
+    public ResponseEntity<ResponseDto<TokenInfo>> signUpOrIn(
         @RequestBody SignUpOrInRequestDto signUpRequestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(SIGN_IN_SUCCESS,
@@ -40,31 +42,30 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResponseDto<?>> getUserInfo(
-        @RequestAttribute("userId") String userId) {
+    public ResponseEntity<ResponseDto<UserInfoResponseDto>> getUserInfo(
+        @RequestAttribute("userNo") Integer userNo) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(GET_USER_INFO_SUCCESS,
-                userService.getUserInfo(userId))
+                userService.getUserInfo(userNo))
         );
     }
 
     @DeleteMapping("")
-    public ResponseEntity<ResponseDto<?>> deleteUser(
-        @RequestAttribute("userId") String userId) {
-        userService.deleteUser(userId);
+    public ResponseEntity<ResponseDto<String>> deleteUser(
+        @RequestAttribute("userNo") Integer userNo) {
+        userService.deleteUser(userNo);
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(DELETE_USER_SUCCESS)
         );
     }
 
     @PutMapping("/message")
-    public ResponseEntity<ResponseDto<?>> updateUserMessage(
-        @RequestAttribute("userId") String userId,
+    public ResponseEntity<ResponseDto<String>> updateUserMessage(
+        @RequestAttribute("userNo") Integer userNo,
         @RequestBody UpdateUserMessageRequestDto updateUserMessageRequestDto) {
-        userService.updateUserMessage(userId, updateUserMessageRequestDto);
+        userService.updateUserMessage(userNo, updateUserMessageRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(UPDATE_USER_MESSAGE_SUCCESS)
         );
     }
-
 }

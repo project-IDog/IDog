@@ -2,20 +2,22 @@ package com.haru.ppobbi.domain.user.service;
 
 
 import static com.haru.ppobbi.domain.user.constant.UserExceptionMessage.USER_NOT_FOUND_EXCEPTION;
+import static com.haru.ppobbi.global.constant.BaseConstant.CANCELED;
+import static com.haru.ppobbi.global.constant.BaseConstant.NOTCANCELED;
 import static com.haru.ppobbi.global.util.oauth.constant.OAuth2ExceptionMessage.INVALID_TOKEN;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haru.ppobbi.domain.user.constant.UserRole;
+import com.haru.ppobbi.domain.user.dto.TokenInfo;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpOrInRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
-import com.haru.ppobbi.domain.user.dto.UserResponseDto.SignUpOrInResponseDto;
 import com.haru.ppobbi.domain.user.dto.UserResponseDto.UserInfoResponseDto;
 import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.domain.user.repo.UserRepository;
 import com.haru.ppobbi.global.error.NotFoundException;
 import com.haru.ppobbi.global.error.TokenException;
-import com.haru.ppobbi.global.util.oauth.OAuth2TokenHandler;
+import com.haru.ppobbi.global.util.jwt.JwtTokenProvider;
 import com.haru.ppobbi.global.util.oauth.OAuth2UserInfo;
 import java.util.Map;
 import java.util.Optional;
@@ -24,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -43,48 +44,43 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
-    private final OAuth2TokenHandler oauthTokenProvider;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret;
-
-    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
-    private String redirectURI;
+    private final JwtTokenProvider jwtTokenProvider;
 
 
-    @Transactional
     @Override
-    public SignUpOrInResponseDto signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto) {
+    public TokenInfo signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto) {
         String idToken = signUpOrInRequestDto.getIdToken();
-        String accessToken = signUpOrInRequestDto.getAccessToken();
-        String refreshToken = signUpOrInRequestDto.getRefreshToken();
         Map<String, Object> userAttribute = getUserAttribute(idToken);
 
-        User user = convertUserAttributeToUser(userAttribute, refreshToken);
+        User user = insertUser(userAttribute);
+        log.debug("[userServiceImpl - signUpOrIn] User : {}", user);
+
+        // 토큰 발급 후, 정보 반환
+        return jwtTokenProvider.generateToken(user.getUserNo());
+    }
+
+    @Transactional
+    public User insertUser(Map<String, Object> userAttribute) {
+        User user = convertUserAttributeToUser(userAttribute);
         log.debug("### [DEBUG/UserService] 회원가입 user : {}", user);
 
         // DB에 정보 없을 경우 회원가입, 있을 경우 프로필 사진/이름 업데이트
-        Optional<User> optionalUser = userRepository.findByUserId(user.getUserId());
+        Optional<User> optionalUser = userRepository.findUserByUserIdAndCanceled(user.getUserId(),
+            NOTCANCELED);
         if (optionalUser.isEmpty()) {
             userRepository.save(user);
         } else {
             User foundUser = optionalUser.get();
             foundUser.updateUserInfo(user.getUserName(), user.getUserProfileImg());
-            foundUser.updateUserRefreshToken(refreshToken);
             userRepository.save(foundUser);
         }
-        return SignUpOrInResponseDto.builder()
-            .accessToken(accessToken)
-            .refreshToken(refreshToken)
-            .build();
+        return userRepository.findUserByUserIdAndCanceled(user.getUserId(),
+            NOTCANCELED).get();
     }
 
     @Override
-    public UserInfoResponseDto getUserInfo(String userId) {
-        User user = userRepository.findByUserId(userId)
+    public UserInfoResponseDto getUserInfo(Integer userNo) {
+        User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
         return UserInfoResponseDto.builder()
@@ -97,28 +93,28 @@ public class UserServiceImpl implements UserService {
             .build();
     }
 
-    @Transactional
     @Override
-    public void deleteUser(String userId) {
-        User user = userRepository.findByUserId(userId)
+    @Transactional
+    public void deleteUser(Integer userNo) {
+        User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
-        userRepository.delete(user);
+        user.setCanceled(CANCELED);
+        userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void updateUserMessage(String userId,
+    public void updateUserMessage(Integer userNo,
         UpdateUserMessageRequestDto updateUserMessageRequestDto) {
-        User user = userRepository.findByUserId(userId)
+        User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
         String message = updateUserMessageRequestDto.getUserMessage();
         user.updateUserMessage(message);
     }
 
-    private User convertUserAttributeToUser(Map<String, Object> userAttribute,
-        String refreshToken) {
+    private User convertUserAttributeToUser(Map<String, Object> userAttribute) {
         OAuth2UserInfo oAuth2UserInfo = new OAuth2UserInfo(userAttribute);
 
         return User.builder()
@@ -126,7 +122,6 @@ public class UserServiceImpl implements UserService {
             .userName(oAuth2UserInfo.getUserName())
             .userProfileImg(oAuth2UserInfo.getUserProfileImg())
             .userRole(UserRole.ROLE_USER)
-            .userRefreshToken(refreshToken)
             .build();
     }
 
