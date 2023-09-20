@@ -78,7 +78,7 @@ public class PhotoServiceImpl implements PhotoService{
     public void deletePhoto(Integer photoNo) {
         Photo photo =photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
         if(photo == null){
-            throw new RuntimeException(PhotoResponseMessage.DELETE_FAIL.message());
+            throw new NotFoundException(PhotoResponseMessage.DELETE_FAIL.message());
         }
         photo.setCanceled(BaseConstant.CANCELED);
         photoRepository.save(photo);
@@ -88,7 +88,7 @@ public class PhotoServiceImpl implements PhotoService{
     public Photo setGoatPhoto(Integer photoNo) {
         Photo photo = photoRepository.findPhotoByPhotoNoAndCanceled(photoNo, BaseConstant.NOTCANCELED);
         if(photo == null){
-            throw new RuntimeException(PhotoResponseMessage.UPDATE_FAIL.message());
+            throw new NotFoundException(PhotoResponseMessage.UPDATE_FAIL.message());
         }
 
         if(photo.getPhotoIsGoat().equals(BaseConstant.GOAT)){

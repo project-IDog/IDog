@@ -25,7 +25,7 @@ public class PhotoController {
     @PostMapping()
     public ResponseEntity<ResponseDto<?>> registPhoto(@RequestAttribute("userId") String userId, @RequestBody RegistRequestDto registRequestDto){
         Photo photo = photoService.registPhoto(userId, registRequestDto);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto.create(CREATE_SUCCESS));
     }
 
