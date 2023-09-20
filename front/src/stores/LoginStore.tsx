@@ -1,7 +1,8 @@
-import {observable} from "mobx";
+import { observable } from "mobx";
 
 const LoginStore = observable({
-    isLogged: true,
+	isLogged: false,
+	userInfo: {},
 });
 
 export default LoginStore;

@@ -30,6 +30,4 @@ const CommonLayout = ({ children }: any) => {
 	);
 };
 
-const styles = StyleSheet.create({});
-
 export default CommonLayout;

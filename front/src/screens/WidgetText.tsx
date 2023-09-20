@@ -60,6 +60,7 @@ const WidgetText = () => {
 				disabled={!appWidgetId}
 			/>
 			<Text>{appWidgetId}</Text>
+			<Text>Current state</Text>
 		</View>
 	);
 };

@@ -6,11 +6,10 @@ import WhiteHeader from "../components/WhiteHeader"
 import SubMain from "../components/SubMain"
 import Footer from "../components/Footer"
 import WeekTimeItem from "../components/weekTimeItem"
+import MyPetScrollView from "../components/MyPetScrollView"
 
 import WalkMainImg from "../../assets/images/walk-main-img.png"
 import TimerImg from "../../assets/images/timer.png"
-import MyPetThumbnail1 from "../../assets/images/my-pet-thumbnail1.png"
-import MyPetThumbnail2 from "../../assets/images/my-pet-thumbnail2.png"
 import BottomArrowIcon from "../../assets/images/bottom-arrow-icon.png"
 
 import WalkLayout from "../styles/walkLayout"
@@ -29,30 +28,6 @@ const Walk = ({navigation}: any) => {
 
         ]
     );
-
-    const [myPetList, setMyPetList] = useState<Object[]>(
-        [
-            {
-                id:1,
-                url:MyPetThumbnail1
-            },
-            {
-                id:2,
-                url:MyPetThumbnail2
-            }
-        ]
-    );
-    const [selectedImages, setSelectedImages] = useState<number[]>([]);
-
-    const toggleImageSelection = (id: number) => {
-        const isSelected = selectedImages.includes(id);
-    
-        if (isSelected) {
-            setSelectedImages(selectedImages.filter((imageId) => imageId !== id));
-        } else {
-            setSelectedImages([...selectedImages, id]);
-        }
-    };
 
     const minusDate = (offset: number) => {
         return dayjs().subtract(offset, "day").get('date');
@@ -181,7 +156,6 @@ const Walk = ({navigation}: any) => {
                         }
                     </View>
                 </View>
-
                 <View style={WalkLayout.choiceWrap}>
                     <View style={WalkLayout.titleFlexWrap}>
                         <View>
@@ -198,27 +172,8 @@ const Walk = ({navigation}: any) => {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <ScrollView horizontal={true} style={WalkLayout.myPetContent}>
-                        {
-                            myPetList.map((myPetImage: Object, index: number) => {
-                                return(     
-                                    <TouchableOpacity activeOpacity={0.7} onPress={() => toggleImageSelection(myPetImage.id)} key={index}>
-                                        <View style={WalkLayout.myPetItem}>
-                                            <Image
-                                                source={myPetImage.url}
-                                                style={{
-                                                    borderWidth: 4,
-                                                    borderColor: selectedImages.includes(myPetImage.id) ? '#EE8A72' : 'transparent',
-                                                }}
-                                            />
-                                        </View>
-                                    </TouchableOpacity>
-                                )
-                            })
-                        }
-                    </ScrollView>
                 </View>
-
+                <MyPetScrollView/>
 
                 <View style={WalkLayout.timerWrap}>
                     <View style={WalkLayout.timerTitleWrap}>
