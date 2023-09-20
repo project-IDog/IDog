@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as Sentry from "@sentry/react-native";
+import IndexStore from "../stores/IndexStore";
 
 const instance = axios.create({
     baseURL: "https://idog.store/api",
@@ -9,7 +10,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
     (config) => {
         config.headers["Content-Type"] = "application/json; charset=utf-8";
-        config.headers["Authorization"] = "";
+        config.headers["Authorization"] = `Bearer ${IndexStore().LoginStore.userInfo.accessToken}`;
         return config;
     },
     (error) => {

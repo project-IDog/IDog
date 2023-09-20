@@ -1,9 +1,11 @@
+import {useEffect} from "react";
 import { TouchableOpacity, View, Text, Image } from "react-native";
 import IconButton from "../components/IconButton";
 import Footer from "../components/Footer";
 import MainLayout from "../styles/mainLayout";
 import { useObserver } from "mobx-react";
 import IndexStore from "../stores/IndexStore";
+import axios from "../utils/axios"
 
 import CommonLayout from "../components/CommonLayout";
 import MainHeader from "../components/MainHeader";
@@ -30,6 +32,8 @@ const Main = ({ navigation }: any) => {
 			alert("해당 서비스는 로그인 후 이용가능합니다.");
 		}
 	}
+
+	
 	return (
 		<>
 			<CommonLayout>

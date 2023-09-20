@@ -3,6 +3,7 @@ import {View,Text,Image,TextInput,TouchableOpacity,Button,Platform} from "react-
 import CommonLayout from "../components/CommonLayout";
 import ColorHeader from "../components/ColorHeader";
 import Footer from "../components/Footer";
+import { useNavigation } from "@react-navigation/native";
 
 import * as ImagePicker from "expo-image-picker";
 import { S3 } from "aws-sdk";
@@ -12,14 +13,17 @@ import {
 	AWS_REGION,
 	AWS_BUCKET,
 } from "@env";
+import axios from "../utils/axios"
 
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
 
 import CreateFeedLayout from "../styles/createFeedLayout";
 
-const CreateFeed = ({navigation}: any) => {
+const CreateFeed = ({navigation, route}: any) => {
+	const selectedId = route.params.selectedId;
     // img uri 저장
 	const [imageUri, setImage] = useState<string | null>(null);
+	const [comment, setComment] = useState<string | null>(null);
 
     // s3 클라이언트 초기화
 	const s3 = new S3({
@@ -85,6 +89,16 @@ const CreateFeed = ({navigation}: any) => {
 
     const submitFeed = () => {
         uploadImage(imageUri);
+
+		axios.post('/photo', {
+			dogNo:selectedId,
+			userNo:0,
+			photoUrl:imageUri,
+			photoComment:comment,
+
+		}).then((data) => {
+			console.log(data);
+		})
     }
 
     return(
@@ -98,6 +112,7 @@ const CreateFeed = ({navigation}: any) => {
                         나의 반려견
                     </Text>
                 </View>
+
                 <TouchableOpacity activeOpacity={0.7} onPress={pickImage}>
                     <View style={CreateFeedLayout.photoUploadWrap}>
                         <Image
@@ -112,7 +127,9 @@ const CreateFeed = ({navigation}: any) => {
                 <View>
                     <TextInput
                         style={CreateFeedLayout.createDescWrap}
+						value={comment}
                         placeholder="문구 입력..."
+						onChangeText={(text) => setComment(text)}
                     />
                 </View>
 
