@@ -12,6 +12,7 @@ import com.haru.ppobbi.domain.user.constant.UserRole;
 import com.haru.ppobbi.domain.user.dto.TokenInfo;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpOrInRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
+import com.haru.ppobbi.domain.user.dto.UserResponseDto.AccessTokenResponseDto;
 import com.haru.ppobbi.domain.user.dto.UserResponseDto.UserInfoResponseDto;
 import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.domain.user.repo.UserRepository;
@@ -112,6 +113,15 @@ public class UserServiceImpl implements UserService {
 
         String message = updateUserMessageRequestDto.getUserMessage();
         user.updateUserMessage(message);
+    }
+
+    @Override
+    public AccessTokenResponseDto reissueAccessToken(Integer userNo) {
+        String accessToken = jwtTokenProvider.generateToken(userNo).getAccessToken();
+
+        return AccessTokenResponseDto.builder()
+            .accessToken(accessToken)
+            .build();
     }
 
     private User convertUserAttributeToUser(Map<String, Object> userAttribute) {
