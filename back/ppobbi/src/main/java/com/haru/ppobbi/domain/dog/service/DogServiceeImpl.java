@@ -32,7 +32,7 @@ public class DogServiceeImpl implements DogService{
                 .userNo(dogSaveRequestDto.getUserNo())
                 .dogName(dogSaveRequestDto.getDogName())
                 .dogBreed(dogSaveRequestDto.getDogBreed())
-                .dogBriteDate(dogSaveRequestDto.getDogBirthDate())
+                .dogBirthDate(dogSaveRequestDto.getDogBirthDate())
                 .dogSex(dogSaveRequestDto.getDogSex())
                 .dogIsDead(BaseConstant.NOTDEAD)
                 .build();

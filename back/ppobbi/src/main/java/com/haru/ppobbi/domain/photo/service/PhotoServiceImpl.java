@@ -29,9 +29,8 @@ public class PhotoServiceImpl implements PhotoService{
     @Override
     public Photo registPhoto(String userId, RegistRequestDto registRequestDto) {
         // 개 가져오기
-        Dog dog = dogRepository.findDogByDogNoAndCanceled(photoRequestDto.getDogNo(), BaseConstant.NOTCANCELED)
+        Dog dog = dogRepository.findDogByDogNoAndCanceled(registRequestDto.getDogNo(), BaseConstant.NOTCANCELED)
                 .orElseThrow(() -> new NotFoundException(DOG_NOT_FOUND_EXCEPTION.message()));
-        User user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
         Photo photo = Photo.builder()
                 .dog(dog)
                 .userNo(dog.getUserNo())
