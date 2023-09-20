@@ -59,7 +59,7 @@ public class MatterMostMessageDto {
         private String title;
         private String color;
         private String text;
-        private String footer;
+        private String footer; 
 
         public void setText(Exception exception, String url, String params){
             this.title = exception.getClass().getSimpleName();
