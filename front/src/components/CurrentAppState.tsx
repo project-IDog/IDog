@@ -1,22 +1,24 @@
 import React, { useRef, useState, useEffect } from "react";
-import { AppState, Text, View, Button } from "react-native";
+import { AppState } from "react-native";
 import IndexStore from "../stores/IndexStore";
 import * as SecureStore from "expo-secure-store";
 
 const CurrentAppState = () => {
 	const appState = useRef(AppState.currentState);
 	const [appStateVisible, setAppStateVisible] = useState(appState.current);
-	const { LoginStore } = IndexStore();
+	const stores = IndexStore();
 
 	useEffect(() => {
 		const subscription = AppState.addEventListener("change", (nextAppState) => {
 			if (appState.current.match(/background/) && nextAppState === "active") {
 				secureStorageToStore();
+				console.log("App has come to the foreground!");
 			} else if (
 				appState.current.match(/active/) &&
 				nextAppState === "background"
 			) {
 				storeToSecureStorage();
+				console.log("App has come to the background!");
 			}
 			appState.current = nextAppState;
 			setAppStateVisible(appState.current);
@@ -28,25 +30,22 @@ const CurrentAppState = () => {
 	}, []);
 
 	const secureStorageToStore = async () => {
-		const loginStoreData = await SecureStore.getItemAsync("loginStoreData");
-		if (loginStoreData) {
-			const parsedData = JSON.parse(loginStoreData);
-			Object.assign(LoginStore, parsedData);
+		for (let key in stores) {
+			const storeData = await SecureStore.getItemAsync(key);
+			if (storeData) {
+				const parsedData = JSON.parse(storeData);
+				Object.assign(stores[key], parsedData);
+			}
 		}
 	};
 
 	const storeToSecureStorage = async () => {
-		await SecureStore.setItemAsync(
-			"loginStoreData",
-			JSON.stringify(LoginStore),
-		);
+		for (let key in stores) {
+			await SecureStore.setItemAsync(key, JSON.stringify(stores[key]));
+		}
 	};
 
-	return (
-		<View>
-			<Text>Current state is: {appStateVisible}</Text>
-		</View>
-	);
+	return null;
 };
 
 export default CurrentAppState;

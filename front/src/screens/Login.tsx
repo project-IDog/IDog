@@ -11,40 +11,32 @@ import IndexStore from "../stores/IndexStore";
 WebBrowser.maybeCompleteAuthSession();
 
 const Login = () => {
-	const { LoginStore } = IndexStore();
-	console.log(LoginStore);
+	const stores = IndexStore();
 	const [request, response, promptAsync] = Google.useAuthRequest({
 		androidClientId: ANDROID_CLIENT_ID,
 	});
 	const handleSignInWithGoogle = async () => {
 		if (response?.type === "success") {
-			const code = response.params?.code;
+			console.log("authorizationCode : ", response.params?.code);
+			console.log("id : ", response.authentication?.idToken);
+			console.log("refresh : ", response.authentication?.refreshToken);
+			console.log("access : ", response.authentication?.accessToken);
 			try {
-				// 테스트용 코드
-				await SecureStore.setItemAsync("accessToken", "testAccessToken");
-				await SecureStore.setItemAsync("refreshToken", "testRefreshToken");
-				LoginStore.isLogged = true;
-				LoginStore.userInfo = {
-					id: "testId",
-					name: "testName",
-					email: "testEmail",
-				};
-				// 이 사이 주석은 로그인이 되었을 시 지웁니다.
 				const { data } = await axios.post(
 					"/user",
 					{
+						authorizationCode: response.params?.code,
 						idToken: response.authentication?.idToken,
-						refreshToken: response.authentication?.refreshToken,
 						accessToken: response.authentication?.accessToken,
+						refreshToken: response.authentication?.refreshToken,
 					},
 					{
 						headers: {
 							"Content-Type": "application/json",
-							Authorization: "Bearer " + code,
 						},
 					},
 				);
-				console.warn(data.data.data);
+				console.warn(data.data);
 				await SecureStore.setItemAsync(
 					"accessToken",
 					data.data.data.accessToken,
@@ -53,7 +45,7 @@ const Login = () => {
 					"refreshToken",
 					data.data.data.refreshToken,
 				);
-				LoginStore.isLogged = true;
+				stores.LoginStore.isLogged = true;
 			} catch (error) {
 				console.error(error);
 			}
@@ -61,20 +53,22 @@ const Login = () => {
 	};
 
 	const handleLogout = async () => {
-		LoginStore.isLogged = false;
+		stores.LoginStore.isLogged = false;
 		await SecureStore.deleteItemAsync("accessToken");
 		await SecureStore.deleteItemAsync("refreshToken");
-		await SecureStore.deleteItemAsync("loginStoreData");
+		for (let key in stores) {
+			stores[key] = {};
+		}
 	};
 
 	const getSecureStorage = async () => {
 		const accessToken = await SecureStore.getItemAsync("accessToken");
 		const refreshToken = await SecureStore.getItemAsync("refreshToken");
-		const loginStoreData = await SecureStore.getItemAsync("loginStoreData");
+		for (let key in stores) {
+			console.warn(key, stores[key]);
+		}
 		console.warn("refreshToken : ", refreshToken);
 		console.warn("accessToken : ", accessToken);
-		console.warn("loginStoreData : ", loginStoreData);
-		console.warn("LoginStore : ", LoginStore);
 	};
 
 	// Google 인증 응답이 바뀔때마다 실행
