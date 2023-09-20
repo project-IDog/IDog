@@ -43,7 +43,6 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
             int number = prefs.getInt("number_" + appWidgetId, 0);
             Log.d("StopWatchModule Number", "This is a simple log from Native Module!" + number + " prefs : " + prefs);
 
-            // 값을 Promise로 반환합니다.
             promise.resolve(number);
         } catch (Exception e) {
             promise.reject("GET_NUMBER_ERROR", e);
@@ -66,7 +65,7 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
 
             StopWatchModule.reactContext
                     .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                    .emit("numberUpdated", eventData);
+                    .emit("onAppWidgetUpdate", eventData);
             Intent intent = new Intent(StopWatchModule.reactContext, StopWatch.class);
             intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             int[] ids = {appWidgetId};

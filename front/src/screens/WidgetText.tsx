@@ -6,7 +6,7 @@ import * as SecureStore from "expo-secure-store";
 const { StopWatchModule } = NativeModules;
 
 const WidgetText = () => {
-	const [widgetData, setWidgetData] = React.useState<number | 0>(0);
+	const [widgetData, setWidgetData] = React.useState<number>(0);
 	const [appWidgetId, setAppWidgetId] = React.useState<String | null>(null);
 
 	useEffect(() => {
@@ -42,16 +42,10 @@ const WidgetText = () => {
 	const getWidgetData = async () => {
 		if (appWidgetId) {
 			const widgetData = await StopWatchModule.getNumber(Number(appWidgetId));
-			console.warn(
-				"appWidgetId : ",
-				appWidgetId + " widgetData : ",
-				widgetData,
-			);
 			setWidgetData(widgetData);
-		} else {
-			console.warn("AppWidgetId is not yet available.");
 		}
 	};
+
 	const increaseBy1 = async () => {
 		if (appWidgetId) {
 			const updatedNumber = await StopWatchModule.updateNumber(
@@ -77,7 +71,7 @@ const WidgetText = () => {
 			const updatedNumber = await StopWatchModule.updateNumber(
 				Number(appWidgetId),
 				-widgetData,
-			); // Reset to 0
+			);
 			setWidgetData(updatedNumber);
 		}
 	};
