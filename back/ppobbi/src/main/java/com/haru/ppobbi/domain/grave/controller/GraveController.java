@@ -39,4 +39,9 @@ public class GraveController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(READ_SUCCESSS, graveService.selectGraves()));
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> hi(){
+        throw new RuntimeException();
+    }
 }
