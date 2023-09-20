@@ -8,6 +8,19 @@ const DetailFeedLayout = StyleSheet.create({
         position:"absolute",
         zIndex:-1,
     },
+    trashIconWrap:{
+        padding:10,
+        marginTop:80,
+        backgroundColor:"#5C5C5C",
+        borderRadius:50,
+        position:"absolute",
+        right:0,
+        marginHorizontal:responsiveWidth(4),
+    },
+    trashIcon:{
+        width:15,
+        height:15,
+    },
     onInfo:{
         width:responsiveWidth(66),
         marginHorizontal:responsiveWidth(5),

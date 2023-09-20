@@ -2,17 +2,21 @@ import axios from "axios";
 import * as Sentry from "@sentry/react-native";
 import * as SecureStore from "expo-secure-store";
 
+const getValueFor = async (key: string) => {
+	return await SecureStore.getItemAsync(key);
+};
+
 const instance = axios.create({
 	baseURL: "https://idog.store/api",
 	timeout: 1000,
 });
 
 instance.interceptors.request.use(
-	(config) => {
+	async (config) => {
 		config.headers["Content-Type"] = "application/json; charset=utf-8";
-		SecureStore.getItemAsync("accessToken").then((token) => {
-			config.headers["Authorization"] = "Bearer " + token;
-		});
+		config.headers["Authorization"] = `Bearer ${await getValueFor(
+			"accessToken",
+		)}`;
 		return config;
 	},
 	(error) => {
