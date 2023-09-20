@@ -64,20 +64,20 @@ public class Dog extends BaseEntity {
     }
 
     @Builder
-    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBriteDate, Character dogSex, Integer dogIsDead) {
+    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBirthDate, Character dogSex, Integer dogIsDead) {
         this.userNo = userNo;
         this.dogName = dogName;
         this.dogBreed = dogBreed;
-        this.dogBirthDate = dogBriteDate;
+        this.dogBirthDate = dogBirthDate;
         this.dogSex = dogSex;
         this.dogIsDead = dogIsDead;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Dog)) return false;
-        Dog dog = (Dog) o;
+    public boolean equals(Object anotherDog) {
+        if (this == anotherDog) return true;
+        if (!(anotherDog instanceof Dog)) return false;
+        Dog dog = (Dog) anotherDog;
         return Objects.equals(userNo, dog.userNo) && Objects.equals(dogName, dog.dogName) && Objects.equals(dogBreed, dog.dogBreed) && Objects.equals(dogBirthDate, dog.dogBirthDate) && Objects.equals(dogSex, dog.dogSex);
     }
 
