@@ -77,10 +77,10 @@ public class JwtTokenProvider {
         } catch (SecurityException | MalformedJwtException | UnsupportedJwtException |
                  IllegalArgumentException e) {
             e.printStackTrace();
-            throw new TokenException(INVALID_TOKEN.message());
+            throw new InvalidTokenException(INVALID_TOKEN.message());
         } catch (ExpiredJwtException e) {
             e.printStackTrace();
-            throw new TokenException(EXPIRED_TOKEN.message());
+            throw new ExpiredTokenException(EXPIRED_TOKEN.message());
         }
     }
 
