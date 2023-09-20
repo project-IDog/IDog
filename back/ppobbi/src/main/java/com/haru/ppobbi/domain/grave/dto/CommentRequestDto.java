@@ -12,7 +12,6 @@ public class CommentRequestDto {
     @Builder
     public static class RegistRequestDto{
         private Integer graveNo;
-        private Integer userNo;
         private String commentContent;
     }
 

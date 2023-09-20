@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,8 +30,8 @@ public class GraveServiceImpl implements GraveService{
     @Override
     public Grave registGrave(String userId, RegistRequestDto registRequestDto) {
         // 그 강아지의 주인 가져오기
-        User user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
-        if(user == null){ //조회된 사용자가 없을 경우
+        Optional<User> user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
+        if(user.isEmpty()){ //조회된 사용자가 없을 경우
             throw new NotFoundException(GraveResponseMessage.CREATE_FAIL_NO_USER.message());
         }
 
@@ -48,7 +49,7 @@ public class GraveServiceImpl implements GraveService{
 
         // 새 grave 객체 생성
         Grave grave = Grave.builder()
-                .user(user)
+                .user(user.get())
                 .dog(deadDog)
                 .build();
         return graveRepository.save(grave);

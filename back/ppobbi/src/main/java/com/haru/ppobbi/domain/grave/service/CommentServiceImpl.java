@@ -22,9 +22,9 @@ public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     @Override
-    public Comment registComment(RegistRequestDto registRequestDto) {
+    public Comment registComment(String userId, RegistRequestDto registRequestDto) {
         // commenter 찾기
-        Optional<User> commenter = userRepository.findById(registRequestDto.getUserNo());
+        Optional<User> commenter = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
         // commenter가 존재할 경우 comment 등록
         if(commenter.isPresent()) {
             Comment comment = Comment.builder()
@@ -49,7 +49,7 @@ public class CommentServiceImpl implements CommentService{
     public void deleteComment(Integer commentNo) {
         Comment comment = commentRepository.findCommentByCommentNoAndCanceled(commentNo, BaseConstant.NOTCANCELED);
         if(comment == null){
-            throw new NotFoundException(CommentResponseMessage.READ_FAIL.message());
+            throw new NotFoundException(CommentResponseMessage.DELETE_FAIL.message());
         }
         comment.setCanceled(BaseConstant.CANCELED);
         commentRepository.save(comment);

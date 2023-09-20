@@ -20,9 +20,9 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping()
-    public ResponseEntity<ResponseDto<?>> registComment(@RequestBody RegistRequestDto registRequestDto){
-        Comment comment = commentService.registComment(registRequestDto);
-        return ResponseEntity.status(HttpStatus.OK)
+    public ResponseEntity<ResponseDto<?>> registComment(@RequestAttribute("userId") String userId, @RequestBody RegistRequestDto registRequestDto){
+        Comment comment = commentService.registComment(userId, registRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto.create(CREATE_SUCCESS));
     }
 
