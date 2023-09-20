@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -67,16 +68,25 @@ public class Dog extends BaseEntity {
     }
 
     @Builder
-    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBriteDate, Character dogSex) {
+    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBirthDate, Character dogSex, Integer dogIsDead) {
         this.userNo = userNo;
         this.dogName = dogName;
         this.dogBreed = dogBreed;
-        this.dogBirthDate = dogBriteDate;
+        this.dogBirthDate = dogBirthDate;
         this.dogSex = dogSex;
+        this.dogIsDead = dogIsDead;
     }
 
-    //nft 업데이트
+    @Override
+    public boolean equals(Object anotherDog) {
+        if (this == anotherDog) return true;
+        if (!(anotherDog instanceof Dog)) return false;
+        Dog dog = (Dog) anotherDog;
+        return Objects.equals(userNo, dog.userNo) && Objects.equals(dogName, dog.dogName) && Objects.equals(dogBreed, dog.dogBreed) && Objects.equals(dogBirthDate, dog.dogBirthDate) && Objects.equals(dogSex, dog.dogSex);
+    }
 
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(userNo, dogName, dogBreed, dogBirthDate, dogSex);
+    }
 }

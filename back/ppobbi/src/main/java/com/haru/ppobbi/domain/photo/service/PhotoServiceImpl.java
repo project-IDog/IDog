@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.haru.ppobbi.domain.dog.constant.DogResponseMessage.DOG_NOT_FOUND_EXCEPTION;
+
 @Service
 @RequiredArgsConstructor
 public class PhotoServiceImpl implements PhotoService{
@@ -27,10 +29,9 @@ public class PhotoServiceImpl implements PhotoService{
     @Override
     public Photo registPhoto(String userId, RegistRequestDto registRequestDto) {
         // 개 가져오기
-        Dog dog = dogRepository.findDogByDogNoAndCanceled(registRequestDto.getDogNo(), BaseConstant.NOTCANCELED);
-        if(dog == null){
-            throw new NotFoundException(PhotoResponseMessage.CREATE_FAIL_NO_DOG.message());
-        }
+        Dog dog = dogRepository.findDogByDogNoAndCanceled(photoRequestDto.getDogNo(), BaseConstant.NOTCANCELED)
+                .orElseThrow(() -> new NotFoundException(DOG_NOT_FOUND_EXCEPTION.message()));
+        User user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
         Photo photo = Photo.builder()
                 .dog(dog)
                 .userNo(dog.getUserNo())
