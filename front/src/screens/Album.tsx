@@ -32,6 +32,7 @@ const Album = ({ navigation }: any) => {
 
 	const [feedActiveState, setFeedActiveState] = useState<Boolean>(false);
 	const [albumActiveState, setAlbumActiveState] = useState<Boolean>(true);
+	const [statusComment, setStatusComment] = useState<string>("나의 반려견에게 하나뿐인 메시지를 전하세요.");
 
 	const toggleFeedState = () => {
 		switch (feedActiveState) {
@@ -67,6 +68,12 @@ const Album = ({ navigation }: any) => {
         axios.get('/photo/user/8').then((data) => {
 			if(data.data.message === "사진 조회 성공"){
 				setFeedList(data.data.data);
+			}
+		})
+
+		axios.get('/user').then((data) => {
+			if(data.data.message === "회원 정보 조회 완료"){
+				setStatusComment(data.data.data.userMessage);
 			}
 		})
     }, []);
@@ -109,7 +116,7 @@ const Album = ({ navigation }: any) => {
 					<View style={AlbumLayout.statusMessageWrap}>
 						<Image source={GrayPenIcon} />
 						<Text style={AlbumLayout.statusMessageText}>
-							상태메시지 적을 공간 할 말 적기
+							{statusComment}
 						</Text>
 					</View>
 				</TouchableOpacity>
@@ -146,7 +153,7 @@ const Album = ({ navigation }: any) => {
 								activeOpacity={0.7}
 								key={index}
 								onPress={() =>
-									navigation.push("DetailFeed", { selectImg: {uri:value.photoUrl}, comment: value.photoComment})
+									navigation.push("DetailFeed", { selectImg: {uri:value.photoUrl}, comment: value.photoComment, photoNo: value.photoNo})
 								}
 							>
 								<Image source={{uri:value.photoUrl}} style={AlbumLayout.photoItem} />
