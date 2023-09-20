@@ -5,8 +5,10 @@ import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.GET_USER_
 import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.SIGN_IN_SUCCESS;
 import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.UPDATE_USER_MESSAGE_SUCCESS;
 
+import com.haru.ppobbi.domain.user.dto.TokenInfo;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpOrInRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
+import com.haru.ppobbi.domain.user.dto.UserResponseDto.UserInfoResponseDto;
 import com.haru.ppobbi.domain.user.service.UserService;
 import com.haru.ppobbi.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("")
-    public ResponseEntity<ResponseDto<?>> signUpOrIn(
+    public ResponseEntity<ResponseDto<TokenInfo>> signUpOrIn(
         @RequestBody SignUpOrInRequestDto signUpRequestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(SIGN_IN_SUCCESS,
@@ -40,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResponseDto<?>> getUserInfo(
+    public ResponseEntity<ResponseDto<UserInfoResponseDto>> getUserInfo(
         @RequestAttribute("userNo") Integer userNo) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(GET_USER_INFO_SUCCESS,
@@ -49,7 +51,7 @@ public class UserController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<ResponseDto<?>> deleteUser(
+    public ResponseEntity<ResponseDto<String>> deleteUser(
         @RequestAttribute("userNo") Integer userNo) {
         userService.deleteUser(userNo);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -58,7 +60,7 @@ public class UserController {
     }
 
     @PutMapping("/message")
-    public ResponseEntity<ResponseDto<?>> updateUserMessage(
+    public ResponseEntity<ResponseDto<String>> updateUserMessage(
         @RequestAttribute("userNo") Integer userNo,
         @RequestBody UpdateUserMessageRequestDto updateUserMessageRequestDto) {
         userService.updateUserMessage(userNo, updateUserMessageRequestDto);
@@ -66,5 +68,4 @@ public class UserController {
             ResponseDto.create(UPDATE_USER_MESSAGE_SUCCESS)
         );
     }
-
 }
