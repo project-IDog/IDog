@@ -10,7 +10,7 @@ public enum PhotoResponseMessage implements ResponseMessage {
     UPDATE_SUCCESS("사진 수정 완료"),
     UPDATE_FAIL("사진 수정 실패"),
     DELETE_SUCCESS("사진 삭제 성공"),
-    DELETE_FAIL("사진 삭제 실패: 삭제할 사진이 없거나 이미 삭제됨"),
+    DELETE_FAIL("사진 삭제 실패"),
     UNAUTHORIZED("인증 실패");
 
     private final String message;

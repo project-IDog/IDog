@@ -3,6 +3,7 @@ package com.haru.ppobbi.domain.grave.controller;
 import static com.haru.ppobbi.domain.grave.constant.GraveResponseMessage.*;
 
 import com.haru.ppobbi.domain.grave.dto.GraveRequestDto.RegistRequestDto;
+import com.haru.ppobbi.domain.grave.dto.GraveResponseDto.GraveInfoDto;
 import com.haru.ppobbi.domain.grave.entity.Grave;
 import com.haru.ppobbi.domain.grave.service.GraveService;
 import com.haru.ppobbi.global.dto.ResponseDto;
@@ -21,20 +22,20 @@ public class GraveController {
     private final GraveService graveService;
 
     @PostMapping()
-    public ResponseEntity<ResponseDto<?>> registGrave(@RequestAttribute("userId") String userId, @RequestBody RegistRequestDto registRequestDto){
+    public ResponseEntity<ResponseDto<String>> registGrave(@RequestAttribute("userId") String userId, @RequestBody RegistRequestDto registRequestDto){
         Grave grave = graveService.registGrave(userId, registRequestDto);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto.create(CREATE_SUCCESS));
     }
 
     @GetMapping("/{graveNo}")
-    public ResponseEntity<ResponseDto<?>> getGraveInfo(@PathVariable Integer graveNo){
+    public ResponseEntity<ResponseDto<GraveInfoDto>> getGraveInfo(@PathVariable Integer graveNo){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(READ_SUCCESSS, graveService.selectGrave(graveNo)));
     }
 
     @GetMapping()
-    public ResponseEntity<ResponseDto<?>> getAllGraves(){
+    public ResponseEntity<ResponseDto<List<GraveInfoDto>>> getAllGraves(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(READ_SUCCESSS, graveService.selectGraves()));
     }
