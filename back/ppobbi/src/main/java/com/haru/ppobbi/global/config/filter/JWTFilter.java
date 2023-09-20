@@ -38,9 +38,9 @@ public class JWTFilter implements Filter {
 
             if (jwtTokenProvider.validateToken(accessToken)) {
                 log.debug("[JWTFilter - doFilter] validate 검증 완료!!");
-                String userId = jwtTokenProvider.getUserIdFromToken(accessToken);
-                log.debug("filter - userId: {}", userId);
-                request.setAttribute("userId", userId);
+                Integer userNo = jwtTokenProvider.getUserNoFromToken(accessToken);
+                log.debug("filter - userNo: {}", userNo);
+                request.setAttribute("userNo", userNo);
             }
 
             chain.doFilter(request, response);

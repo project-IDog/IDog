@@ -41,17 +41,17 @@ public class UserController {
 
     @GetMapping("")
     public ResponseEntity<ResponseDto<?>> getUserInfo(
-        @RequestAttribute("userId") String userId) {
+        @RequestAttribute("userNo") Integer userNo) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(GET_USER_INFO_SUCCESS,
-                userService.getUserInfo(userId))
+                userService.getUserInfo(userNo))
         );
     }
 
     @DeleteMapping("")
     public ResponseEntity<ResponseDto<?>> deleteUser(
-        @RequestAttribute("userId") String userId) {
-        userService.deleteUser(userId);
+        @RequestAttribute("userNo") Integer userNo) {
+        userService.deleteUser(userNo);
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(DELETE_USER_SUCCESS)
         );
@@ -59,9 +59,9 @@ public class UserController {
 
     @PutMapping("/message")
     public ResponseEntity<ResponseDto<?>> updateUserMessage(
-        @RequestAttribute("userId") String userId,
+        @RequestAttribute("userNo") Integer userNo,
         @RequestBody UpdateUserMessageRequestDto updateUserMessageRequestDto) {
-        userService.updateUserMessage(userId, updateUserMessageRequestDto);
+        userService.updateUserMessage(userNo, updateUserMessageRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(UPDATE_USER_MESSAGE_SUCCESS)
         );

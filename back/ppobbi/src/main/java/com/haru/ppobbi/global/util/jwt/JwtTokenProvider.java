@@ -36,27 +36,27 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenInfo generateToken(String userId) {
-        log.debug("[generateToken] user Id : {}", userId);
+    public TokenInfo generateToken(Integer userNo) {
+        log.debug("[generateToken] user no : {}", userNo);
         long currentTime = (new Date()).getTime();
 
         Date accessTokenExpiresIn = new Date(currentTime + ACCESS_TOKEN_EXPIRED_IN);
         String accessToken = Jwts.builder()
-            .setSubject(userId)
-            .claim("user-id", userId)
+            .setSubject(String.valueOf(userNo))
+            .claim("user-no", userNo)
             .setExpiration(accessTokenExpiresIn)
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
 
         // ### 디버깅 용
         Claims claims = parseClaims(accessToken);
-        log.debug("[DEBUG/getUserIdFromToken] claims : {}", claims);
+        log.debug("[DEBUG/getUserNoFromToken] claims : {}", claims);
         // 디버깅 용 ###
 
         Date refreshTokenExpiresIn = new Date(currentTime + REFRESH_TOKEN_EXPIRED_IN);
         String refreshToken = Jwts.builder()
-            .setSubject(String.valueOf(userId))
-            .claim("user-id", userId)
+            .setSubject(String.valueOf(userNo))
+            .claim("user-no", userNo)
             .setExpiration(refreshTokenExpiresIn)
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
@@ -84,16 +84,16 @@ public class JwtTokenProvider {
         }
     }
 
-    public String getUserIdFromToken(String accessToken) {
+    public Integer getUserNoFromToken(String accessToken) {
         Claims claims = parseClaims(accessToken);
-        log.debug("[DEBUG/getUserIdFromToken] claims : {}", claims);
+        log.debug("[DEBUG/getFUserNoFromToken] claims : {}", claims);
 
-        if(claims.get("user-id") == null) {
-            log.debug("[JwtTokenProvider - getUserIdFromToken] user id 가 Null!!!!");
+        if (claims.get("user-no") == null) {
+            log.debug("[JwtTokenProvider - getUserNoFromToken] user no 가 Null!!!!");
             throw new TokenException(INVALID_TOKEN.message());
         }
 
-        return claims.get("user-id", String.class);
+        return claims.get("user-no", Integer.class);
     }
 
     private Claims parseClaims(String accessToken) {

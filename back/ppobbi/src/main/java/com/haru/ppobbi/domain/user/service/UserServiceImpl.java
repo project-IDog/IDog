@@ -45,17 +45,22 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
 
-    @Transactional
     @Override
     public TokenInfo signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto) {
         String idToken = signUpOrInRequestDto.getIdToken();
         Map<String, Object> userAttribute = getUserAttribute(idToken);
 
+        User user = insertUser(userAttribute);
+        log.debug("[userServiceImpl - signUpOrIn] User : {}", user);
+
+        // 토큰 발급 후, 정보 반환
+        return jwtTokenProvider.generateToken(user.getUserNo());
+    }
+
+    @Transactional
+    public User insertUser(Map<String, Object> userAttribute) {
         User user = convertUserAttributeToUser(userAttribute);
         log.debug("### [DEBUG/UserService] 회원가입 user : {}", user);
-
-        // JWT Token 발급
-        TokenInfo tokenInfo = jwtTokenProvider.generateToken(user.getUserId());
 
         // DB에 정보 없을 경우 회원가입, 있을 경우 프로필 사진/이름 업데이트
         Optional<User> optionalUser = userRepository.findByUserId(user.getUserId());
@@ -66,12 +71,12 @@ public class UserServiceImpl implements UserService {
             foundUser.updateUserInfo(user.getUserName(), user.getUserProfileImg());
             userRepository.save(foundUser);
         }
-        return tokenInfo;
+        return userRepository.findByUserId(user.getUserId()).get();
     }
 
     @Override
-    public UserInfoResponseDto getUserInfo(String userId) {
-        User user = userRepository.findByUserId(userId)
+    public UserInfoResponseDto getUserInfo(Integer userNo) {
+        User user = userRepository.findById(userNo)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
         return UserInfoResponseDto.builder()
@@ -84,10 +89,10 @@ public class UserServiceImpl implements UserService {
             .build();
     }
 
-    @Transactional
     @Override
-    public void deleteUser(String userId) {
-        User user = userRepository.findByUserId(userId)
+    @Transactional
+    public void deleteUser(Integer userNo) {
+        User user = userRepository.findById(userNo)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
         userRepository.delete(user);
@@ -95,9 +100,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUserMessage(String userId,
+    public void updateUserMessage(Integer userNo,
         UpdateUserMessageRequestDto updateUserMessageRequestDto) {
-        User user = userRepository.findByUserId(userId)
+        User user = userRepository.findById(userNo)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
         String message = updateUserMessageRequestDto.getUserMessage();
