@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.haru.ppobbi.domain.dog.constant.DogResponseMessage.DOG_NOT_FOUND_EXCEPTION;
@@ -31,8 +32,8 @@ public class GraveServiceImpl implements GraveService{
     @Override
     public Grave registGrave(String userId, RegistRequestDto registRequestDto) {
         // 그 강아지의 주인 가져오기
-        User user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
-        if(user == null){ //조회된 사용자가 없을 경우
+        Optional<User> user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
+        if(user.isEmpty()){ //조회된 사용자가 없을 경우
             throw new NotFoundException(GraveResponseMessage.CREATE_FAIL_NO_USER.message());
         }
 
@@ -46,10 +47,12 @@ public class GraveServiceImpl implements GraveService{
         }
         // 강아지 사망 판정
         deadDog.setDogIsDead(BaseConstant.DEAD);
+        // 사망 일자 저장
+        deadDog.setDogDeathDate(registRequestDto.getDogDeathDate());
 
         // 새 grave 객체 생성
         Grave grave = Grave.builder()
-                .user(user)
+                .user(user.get())
                 .dog(deadDog)
                 .build();
         return graveRepository.save(grave);
@@ -57,10 +60,8 @@ public class GraveServiceImpl implements GraveService{
 
     @Override
     public GraveInfoDto selectGrave(Integer graveNo) {
-        Grave grave = graveRepository.findGraveByGraveNo(graveNo);
-        if(grave == null){
-            throw new NotFoundException(GraveResponseMessage.READ_FAIL.message());
-        }
+        Grave grave = graveRepository.findGraveByGraveNo(graveNo)
+                .orElseThrow(() -> new NotFoundException(GraveResponseMessage.READ_FAIL.message()));
         User user = grave.getUser();
         Dog dog = grave.getDog();
         return GraveInfoDto.builder()

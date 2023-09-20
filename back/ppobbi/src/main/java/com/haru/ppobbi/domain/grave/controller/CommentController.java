@@ -2,7 +2,8 @@ package com.haru.ppobbi.domain.grave.controller;
 
 import static com.haru.ppobbi.domain.grave.constant.CommentResponseMessage.*;
 
-import com.haru.ppobbi.domain.grave.dto.CommentRequestDto;
+import com.haru.ppobbi.domain.grave.dto.CommentRequestDto.RegistRequestDto;
+import com.haru.ppobbi.domain.grave.dto.CommentResponseDto.CommentInfoDto;
 import com.haru.ppobbi.domain.grave.entity.Comment;
 import com.haru.ppobbi.domain.grave.service.CommentService;
 import com.haru.ppobbi.global.dto.ResponseDto;
@@ -20,20 +21,20 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping()
-    public ResponseEntity<ResponseDto<?>> registComment(@RequestBody CommentRequestDto commentRequestDto){
-        Comment comment = commentService.registComment(commentRequestDto);
-        return ResponseEntity.status(HttpStatus.OK)
+    public ResponseEntity<ResponseDto<String>> registComment(@RequestAttribute("userId") String userId, @RequestBody RegistRequestDto registRequestDto){
+        Comment comment = commentService.registComment(userId, registRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto.create(CREATE_SUCCESS));
     }
 
     @GetMapping("/{graveNo}")
-    public ResponseEntity<ResponseDto<List<Comment>>> getComments(@PathVariable Integer graveNo){
+    public ResponseEntity<ResponseDto<List<CommentInfoDto>>> getComments(@PathVariable Integer graveNo){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(READ_SUCCESS, commentService.selectComments(graveNo)));
     }
 
     @DeleteMapping("/{commentNo}")
-    public ResponseEntity<ResponseDto<?>> deleteComment(@PathVariable Integer commentNo){
+    public ResponseEntity<ResponseDto<String>> deleteComment(@PathVariable Integer commentNo){
         commentService.deleteComment(commentNo);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(DELETE_SUCCESS));

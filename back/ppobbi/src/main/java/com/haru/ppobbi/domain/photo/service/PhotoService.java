@@ -1,6 +1,7 @@
 package com.haru.ppobbi.domain.photo.service;
 
-import com.haru.ppobbi.domain.photo.dto.PhotoRequestDto;
+import com.haru.ppobbi.domain.photo.dto.PhotoRequestDto.RegistRequestDto;
+import com.haru.ppobbi.domain.photo.dto.PhotoResponseDto.PhotoInfoDto;
 import com.haru.ppobbi.domain.photo.entity.Photo;
 
 import java.util.List;
@@ -10,34 +11,34 @@ public interface PhotoService {
      * photoRequestDto 객체를 받아 등록
      * @author Geon
      * @param userId 관련된 User 기본 키
-     * @param photoRequestDto 등록할 photoRequestDto 객체
+     * @param registRequestDto 등록할 registRequestDto 객체
      * @return Photo
      */
-    public Photo registPhoto(String userId, PhotoRequestDto photoRequestDto);
+    public Photo registPhoto(String userId, RegistRequestDto registRequestDto);
 
     /**
      * photoNo를 받아 Photo 조회
      * @author Geon
      * @param photoNo 조회할 Photo 기본 키
-     * @return Photo
+     * @return PhotoInfoDto
      */
-    public Photo selectPhoto(Integer photoNo);
+    public PhotoInfoDto selectPhoto(Integer photoNo);
 
     /**
      * userNo를 받아 모든 Photo 조회
      * @author Geon
      * @param userNO 조회할 User 기본 키
-     * @return {@code List<Photo>}
+     * @return {@code List<PhotoInfoDto>}
      */
-    public List<Photo> selectPhotosByUserNo(Integer userNO);
+    public List<PhotoInfoDto> selectPhotosByUserNo(Integer userNO);
 
     /**
      * dogNo를 받아 모든 Photo 조회
      * @author Geon
      * @param dogNo 조회할 Dog 기본 키
-     * @return {@code List<Photo>}
+     * @return {@code List<PhotoInfoDto>}
      */
-    public List<Photo> selectPhotosByDogNo(Integer dogNo);
+    public List<PhotoInfoDto> selectPhotosByDogNo(Integer dogNo);
 
     /**
      * photoNo를 받아 Photo 삭제

@@ -4,6 +4,7 @@ import com.haru.ppobbi.domain.grave.entity.Grave;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GraveRepository extends JpaRepository<Grave, Integer> {
     /**
@@ -12,7 +13,7 @@ public interface GraveRepository extends JpaRepository<Grave, Integer> {
      * @param graveNo Grave 기본 키
      * @return Grave
      */
-    public Grave findGraveByGraveNo(Integer graveNo);
+    public Optional<Grave> findGraveByGraveNo(Integer graveNo);
 
     /**
      * userNo를 조건으로 하는 모든 Grave 조회

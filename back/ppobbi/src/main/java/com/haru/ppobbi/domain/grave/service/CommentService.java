@@ -1,6 +1,7 @@
 package com.haru.ppobbi.domain.grave.service;
 
-import com.haru.ppobbi.domain.grave.dto.CommentRequestDto;
+import com.haru.ppobbi.domain.grave.dto.CommentRequestDto.RegistRequestDto;
+import com.haru.ppobbi.domain.grave.dto.CommentResponseDto.CommentInfoDto;
 import com.haru.ppobbi.domain.grave.entity.Comment;
 
 import java.util.List;
@@ -9,10 +10,11 @@ public interface CommentService {
     /**
      * CommentRequestDto 객체를 받아 등록
      * @author Geon
-     * @param commentRequestDto 등록할 CommentRequestDto 객체
+     * @param userId 작성자 id
+     * @param registRequestDto 등록할 CommentRequestDto 객체
      * @return Comment
      */
-    public Comment registComment(CommentRequestDto commentRequestDto);
+    public Comment registComment(String userId, RegistRequestDto registRequestDto);
 
     /**
      * graveNo를 받아 Comment 조회
@@ -20,7 +22,7 @@ public interface CommentService {
      * @param graveNo 조회할 Grave 기본 키
      * @return {@code List<Comment>}
      */
-    public List<Comment> selectComments(Integer graveNo);
+    public List<CommentInfoDto> selectComments(Integer graveNo);
 
     /**
      * commentNo를 받아 Comment 삭제

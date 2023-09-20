@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class CommentRequestDto {
-    private Integer graveNo;
-    private Integer userNo;
-    private String commentContent;
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class RegistRequestDto{
+        private Integer graveNo;
+        private String commentContent;
+    }
+
 }

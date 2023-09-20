@@ -63,6 +63,10 @@ public class Dog extends BaseEntity {
         this.dogIsDead = dogIsDead;
     }
 
+    public void setDogDeathDate(LocalDate dogDeathDate){
+        this.dogDeathDate = dogDeathDate;
+    }
+
     @Builder
     public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBirthDate, Character dogSex, Integer dogIsDead) {
         this.userNo = userNo;
