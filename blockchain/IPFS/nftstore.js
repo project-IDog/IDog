@@ -84,20 +84,16 @@ const storeMetaData = async () => {
   const dogBirthDate = "";
   const dogBreed = "";
   const dogGender = "";
-  const dogImage = "ipfs://" + imageIpfsCID + "/metadata.json";
-  const imageUrl = await imageIpfsUrl();
-  const imageBLOB = await getImage(imageUrl);
+  const dogImage = await getImage(imageUrl);
 
   const dogNft = {
-    image: imageBLOB,
-    name: "dogNft",
+    image: dogImage,
+    name: dogName,
     description: "",
     properties: {
-      name: dogName,
       birthDate: dogBirthDate,
       breed: dogBreed,
       gender: dogGender,
-      image: dogImage,
     },
   };
 
