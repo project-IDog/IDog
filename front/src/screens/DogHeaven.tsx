@@ -2,11 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import {
 	Animated,
 	View,
-	Text,
 	StyleSheet,
 	ViewStyle,
 	Dimensions,
+	Image,
 } from "react-native";
+import {
+	responsiveWidth,
+	responsiveHeight,
+} from "react-native-responsive-dimensions";
+
 import LottieView from "lottie-react-native";
 import DogHeavenLayout from "../styles/DogHeavenLayout";
 import Hill from "../../assets/Hill.json";
@@ -14,10 +19,21 @@ import runningDog1 from "../../assets/runningDog1.json";
 import runningDog2 from "../../assets/runningDog2.json";
 import runningDog3 from "../../assets/runningDog3.json";
 import RightDog from "../../assets/RightDog.json";
-4;
 import cloud from "../../assets/cloud.json";
+import Heaven from "../../assets/images/Heaven.jpg";
+import planet from "../../assets/planet.png";
+import cloud2 from "../../assets/images/cloud2.png";
+import Dancingdog from "../../assets/dancingDog.json";
+import heavenground from "../../assets/heavenground.png";
+import Cube from "../../assets/Cube.json";
+import Light from "../../assets/Light.json";
+import heavencloud4 from "../../assets/images/heavencloud4.png";
+import dog1of3 from "../../assets/dog1of3.json";
+import dog2of3 from "../../assets/dog2of3.json";
+import dog3of3 from "../../assets/dog3of3.json";
+import dog4of3 from "../../assets/dog4of3.json";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 interface RunningDogProps {
 	style: ViewStyle;
@@ -38,12 +54,15 @@ const RunningDog: React.FC<RunningDogProps> = ({ style, source, height }) => (
 
 const Main: React.FC = () => {
 	const [isAnimationStarted, setIsAnimationStarted] = useState(false);
+	const hillPosition = useRef(new Animated.Value(0)).current;
 	const progress = useRef(new Animated.Value(0)).current;
 	const progress2 = useRef(new Animated.Value(0)).current;
 	const dogPosition1 = useRef(new Animated.Value(400)).current;
 	const dogPosition2 = useRef(new Animated.Value(-400)).current;
 	const dogPosition3 = useRef(new Animated.Value(400)).current;
 	const cloudPosition1 = useRef(new Animated.Value(100)).current;
+	const dog3totop = useRef(new Animated.Value(0)).current;
+	const dog3Opacity = useRef(new Animated.Value(0)).current;
 
 	const dogStyles = [
 		DogHeavenLayout.runningDog1,
@@ -80,15 +99,25 @@ const Main: React.FC = () => {
 				Animated.delay(3000),
 				Animated.timing(progress, {
 					toValue: 0.2,
-					duration: 3000, // Adjust as needed.
+					duration: 3000,
 					useNativeDriver: true,
 				}),
-				Animated.delay(2000), // Pause for 1 second
-				Animated.timing(progress, {
-					toValue: 0.5,
-					duration: 2000, // Adjust as needed.
-					useNativeDriver: true,
-				}),
+				Animated.delay(2000),
+				Animated.parallel([
+					Animated.sequence([
+						Animated.delay(800),
+						Animated.timing(dog3Opacity, {
+							toValue: 1,
+							duration: 1000,
+							useNativeDriver: true,
+						}),
+					]),
+					Animated.timing(progress, {
+						toValue: 0.5,
+						duration: 2000,
+						useNativeDriver: true,
+					}),
+				]),
 			]);
 			animationSequence.start();
 		}
@@ -113,43 +142,149 @@ const Main: React.FC = () => {
 				duration: 3000,
 				useNativeDriver: true,
 			}),
-			Animated.delay(1000),
-			Animated.timing(dogPosition3, {
-				toValue: 400,
-				duration: 2000,
-				useNativeDriver: true,
-			}),
-		]).start();
+			Animated.parallel([
+				Animated.timing(hillPosition, {
+					toValue: height,
+					duration: 2000,
+					useNativeDriver: true,
+				}),
+				Animated.timing(cloudPosition1, {
+					toValue: -(width + 500),
+					duration: 2000,
+					useNativeDriver: true,
+				}),
+				Animated.timing(dogPosition3, {
+					toValue: width,
+					duration: 1500,
+					useNativeDriver: true,
+				}),
+				Animated.timing(dog3totop, {
+					toValue: -height,
+					duration: 1500,
+					useNativeDriver: true,
+				}),
+			]),
+		]).start(() => {});
 	}, [isAnimationStarted]);
+
+	const cloudPositionY = useRef(new Animated.Value(0)).current;
+	const cloudPositionY2 = useRef(new Animated.Value(0)).current;
+
+	useEffect(() => {
+		const animation = Animated.loop(
+			Animated.sequence([
+				Animated.timing(cloudPositionY, {
+					toValue: 50,
+					duration: 8000,
+					useNativeDriver: true,
+				}),
+				Animated.timing(cloudPositionY, {
+					toValue: 0,
+					duration: 8000, // 원하는 대로 지속 시간을 조절하세요
+					useNativeDriver: true,
+				}),
+			]),
+		);
+
+		const animation2 = Animated.loop(
+			Animated.sequence([
+				Animated.timing(cloudPositionY2, {
+					toValue: -30,
+					duration: 8000,
+					useNativeDriver: true,
+				}),
+				Animated.timing(cloudPositionY2, {
+					toValue: 0,
+					duration: 8000, // 원하는 대로 지속 시간을 조절하세요
+					useNativeDriver: true,
+				}),
+			]),
+		);
+
+		animation.start();
+		animation2.start();
+
+		return () => {
+			animation.stop();
+			animation2.stop();
+		}; // 컴포넌트가 사라질 때 애니메이션을 정지합니다
+	}, []);
 
 	return (
 		<>
-			<LottieView
-				style={[DogHeavenLayout.hill]}
-				source={Hill}
-				progress={progress}
-				loop={false}
-				resizeMode="cover"
-			/>
-			{/* <LottieView
-				source={runningDog3}
+			<View>
+				<Image
+					source={Heaven}
+					style={[DogHeavenLayout.heaven]}
+					resizeMode="cover"
+				/>
+				<Image
+					source={planet}
+					style={[DogHeavenLayout.planet]}
+					resizeMode="cover"
+				/>
+				<Image
+					source={cloud2}
+					style={[DogHeavenLayout.heavencloud]}
+					resizeMode="cover"
+				/>
+			</View>
+			<Animated.Image
+				source={heavenground}
 				style={[
-					{
-						zIndex: 3,
-						width: 100,
-						height: 100,
-						position: "absolute",
-						top: 200,
-						bottom: 0,
-						left: 100,
-						right: 0,
-					},
+					DogHeavenLayout.heavenground,
+					{ transform: [{ translateY: cloudPositionY }] },
 				]}
+			/>
+			<Animated.Image
+				source={heavencloud4}
+				style={[
+					DogHeavenLayout.heavencloud4,
+					{ transform: [{ translateY: cloudPositionY2 }] },
+				]}
+			/>
+			<Animated.Image
+				source={cloud2}
+				style={[
+					DogHeavenLayout.heavencloud2,
+					{ transform: [{ translateY: cloudPositionY }] },
+				]}
+			/>
+			<LottieView
+				style={[DogHeavenLayout.Dancingdog]}
+				source={Dancingdog}
 				autoPlay
-				speed={2}
 				loop={true}
 				resizeMode="cover"
-			/> */}
+			/>
+			<LottieView
+				style={[DogHeavenLayout.cube, { transform: [{ scale: 0.35 }] }]}
+				source={Cube}
+				autoPlay
+				loop={true}
+				resizeMode="cover"
+				speed={0.5}
+			/>
+			<LottieView
+				style={[DogHeavenLayout.light, { transform: [{ scale: 0.7 }] }]}
+				source={Light}
+				autoPlay
+				loop={true}
+				resizeMode="cover"
+				speed={0.5}
+			/>
+
+			<Animated.View
+				style={[{ transform: [{ translateY: hillPosition }], zIndex: 2 }]}
+			>
+				<LottieView
+					style={[DogHeavenLayout.hill]}
+					source={Hill}
+					progress={progress}
+					loop={false}
+					resizeMode="cover"
+				/>
+			</Animated.View>
 			<Animated.View
 				style={{
 					position: "absolute",
@@ -235,13 +370,60 @@ const Main: React.FC = () => {
 					<LottieView
 						key={index}
 						source={cloud}
-						style={[style]}
+						style={[style, { transform: [{ scale: 1.1 }] }]}
 						autoPlay
 						speed={0.5}
 						loop={true}
 						resizeMode="cover"
 					/>
 				))}
+			</Animated.View>
+			<Animated.View
+				style={{
+					position: "absolute",
+					zIndex: 2,
+					opacity: dog3Opacity,
+					transform: [{ translateY: hillPosition }],
+				}}
+			>
+				<LottieView
+					source={dog2of3}
+					style={[
+						{
+							zIndex: 4,
+							width: 150,
+							height: 100,
+							position: "absolute",
+							top: responsiveHeight(33),
+							bottom: 0,
+							left: responsiveWidth(5),
+							right: 0,
+						},
+					]}
+					autoPlay
+					speed={2}
+					loop={true}
+					resizeMode="cover"
+				/>
+				<LottieView
+					source={dog4of3}
+					style={[
+						{
+							zIndex: 4,
+							width: 150,
+							height: 100,
+							position: "absolute",
+							top: responsiveHeight(36),
+							bottom: 0,
+							left: responsiveWidth(30),
+							right: 0,
+						},
+					]}
+					autoPlay
+					speed={2}
+					loop={true}
+					resizeMode="cover"
+				/>
 			</Animated.View>
 		</>
 	);
