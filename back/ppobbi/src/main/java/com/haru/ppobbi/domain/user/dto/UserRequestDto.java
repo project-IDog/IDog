@@ -13,10 +13,7 @@ public class UserRequestDto {
     @AllArgsConstructor
     public static class SignUpOrInRequestDto {
 
-        private String authorizationCode;
         private String idToken;
-        private String accessToken;
-        private String refreshToken;
     }
 
     @Data
