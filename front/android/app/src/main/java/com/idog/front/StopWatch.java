@@ -54,6 +54,7 @@ public class StopWatch extends AppWidgetProvider {
         int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         boolean isRunning = prefs.getBoolean("isRunning_" + appWidgetId, false);
 
+        Log.d("appWidgetId ", "현재 위젯 아이디 : " + appWidgetId);
         if ("PLAY_ACTION".equals(intent.getAction())) {
             if (!isRunning) {
                 prefs.edit().putBoolean("isRunning_" + appWidgetId, true).apply();
@@ -128,9 +129,16 @@ public class StopWatch extends AppWidgetProvider {
             prefs.edit().putInt("number_" + appWidgetId, number + 1).apply();
             updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId);
 
+            // Emit event to React Native
+            WritableMap map = Arguments.createMap();
+            map.putInt("appWidgetId", appWidgetId);
+            map.putInt("number", number + 1);
+            StopWatchModule.emitDeviceEvent("onAppWidgetUpdate", map);
+
             if (isRunning) {
                 this.sendMessageDelayed(this.obtainMessage(appWidgetId), 1000);
             }
         }
+
     }
 }

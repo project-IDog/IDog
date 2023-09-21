@@ -43,36 +43,26 @@ const WidgetText = () => {
 		if (appWidgetId) {
 			const widgetData = await StopWatchModule.getNumber(Number(appWidgetId));
 			setWidgetData(widgetData);
+			console.log("widgetData : ", widgetData);
+			console.log("widgetId : ", appWidgetId);
 		}
 	};
 
-	const increaseBy1 = async () => {
+	const playTimer = () => {
 		if (appWidgetId) {
-			const updatedNumber = await StopWatchModule.updateNumber(
-				Number(appWidgetId),
-				1,
-			);
-			setWidgetData(updatedNumber);
+			StopWatchModule.playTimer(Number(appWidgetId));
 		}
 	};
 
-	const increaseBy10 = async () => {
+	const stopTimer = () => {
 		if (appWidgetId) {
-			const updatedNumber = await StopWatchModule.updateNumber(
-				Number(appWidgetId),
-				10,
-			);
-			setWidgetData(updatedNumber);
+			StopWatchModule.stopTimer(Number(appWidgetId));
 		}
 	};
 
-	const resetNumber = async () => {
+	const resetTimer = () => {
 		if (appWidgetId) {
-			const updatedNumber = await StopWatchModule.updateNumber(
-				Number(appWidgetId),
-				-widgetData,
-			);
-			setWidgetData(updatedNumber);
+			StopWatchModule.resetTimer(Number(appWidgetId));
 		}
 	};
 
@@ -86,9 +76,9 @@ const WidgetText = () => {
 			/>
 			<Text>{appWidgetId}</Text>
 			<Text>Current state</Text>
-			<Button title="increase by 1" onPress={() => increaseBy1()} />
-			<Button title="increase by 10" onPress={() => increaseBy10()} />
-			<Button title="reset" onPress={() => resetNumber()} />
+			<Button title="Play" onPress={playTimer} />
+			<Button title="Stop" onPress={stopTimer} />
+			<Button title="Reset" onPress={resetTimer} />
 		</View>
 	);
 };

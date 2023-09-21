@@ -15,6 +15,7 @@ import com.facebook.soloader.SoLoader;
 
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
+import android.util.Log;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             @SuppressWarnings("UnnecessaryLocalVariable")
             List<ReactPackage> packages = new PackageList(this).getPackages();
+            Log.d("packages ", "PACKAGES : " + packages.toString());
             packages.add(new StopWatchPackage());
             return packages;
         }
