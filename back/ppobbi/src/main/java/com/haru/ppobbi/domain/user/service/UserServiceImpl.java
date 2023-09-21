@@ -51,9 +51,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public TokenInfo signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto) {
         String idToken = signUpOrInRequestDto.getIdToken();
-        Map<String, Object> userAttribute = getUserAttribute(idToken);
 
-        User user = insertUser(userAttribute);
+        Map<String, Object> userAttribute = getUserAttribute(idToken);
+        OAuth2UserInfo oAuth2UserInfo = new OAuth2UserInfo(userAttribute);
+
+        User user = insertUser(oAuth2UserInfo);
         log.debug("[userServiceImpl - signUpOrIn] User : {}", user);
 
         // 토큰 발급 후, 정보 반환
@@ -61,8 +63,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public User insertUser(Map<String, Object> userAttribute) {
-        User user = convertUserAttributeToUser(userAttribute);
+    public User insertUser(OAuth2UserInfo oAuth2UserInfo) {
+        User user = convertOAuth2UserToUser(oAuth2UserInfo);
         log.debug("### [DEBUG/UserService] 회원가입 user : {}", user);
 
         // DB에 정보 없을 경우 회원가입, 있을 경우 프로필 사진/이름 업데이트
@@ -124,9 +126,7 @@ public class UserServiceImpl implements UserService {
             .build();
     }
 
-    private User convertUserAttributeToUser(Map<String, Object> userAttribute) {
-        OAuth2UserInfo oAuth2UserInfo = new OAuth2UserInfo(userAttribute);
-
+    private User convertOAuth2UserToUser(OAuth2UserInfo oAuth2UserInfo) {
         return User.builder()
             .userId(oAuth2UserInfo.getUserId())
             .userName(oAuth2UserInfo.getUserName())
