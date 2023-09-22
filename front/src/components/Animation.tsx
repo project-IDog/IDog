@@ -1,16 +1,5 @@
-import {
-	SectionList,
-	View,
-	Text,
-	Image,
-	StyleSheet,
-	Animated,
-} from "react-native";
+import { View, Text, Image, StyleSheet, Animated } from "react-native";
 import React, { useEffect } from "react";
-import Footer from "../components/Footer";
-import IndexStore from "../stores/IndexStore";
-import CommonLayout from "../components/CommonLayout";
-import MainHeader from "../components/MainHeader";
 import BG1 from "../../assets/images/BG1.png";
 import {
 	responsiveHeight,
@@ -19,9 +8,8 @@ import {
 import LottieView from "lottie-react-native";
 import cloud22 from "../../assets/images/cloud22.png";
 import cloud32 from "../../assets/images/cloud32.png";
-// import SectionList from "./SectionList";
 
-const Main = ({ navigation }: any) => {
+const Main = () => {
 	const grasses = [
 		MemorialParkDesignLayout.grass1,
 		MemorialParkDesignLayout.grass2,
@@ -30,21 +18,6 @@ const Main = ({ navigation }: any) => {
 		MemorialParkDesignLayout.grass5,
 		MemorialParkDesignLayout.grass6,
 	];
-
-	const { LoginStore } = IndexStore();
-
-	const authHandling = (pageName: string) => {
-		if (pageName === "Three") {
-			navigation.navigate(pageName);
-			return;
-		}
-
-		if (LoginStore.isLogged) {
-			navigation.navigate(pageName);
-		} else {
-			alert("해당 서비스는 로그인 후 이용가능합니다.");
-		}
-	};
 
 	const animatedX1 = new Animated.Value(-responsiveWidth(0));
 	const animatedX2 = new Animated.Value(-responsiveWidth(50));
@@ -73,49 +46,38 @@ const Main = ({ navigation }: any) => {
 
 	return (
 		<>
-			<CommonLayout>
-				<MainHeader></MainHeader>
-				<View
+			<View style={MemorialParkDesignLayout.view1}>
+				<Image source={BG1} style={MemorialParkDesignLayout.bg1} />
+				<Animated.Image
+					source={cloud22}
 					style={[
-						{
-							backgroundColor: "black",
-							height: responsiveHeight(100),
-						},
+						MemorialParkDesignLayout.cloud1,
+						{ transform: [{ translateX: animatedX1 }] },
 					]}
-				></View>
-				<View style={MemorialParkDesignLayout.view1}>
-					<Image source={BG1} style={MemorialParkDesignLayout.bg1} />
-					<Animated.Image
-						source={cloud22}
-						style={[
-							MemorialParkDesignLayout.cloud1,
-							{ transform: [{ translateX: animatedX1 }] },
-						]}
-					/>
-					<Animated.Image
-						source={cloud32}
-						style={[
-							MemorialParkDesignLayout.cloud2,
-							{ transform: [{ translateX: animatedX2 }] },
-						]}
-					/>
-					{grasses.map((grass, index) => {
-						return (
-							<LottieView
-								key={index}
-								source={require("../../assets/grass.json")}
-								style={[
-									grass,
-									// { top: responsiveHeight(103) }
-								]}
-								autoPlay
-								loop
-								speed={0.4}
-							/>
-						);
-					})}
-				</View>
-			</CommonLayout>
+				/>
+				<Animated.Image
+					source={cloud32}
+					style={[
+						MemorialParkDesignLayout.cloud2,
+						{ transform: [{ translateX: animatedX2 }] },
+					]}
+				/>
+				{grasses.map((grass, index) => {
+					return (
+						<LottieView
+							key={index}
+							source={require("../../assets/grass.json")}
+							style={[
+								grass,
+								// { top: responsiveHeight(103) }
+							]}
+							autoPlay
+							loop
+							speed={0.4}
+						/>
+					);
+				})}
+			</View>
 		</>
 	);
 };
