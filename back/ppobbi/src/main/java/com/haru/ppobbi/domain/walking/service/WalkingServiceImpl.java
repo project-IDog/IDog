@@ -52,7 +52,7 @@ public class WalkingServiceImpl implements WalkingService{
     }
 
     @Override
-    public List<WalkingResponseDto.WalkingInfoDto> selectWalkingsByUserNo(String userId) {
+    public List<WalkingResponseDto.WalkingInfoDto> selectWalkingsByUserId(String userId) {
         User user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED)
                 .orElseThrow(() -> new NotFoundException(CREATE_FAIL_NO_USER.message()));
         List<Walking> walkingList = walkingRepository.findAllByUserNoAndCanceled(user.getUserNo(), BaseConstant.NOTCANCELED);

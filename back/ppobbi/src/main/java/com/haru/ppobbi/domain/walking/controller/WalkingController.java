@@ -20,11 +20,22 @@ public class WalkingController {
     private WalkingService walkingService;
 
     @PostMapping()
-    public ResponseEntity<ResponseDto<String>> registOrUpdateWalking(@RequestAttribute("userid") String userId, RegistRequestDto registRequestDto){
+    public ResponseEntity<ResponseDto<String>> registOrUpdateWalking(@RequestAttribute("userId") String userId, RegistRequestDto registRequestDto){
         Walking walking = walkingService.registOrUpdateWalking(userId, registRequestDto);
         return (walking.getWalkingCount() == 1) ?
                 ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.create(CREATE_SUCCESS)) :
                 ResponseEntity.status(HttpStatus.OK).body(ResponseDto.create(UPDATE_SUCCESS));
     }
 
+    @GetMapping()
+    public ResponseEntity<ResponseDto<List<WalkingInfoDto>>> getWalkingInfoByUser(@RequestAttribute("userId") String userId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.create(READ_SUCCESS, walkingService.selectWalkingsByUserId(userId)));
+    }
+
+    @GetMapping("/{dogNo}")
+    public ResponseEntity<ResponseDto<List<WalkingInfoDto>>> getWalkingInfoByDog(@PathVariable Integer dogNo){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.create(READ_SUCCESS, walkingService.selectWalkingsByDogNo(dogNo)));
+    }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 public interface WalkingService {
     public Walking registOrUpdateWalking(String userId, RegistRequestDto registRequestDto);
 
-    public List<WalkingInfoDto> selectWalkingsByUserNo(String userId);
+    public List<WalkingInfoDto> selectWalkingsByUserId(String userId);
 
     public List<WalkingInfoDto> selectWalkingsByDogNo(Integer dogNo);
 }
