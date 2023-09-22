@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,10 +26,10 @@ public class Walking extends BaseEntity {
     private Integer userNo;
 
     @Column(name = "walking_starttime")
-    private Integer walkingStarttime;
+    private LocalDateTime walkingStarttime;
 
     @Column(name = "walking_endtime")
-    private Integer walkingEndtime;
+    private LocalDateTime walkingEndtime;
 
     @Column(name = "walking_time")
     private Integer walkingTime;
