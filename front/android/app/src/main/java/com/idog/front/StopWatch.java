@@ -51,38 +51,43 @@ public class StopWatch extends AppWidgetProvider {
         super.onReceive(context, intent);
 
         SharedPreferences prefs = context.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
-        int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        boolean isRunning = prefs.getBoolean("isRunning_" + appWidgetId, false);
+        boolean isRunning = prefs.getBoolean("isRunning" , false);
+        Log.d("StopWatch", "Received action: " + intent.getAction());
 
-        Log.d("appWidgetId ", "현재 위젯 아이디 : " + appWidgetId);
         if ("PLAY_ACTION".equals(intent.getAction())) {
             if (!isRunning) {
-                prefs.edit().putBoolean("isRunning_" + appWidgetId, true).apply();
-                Log.d("isRunning : ", "PLAY_ACTION ");
+                prefs.edit().putBoolean("isRunning", true).apply();
                 if (handler == null) {
                     handler = new MyHandler(context);
                 }
-                handler.sendMessage(handler.obtainMessage(appWidgetId));
+                handler.sendMessage(handler.obtainMessage(0));
             }
         } else if ("STOP_ACTION".equals(intent.getAction())) {
-            prefs.edit().putBoolean("isRunning_" + appWidgetId, false).apply();
-            Log.d("isRunning : ", "STOP_ACTION ");
+            prefs.edit().putBoolean("isRunning", false).apply();
             if (handler != null) {
-                handler.removeMessages(appWidgetId);
+                handler.removeMessages(0);
             }
         } else if ("RESET_ACTION".equals(intent.getAction())) {
-            prefs.edit().putBoolean("isRunning_" + appWidgetId, false).apply();
+            prefs.edit().putBoolean("isRunning", false).apply();
             if (handler != null) {
-                handler.removeMessages(appWidgetId);
+                handler.removeMessages(0);
             }
-            prefs.edit().putInt("number_" + appWidgetId, 0).apply();
-            updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId);
+            prefs.edit().putInt("number", 0).apply();
+            updateAllWidgets(context);
+        }
+    }
+
+    static void updateAllWidgets(Context context) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, StopWatch.class));
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
-        int number = prefs.getInt("number_" + appWidgetId, 0);
+        int number = prefs.getInt("number", 0);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
         views.setTextViewText(R.id.timer, String.valueOf(number));
@@ -122,21 +127,19 @@ public class StopWatch extends AppWidgetProvider {
             if (context == null) return;
 
             SharedPreferences prefs = context.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
-            int appWidgetId = msg.what;
-            int number = prefs.getInt("number_" + appWidgetId, 0);
-            boolean isRunning = prefs.getBoolean("isRunning_" + appWidgetId, false);
+            int number = prefs.getInt("number", 0);
+            boolean isRunning = prefs.getBoolean("isRunning", false);
 
-            prefs.edit().putInt("number_" + appWidgetId, number + 1).apply();
-            updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId);
+            prefs.edit().putInt("number", number + 1).apply();
+            updateAllWidgets(context);
 
             // Emit event to React Native
             WritableMap map = Arguments.createMap();
-            map.putInt("appWidgetId", appWidgetId);
             map.putInt("number", number + 1);
             StopWatchModule.emitDeviceEvent("onAppWidgetUpdate", map);
 
             if (isRunning) {
-                this.sendMessageDelayed(this.obtainMessage(appWidgetId), 1000);
+                this.sendMessageDelayed(this.obtainMessage(0), 1000);
             }
         }
 
