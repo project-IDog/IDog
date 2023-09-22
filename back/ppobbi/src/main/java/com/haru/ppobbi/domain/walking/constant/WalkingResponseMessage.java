@@ -3,6 +3,8 @@ package com.haru.ppobbi.domain.walking.constant;
 import com.haru.ppobbi.global.dto.ResponseMessage;
 
 public enum WalkingResponseMessage implements ResponseMessage {
+
+    UPDATE_SUCCESS("산책 기록 수정 성공"),
     CREATE_SUCCESS("산책 기록 등록 성공"),
     CREATE_FAIL_NO_DOG("산책 기록 등록 실패: 노 독"),
     CREATE_FAIL_NO_USER("산책 기록 등록 실패: 사용자 없음"),

@@ -37,10 +37,18 @@ public class Walking extends BaseEntity {
     private Dog dog;
 
     @Builder
-    public Walking(Integer userNo, LocalDate walkingStartDate, Integer walkingTime){
+    public Walking(Integer userNo, LocalDate walkingStartDate, Integer walkingCount, Integer walkingTime){
         this.userNo = userNo;
         this.walkingStartDate = walkingStartDate;
         this.walkingTime = walkingTime;
+    }
+
+    public void addCountPlusOne(){
+        this.walkingCount++;
+    }
+
+    public void addWalkingTime(Integer walkingTime){
+        this.walkingTime += walkingTime;
     }
 
     public void setDog(Dog dog) {

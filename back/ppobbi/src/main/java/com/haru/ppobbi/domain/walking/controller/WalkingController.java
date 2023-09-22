@@ -20,10 +20,11 @@ public class WalkingController {
     private WalkingService walkingService;
 
     @PostMapping()
-    public ResponseEntity<ResponseDto<String>> registWalking(@RequestAttribute("userid") String userId, RegistRequestDto registRequestDto){
-        Walking walking = walkingService.registWalking(userId, registRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ResponseDto.create(CREATE_SUCCESS));
+    public ResponseEntity<ResponseDto<String>> registOrUpdateWalking(@RequestAttribute("userid") String userId, RegistRequestDto registRequestDto){
+        Walking walking = walkingService.registOrUpdateWalking(userId, registRequestDto);
+        return (walking.getWalkingCount() == 1) ?
+                ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.create(CREATE_SUCCESS)) :
+                ResponseEntity.status(HttpStatus.OK).body(ResponseDto.create(UPDATE_SUCCESS));
     }
 
 }
