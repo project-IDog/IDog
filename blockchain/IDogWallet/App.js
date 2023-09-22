@@ -4,20 +4,19 @@ import { StyleSheet, Text, View, Button, TextInput } from "react-native";
 import "react-native-get-random-values";
 
 import { ethers } from "ethers";
-import PinFile from "./IPFS";
+// import PinFile from "./IPFS";
 import CryptoJS from "react-native-crypto-js";
 import * as SecureStore from 'expo-secure-store';
-
-// import smartcontract from './TestNFT1.json';
-
-
+import { mintAnimalTokenAbi, mintAnimalTokenAddress } from "./mintContract";
 
 export default function App() {
   const [password, setPassword] = useState("");
 
   const RPC_URL = process.env.RPC_URL;
   const SECRET_SALT = process.env.SECRET_SALT;
-  const NFT_STORAGE = process.env.NFT_STORAGE;
+  const PRIVATE_KEY = process.env.PRIVATE_KEY;
+  const ANOTHER_ADDRESS = process.env.ANOTHER_ADDRESS;
+  // const NFT_STORAGE = process.env.NFT_STORAGE;
 
   //1. 니모닉 생성 (지갑 생성)
   // 지갑을 생성하면 첫번째 계정은 만들어진다. (디폴트 경로가 있으니까)
@@ -96,25 +95,39 @@ export default function App() {
   };
 
 
-  //NFT Minting
-  // const provider = new ethers.JsonRpcProvider("https://rpc.sepolia.org");
-  // const sepoliawallet = new ethers.Wallet("4f2a7e577a4fa0143e172e799cb182e9efdf59e543a386ed9e879e797315aafc", provider);
-  // const contractAbi = smartcontract.abi; // 배포된 컨트랙트의 ABI
-  // const contractAddress = "0xb84E333213874e742ad883220B17Fd8A38E12553"; // 배포된 컨트랙트의 주소
-  // const contract = new ethers.Contract(contractAddress, contractAbi, sepoliawallet);
+  // NFT Minting
 
-  // const mintNFT = async() => {
-  //   const recipient = "0xe4aB23dE71Aa79c773C1783E1120f1f5e6A7F551"; // 수신자의 Ethereum 주소
-  //   const uri = "https://example.com/path/to/your/metadata.json"; // NFT의 메타데이터 URI
+  const mintNFT = async() => {
+    const provider = new ethers.JsonRpcProvider(RPC_URL);
+    const testwallet = new ethers.Wallet(PRIVATE_KEY, provider);
+    console.log(testwallet);
+    // const message = testwallet.signMessageSync("hello");
+    // console.log(message);
+    const contractAbi = mintAnimalTokenAbi.abi; // 배포된 컨트랙트의 ABI
+    const contractAddress = mintAnimalTokenAddress; // 배포된 컨트랙트의 주소
+    const contract = new ethers.Contract(contractAddress, contractAbi, testwallet);
+   
+    const to = ANOTHER_ADDRESS;
+    const value = ethers.parseEther('1.0');
 
-  //   const tx = await contract.mintNFT(recipient, uri);
-  //   await tx.wait();
+    // transaction 생성
+    // const transaction = {to, value };
 
-  //   console.log("NFT minted successfully.");
-  // }
 
-  
-  return ( 
+    // 지갑으로 서명하고 서명값을 서버에 보내기
+    let tx = await testwallet.sendTransaction({to, value });
+    console.log("tx", tx);
+
+
+
+    // const tx = await contract.mintAnimakToken({from:sepoliawallet});
+    // await tx.wait();
+
+    // console.log("NFT minted successfully.");
+  }
+
+
+  return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Text>디지털지갑</Text>
@@ -131,11 +144,13 @@ export default function App() {
       <Text>--------------------------------------</Text>
       <Button title="NFT Mint" onPress={mintNFT} />
       <Text>--------------------------------------</Text>
-      <PinFile />
+      {/* <PinFilre /> */}
       <StatusBar style="auto" />
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -145,6 +160,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   space: {
-    flex:0.1,
+    flex: 0.1,
   }
 });

@@ -1,25 +1,29 @@
 import React, {FC, useEffect, useState} from "react";
-import { mintAnimakTokenContract, saleAnimalTokenAddress } from "../contracts";
-import AnimalCard from "../components/AnimalCard";
+import { saleAnimalTokenAddress, mintAnimalTokenContract, saleAnimalTokenContract } from "../contracts";
+import MyAnimalCard from "../components/MyAnimalCard";
+import { IMyAnimalCard } from "../components/MyAnimalCard";
 
 interface MyAnimalProps {
     account:string;
 }
 
 const MyAnimal: FC<MyAnimalProps> = ({account}) => {
-const [animalCardArray, setAnimalCardArray] = useState<string[]>();
+const [animalCardArray, setAnimalCardArray] = useState<IMyAnimalCard[]>();
 const [saleStatus, setSaleStatus] = useState<boolean>(false);
 
 const getAnimalTokens = async () => {
     try {
-        const balanceLength = await mintAnimakTokenContract.methods.balanceOf(account).call();
+        const balanceLength = await mintAnimalTokenContract.methods.balanceOf(account).call();
 
         const tempAnimalCardArray = [];
 
         for(let i=0; i <parseInt(balanceLength,10); i++){
-            const animalTokenId = await mintAnimakTokenContract.methods.tokenOfOwnerByIndex(account, i).call();
-            const animalType = await mintAnimakTokenContract.methods.animalTypes(animalTokenId).call();
-            tempAnimalCardArray.push(animalType);
+            const animalTokenId = await mintAnimalTokenContract.methods.tokenOfOwnerByIndex(account, i).call();
+            const animalType = await mintAnimalTokenContract.methods.animalTypes(animalTokenId).call();
+
+            const animalPrice = await saleAnimalTokenContract.methods.animalTokenPrices(animalTokenId).call();
+
+            tempAnimalCardArray.push({animalTokenId, animalType, animalPrice});
         }
         setAnimalCardArray(tempAnimalCardArray);
     } catch (error) {
@@ -28,7 +32,7 @@ const getAnimalTokens = async () => {
 };
     const getIsApprovedForAll =async () => {
         try {
-            const response = await mintAnimakTokenContract.methods.isApprovedForAll(account, saleAnimalTokenAddress).call();
+            const response = await mintAnimalTokenContract.methods.isApprovedForAll(account, saleAnimalTokenAddress).call();
             if(response) {
                 setSaleStatus(response);
             }
@@ -40,7 +44,7 @@ const getAnimalTokens = async () => {
     const onClickApproveToggle =async () => {
         try {
             if(!account) return;
-            const response = await mintAnimakTokenContract.methods.setApprovalForAll(saleAnimalTokenAddress, !saleStatus).send({from:account});
+            const response = await mintAnimalTokenContract.methods.setApprovalForAll(saleAnimalTokenAddress, !saleStatus).send({from:account});
             if(response.status) {
                 setSaleStatus(!saleStatus);
             }
@@ -67,7 +71,16 @@ const getAnimalTokens = async () => {
         </div>
         <div className="grid-container">
             {animalCardArray && animalCardArray.map((src, index) => {
-                return <AnimalCard key={index} animalType={src}></AnimalCard>
+                return (
+                    <MyAnimalCard 
+                        key={index} 
+                        animalTokenId={src.animalTokenId} 
+                        animalType={src.animalType} 
+                        animalPrice={src.animalPrice} 
+                        saleStatus={saleStatus}
+                        account={account}
+                    />
+                );
             })}
         </div>
         </>

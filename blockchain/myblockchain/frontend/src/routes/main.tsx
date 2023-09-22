@@ -1,6 +1,6 @@
 import { async } from "q";
 import React, {FC, useState} from "react";
-import { mintAnimakTokenContract } from "../contracts";
+import { mintAnimalTokenContract } from "../contracts";
 import AnimalCard from "../components/AnimalCard";
 
 interface MainProps {
@@ -13,12 +13,12 @@ const Main: FC<MainProps> = ({account}) => {
     const onClickMint = async () => {
         try {
             if(!account) return;
-            const response = await mintAnimakTokenContract.methods.mintAnimakToken().send({from: account});
-            // console.log(response);
+            const response = await mintAnimalTokenContract.methods.mintAnimakToken().send({from: account});
+            console.log(response);
             if(response.status) {
-                const balanceLength = await mintAnimakTokenContract.methods.balanceOf(account).call();
-                const animalTokenId = await mintAnimakTokenContract.methods.tokenOfOwnerByIndex(account, parseInt(balanceLength.length,10)-1).call();
-                const animalType = await mintAnimakTokenContract.methods.animalTypes(animalTokenId).call();
+                const balanceLength = await mintAnimalTokenContract.methods.balanceOf(account).call();
+                const animalTokenId = await mintAnimalTokenContract.methods.tokenOfOwnerByIndex(account, parseInt(balanceLength.length,10)-1).call();
+                const animalType = await mintAnimalTokenContract.methods.animalTypes(animalTokenId).call();
                 console.log(animalType);
                 setNewAnimalType(animalType);
             }

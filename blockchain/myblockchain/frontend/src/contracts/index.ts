@@ -535,12 +535,12 @@ export const saleAnimalTokenAddress = "0xadD2cEc4B681b51C1f575130721C5e5f0a0654a
 
 export const web3 = new Web3(window.ethereum);
 
-export const mintAnimakTokenContract = new web3.eth.Contract(
+export const mintAnimalTokenContract = new web3.eth.Contract(
 	mintAnimalTokenAbi,
 	mintAnimalTokenAddress
 );
 
-export const SaleAnimakTokenContract = new web3.eth.Contract(
+export const saleAnimalTokenContract = new web3.eth.Contract(
 	saleAnimalTokenAbi,
 	saleAnimalTokenAddress
 );
