@@ -16,7 +16,6 @@ import CreateFeed from "./src/screens/CreateFeed";
 import DetailFeed from "./src/screens/DetailFeed";
 import Walk from "./src/screens/Walk";
 import Login from "./src/screens/Login";
-import Ani from "./src/screens/Ani";
 import Three from "./src/screens/MemorialPark";
 import CreateWalletMain from "./src/screens/CreateWalletMain";
 import AgreeWallet from "./src/screens/AgreeWallet";
@@ -57,7 +56,6 @@ const App = () => {
 					component={CreateWalletPassword}
 				/>
 				<Stack.Screen name="ProtectWallet" component={ProtectWallet} />
-				<Stack.Screen name="Ani" component={Ani} />
 				<Stack.Screen name="Three" component={Three} />
 				<Stack.Screen name="Ipfs" component={Ipfs} />
 				<Stack.Screen name="WidgetText" component={WidgetText} />
