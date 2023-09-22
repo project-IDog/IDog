@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
+
 public class StopWatchModule extends ReactContextBaseJavaModule {
     private static ReactApplicationContext reactContext;
 
@@ -31,16 +32,17 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
                     .emit(eventName, eventData);
         }
     }
+
     @Override
     public String getName() {
         return "StopWatchModule";
     }
 
     @ReactMethod
-    public void getNumber(int appWidgetId, Promise promise) {
+    public void getNumber(Promise promise) {
         try {
             SharedPreferences prefs = StopWatchModule.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
-            int number = prefs.getInt("number_" + appWidgetId, 0);
+            int number = prefs.getInt("number", 0); // Remove appWidgetId usage
             Log.d("StopWatchModule Number", "This is a simple log from Native Module!" + number + " prefs : " + prefs);
 
             promise.resolve(number);
@@ -48,29 +50,25 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
             promise.reject("GET_NUMBER_ERROR", e);
         }
     }
+
     @ReactMethod
-    public void playTimer(int appWidgetId) {
+    public void playTimer() {
         Intent intent = new Intent(reactContext, StopWatch.class);
         intent.setAction("PLAY_ACTION");
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         reactContext.sendBroadcast(intent);
     }
 
     @ReactMethod
-    public void stopTimer(int appWidgetId) {
+    public void stopTimer() {
         Intent intent = new Intent(reactContext, StopWatch.class);
         intent.setAction("STOP_ACTION");
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         reactContext.sendBroadcast(intent);
     }
 
     @ReactMethod
-    public void resetTimer(int appWidgetId) {
+    public void resetTimer() {
         Intent intent = new Intent(reactContext, StopWatch.class);
         intent.setAction("RESET_ACTION");
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         reactContext.sendBroadcast(intent);
     }
-
-
 }

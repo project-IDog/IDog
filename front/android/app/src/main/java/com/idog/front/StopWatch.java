@@ -30,10 +30,8 @@ public class StopWatch extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
-            WritableMap map = Arguments.createMap();
-            map.putInt("appWidgetId", appWidgetId);
-            StopWatchModule.emitDeviceEvent("onAppWidgetUpdate", map);
         }
+        StopWatchModule.emitDeviceEvent("onAppWidgetUpdate", Arguments.createMap());
     }
 
     @Override
@@ -94,20 +92,17 @@ public class StopWatch extends AppWidgetProvider {
 
         Intent playIntent = new Intent(context, StopWatch.class);
         playIntent.setAction("PLAY_ACTION");
-        playIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, playIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.playButton, playPendingIntent);
 
         Intent stopIntent = new Intent(context, StopWatch.class);
         stopIntent.setAction("STOP_ACTION");
-        stopIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, appWidgetId + 1, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 1, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.stopButton, stopPendingIntent);
 
         Intent resetIntent = new Intent(context, StopWatch.class);
         resetIntent.setAction("RESET_ACTION");
-        resetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent resetPendingIntent = PendingIntent.getBroadcast(context, appWidgetId + 2, resetIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent resetPendingIntent = PendingIntent.getBroadcast(context, 2, resetIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.resetButton, resetPendingIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
