@@ -15,8 +15,7 @@ public class WalkingRequestDto {
     @Builder
     public static class RegistRequestDto{
         private Integer dogNo;
-        private LocalDateTime walkingStartTime;
-        private LocalDateTime walkingEndTime;
+        private LocalDate walkingStartDate;
         private Integer walkingTime;
     }
 }

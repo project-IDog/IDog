@@ -5,6 +5,7 @@ import com.haru.ppobbi.global.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,11 +23,11 @@ public class Walking extends BaseEntity {
     @Column(name = "user_no")
     private Integer userNo;
 
-    @Column(name = "walking_starttime")
-    private LocalDateTime walkingStarttime;
+    @Column(name = "walking_startdate")
+    private LocalDate walkingStartDate;
 
-    @Column(name = "walking_endtime")
-    private LocalDateTime walkingEndtime;
+    @Column(name = "walking_count")
+    private Integer walkingCount;
 
     @Column(name = "walking_time")
     private Integer walkingTime;
@@ -36,11 +37,9 @@ public class Walking extends BaseEntity {
     private Dog dog;
 
     @Builder
-    public Walking(Integer userNo, LocalDateTime walkingStarttime, LocalDateTime walkingEndtime,
-                   Integer walkingTime){
+    public Walking(Integer userNo, LocalDate walkingStartDate, Integer walkingTime){
         this.userNo = userNo;
-        this.walkingStarttime = walkingStarttime;
-        this.walkingEndtime = walkingEndtime;
+        this.walkingStartDate = walkingStartDate;
         this.walkingTime = walkingTime;
     }
 

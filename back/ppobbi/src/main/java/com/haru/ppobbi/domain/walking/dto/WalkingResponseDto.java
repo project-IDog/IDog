@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class WalkingResponseDto {
@@ -16,16 +17,16 @@ public class WalkingResponseDto {
         private Integer walkingNo;
         private Integer dogNo;
         private String dogName;
-        private LocalDateTime walkingStartTime;
-        private LocalDateTime walkingEndTime;
+        private LocalDate walkingStartDate;
+        private Integer walkingCount;
         private Integer walkingTime;
 
         public WalkingInfoDto(Walking walking){
             this.walkingNo = walking.getWalkingNo();
             this.dogNo = walking.getDog().getDogNo();
             this.dogName = walking.getDog().getDogName();
-            this.walkingStartTime = walking.getWalkingStarttime();
-            this.walkingEndTime = walking.getWalkingEndtime();
+            this.walkingStartDate = walking.getWalkingStartDate();
+            this.walkingCount = walking.getWalkingCount();
             this.walkingTime = walking.getWalkingTime();
         }
     }
