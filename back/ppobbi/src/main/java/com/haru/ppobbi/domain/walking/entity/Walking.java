@@ -2,10 +2,7 @@ package com.haru.ppobbi.domain.walking.entity;
 
 import com.haru.ppobbi.domain.dog.entity.Dog;
 import com.haru.ppobbi.global.entity.BaseEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -37,6 +34,15 @@ public class Walking extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "dog_no")
     private Dog dog;
+
+    @Builder
+    public Walking(Integer userNo, LocalDateTime walkingStarttime, LocalDateTime walkingEndtime,
+                   Integer walkingTime){
+        this.userNo = userNo;
+        this.walkingStarttime = walkingStarttime;
+        this.walkingEndtime = walkingEndtime;
+        this.walkingTime = walkingTime;
+    }
 
     public void setDog(Dog dog) {
         this.dog = dog;

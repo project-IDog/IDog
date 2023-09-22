@@ -12,7 +12,7 @@ public class WalkingResponseDto {
     @Getter
     @AllArgsConstructor
     @Builder
-    private static class WalkingInfoDto{
+    public static class WalkingInfoDto{
         private Integer walkingNo;
         private Integer dogNo;
         private String dogName;
