@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
+import { set } from "mobx";
+import React, { useEffect, useState } from "react";
 import { View, Text, Button } from "react-native";
 import { NativeModules, DeviceEventEmitter } from "react-native";
 
 const { StopWatchModule } = NativeModules;
 
 const WidgetText = () => {
-	const [widgetData, setWidgetData] = React.useState<number>(0);
+	const [widgetData, setWidgetData] = useState("00:00:00");
 
 	useEffect(() => {
 		getWidgetData();
@@ -38,6 +39,7 @@ const WidgetText = () => {
 
 	const resetTimer = () => {
 		StopWatchModule.resetTimer();
+		setWidgetData("00:00:00");
 	};
 
 	return (

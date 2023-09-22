@@ -44,8 +44,12 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
             SharedPreferences prefs = StopWatchModule.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
             int number = prefs.getInt("number", 0); // Remove appWidgetId usage
             Log.d("StopWatchModule Number", "This is a simple log from Native Module!" + number + " prefs : " + prefs);
-
-            promise.resolve(number);
+            int hours = number / 3600;
+            int minutes = (number % 3600) / 60;
+            int seconds = number % 60;
+            String formattedTime = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+            Log.d("StopWatchModule Number", "Formatted time: " + formattedTime + " prefs : " + prefs);
+            promise.resolve(formattedTime);
         } catch (Exception e) {
             promise.reject("GET_NUMBER_ERROR", e);
         }

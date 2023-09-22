@@ -88,7 +88,7 @@ public class StopWatch extends AppWidgetProvider {
         int number = prefs.getInt("number", 0);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
-        views.setTextViewText(R.id.timer, String.valueOf(number));
+        views.setTextViewText(R.id.timer, formatTime(number));
 
         Intent playIntent = new Intent(context, StopWatch.class);
         playIntent.setAction("PLAY_ACTION");
@@ -106,6 +106,13 @@ public class StopWatch extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.resetButton, resetPendingIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    private static String formatTime(int totalSecond) {
+        int hours = totalSecond / 3600;
+        int minutes = (totalSecond % 3600) / 60;
+        int seconds = totalSecond % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     private static class MyHandler extends Handler {
@@ -130,7 +137,7 @@ public class StopWatch extends AppWidgetProvider {
 
             // Emit event to React Native
             WritableMap map = Arguments.createMap();
-            map.putInt("number", number + 1);
+            map.putString("number", formatTime(number + 1));
             StopWatchModule.emitDeviceEvent("onAppWidgetUpdate", map);
 
             if (isRunning) {
