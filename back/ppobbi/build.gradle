@@ -46,9 +46,9 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+//tasks.named('test') {
+//    useJUnitPlatform()
+//}
 apply plugin: 'org.sonarqube'
 
 sonarqube {
