@@ -1,8 +1,16 @@
-import {observable} from "mobx";
+import { observable } from "mobx";
 import LoginStore from "./LoginStore";
 
-const IndexStore = () => ({
-    LoginStore,
-})
+type StoresType = {
+	LoginStore: {
+		isLogged: boolean;
+		userInfo: {};
+	};
+	[key: string]: any;
+};
+
+const IndexStore = (): StoresType => ({
+	LoginStore,
+});
 
 export default IndexStore;

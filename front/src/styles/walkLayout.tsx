@@ -103,12 +103,6 @@ const WalkLayout = StyleSheet.create({
         height:10,
         marginLeft:4,
     },
-    myPetContent:{
-        marginTop:20,
-    },
-    myPetItem:{
-        marginHorizontal:responsiveWidth(1),
-    },
 
     timerWrap:{
         marginTop:38,
