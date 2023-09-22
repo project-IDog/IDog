@@ -3,6 +3,8 @@ package com.haru.ppobbi.domain.walking.entity;
 import com.haru.ppobbi.domain.dog.entity.Dog;
 import com.haru.ppobbi.global.entity.BaseEntity;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,7 +26,7 @@ public class Walking extends BaseEntity {
     private Integer userNo;
 
     @Column(name = "walking_startdate")
-    private LocalDate walkingStartDate;
+    private LocalDateTime walkingStartDate;
 
     @Column(name = "walking_count")
     private Integer walkingCount;
@@ -37,9 +39,10 @@ public class Walking extends BaseEntity {
     private Dog dog;
 
     @Builder
-    public Walking(Integer userNo, LocalDate walkingStartDate, Integer walkingCount, Integer walkingTime){
+    public Walking(Integer userNo, LocalDate walkingStartDate, Integer walkingTime){
         this.userNo = userNo;
-        this.walkingStartDate = walkingStartDate;
+        this.walkingStartDate = walkingStartDate.atStartOfDay();
+        this.walkingCount = 1;
         this.walkingTime = walkingTime;
     }
 

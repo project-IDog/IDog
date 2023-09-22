@@ -7,9 +7,9 @@ import com.haru.ppobbi.domain.walking.entity.Walking;
 import java.util.List;
 
 public interface WalkingService {
-    public Walking registOrUpdateWalking(String userId, RegistRequestDto registRequestDto);
+    public Walking registOrUpdateWalking(Integer userNo, RegistRequestDto registRequestDto);
 
-    public List<WalkingInfoDto> selectWalkingsByUserId(String userId);
+    public List<WalkingInfoDto> selectWalkingsByUserNo(Integer userNo);
 
     public List<WalkingInfoDto> selectWalkingsByDogNo(Integer dogNo);
 }

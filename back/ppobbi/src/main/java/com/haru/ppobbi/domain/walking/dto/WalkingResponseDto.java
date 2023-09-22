@@ -25,7 +25,7 @@ public class WalkingResponseDto {
             this.walkingNo = walking.getWalkingNo();
             this.dogNo = walking.getDog().getDogNo();
             this.dogName = walking.getDog().getDogName();
-            this.walkingStartDate = walking.getWalkingStartDate();
+            this.walkingStartDate = walking.getWalkingStartDate().toLocalDate();
             this.walkingCount = walking.getWalkingCount();
             this.walkingTime = walking.getWalkingTime();
         }
