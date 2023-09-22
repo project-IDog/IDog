@@ -112,7 +112,7 @@ public class StopWatch extends AppWidgetProvider {
         int hours = totalSecond / 3600;
         int minutes = (totalSecond % 3600) / 60;
         int seconds = totalSecond % 60;
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return String.format("%01d:%02d:%02d", hours, minutes, seconds);
     }
 
     private static class MyHandler extends Handler {

@@ -7,7 +7,7 @@ import { set } from "mobx";
 const { StopWatchModule } = NativeModules;
 
 const WidgetText = () => {
-	const [widgetData, setWidgetData] = useState("00:00:00");
+	const [widgetData, setWidgetData] = useState("0:00:00");
 	const [isPlaying, setIsPlaying] = useState(false);
 
 	useEffect(() => {
@@ -43,7 +43,7 @@ const WidgetText = () => {
 
 	const resetTimer = () => {
 		StopWatchModule.resetTimer();
-		setWidgetData("00:00:00");
+		setWidgetData("0:00:00");
 		setIsPlaying(false);
 	};
 

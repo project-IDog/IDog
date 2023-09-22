@@ -11,7 +11,7 @@
         android:id="@+id/profile"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:src="@drawable/vaccine_icon"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
@@ -22,7 +22,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:orientation="vertical"
         android:gravity="center">
 
@@ -41,16 +41,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/possible_button"
-                android:text="재생"
+                android:background="@drawable/possible_play"
                 android:layout_marginRight="4dp" />
             <Button
                 android:id="@+id/stopButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/possible_button"
-                android:text="정지"
+                android:background="@drawable/possible_stop"
                 android:layout_marginRight="4dp"
                 android:visibility="gone"/>
             <Button
@@ -58,8 +56,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/impossible_button"
-                android:text="초기화"
+                android:background="@drawable/impossible_stop"
                 android:layout_marginLeft="4dp" />
 
         </LinearLayout>
@@ -72,8 +69,9 @@
             android:layout_weight="1"
             android:background="@drawable/background_timer"
             android:gravity="center"
-            android:text="00:00:00"
-            android:textSize="18sp"
+            android:text="0:00:00"
+            android:textColor="@android:color/white"
+            android:textSize="36sp"
             android:layout_margin="2dp"/>
 
     </LinearLayout>
