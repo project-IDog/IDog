@@ -1,5 +1,7 @@
 package com.haru.ppobbi.domain.user.dto;
 
+import com.haru.ppobbi.domain.user.constant.UserRole;
+import com.haru.ppobbi.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,9 +13,21 @@ public class UserRequestDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SignUpOrInRequestDto {
+    public static class UserInfoRequestDto {
 
-        private String idToken;
+        private String userId;
+        private String userName;
+        private String userProfileImg;
+        private UserRole userRole;
+
+        public User toUser() {
+            return User.builder()
+                .userId(userId)
+                .userName(userName)
+                .userProfileImg(userProfileImg)
+                .userRole(userRole)
+                .build();
+        }
     }
 
     @Data
