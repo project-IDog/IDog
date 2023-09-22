@@ -25,7 +25,7 @@ const Profile = ({navigation}:any) => {
     const renderFront = () => {
         return(
             <View>
-                <NftProfile createdTitle="좌우로 회전해보세요" bgImg={PuppyThumbnail1}/>
+                <NftProfile dogName="내 반려견 해피" createdTitle="등록한 날짜" createdAt="2023. 09. 02." species="시베리안허스키" bgImg={PuppyThumbnail1}/>
             </View>
         )
     }
@@ -33,18 +33,15 @@ const Profile = ({navigation}:any) => {
     const renderBack = () => {
         return(
             <View>
-                <NftProfile dogName="내 반려견 해피" createdTitle="등록한 날짜" createdAt="2023. 09. 02." species="시베리안허스키" bgImg={PuppyThumbnail1}/>
+                <NftProfile createdTitle="좌우로 회전해보세요" bgImg={PuppyThumbnail1}/>
             </View>
         )
     }
 
     useEffect(() => {
-        axios.get('/user').then((data) => {
-            if(String(data) === "session expire"){
-                navigation.navigate('Main');
-            }
-        })
-    }, [])
+
+    }, []);
+    
     return(
         <>
             <CommonLayout>

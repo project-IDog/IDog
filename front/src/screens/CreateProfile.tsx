@@ -1,9 +1,10 @@
-import {useState} from "react"
+import {useState,useEffect} from "react"
 import {View, Text, TextInput, Image, TouchableOpacity} from "react-native"
 import ColorHeader from "../components/ColorHeader"
 import CommonLayout from "../components/CommonLayout"
 import Footer from "../components/Footer"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
+import * as SecureStore from 'expo-secure-store';
 
 import DatePickerIcon from "../../assets/images/date-picker-icon.png"
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
@@ -12,6 +13,9 @@ import CreateProfileLayout from "../styles/createProfileLayout"
 
 const CreateProfile = ({navigation} : any) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [walletAddress, setWalletAddress] = useState<string>();
+    const [walletPrivateKey, setWalletPrivateKey] = useState<string>();
+
     const showDatePicker = () => {
         setDatePickerVisibility(true);
     };
@@ -24,6 +28,22 @@ const CreateProfile = ({navigation} : any) => {
         console.warn("사용자가 선택한 날짜: ", date);
         hideDatePicker();
     };
+
+    useEffect(() => {
+        const getWalletInfoFromStore = async () => {
+            const walletAddress = await SecureStore.getItemAsync("walletAddress");
+            if(walletAddress){
+                setWalletAddress(walletAddress);
+            }
+            const privateKey = await SecureStore.getItemAsync("privateKey");
+            if(privateKey){
+                setWalletPrivateKey(privateKey);
+            }
+        }
+
+        getWalletInfoFromStore();
+    }, [])
+
     return(
         <>
             <CommonLayout>
