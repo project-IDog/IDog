@@ -1,27 +1,24 @@
 package com.haru.ppobbi.global.util.oauth;
 
-import static com.haru.ppobbi.global.util.oauth.constant.OAuth2ExceptionMessage.EXPIRED_TOKEN;
+import static com.haru.ppobbi.domain.user.constant.UserRole.ROLE_USER;
 import static com.haru.ppobbi.global.util.oauth.constant.OAuth2ExceptionMessage.INVALID_TOKEN;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserInfoRequestDto;
+import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.global.error.TokenException;
-import com.haru.ppobbi.global.util.oauth.OAuth2ResponseDto.OAuth2TokenInfo;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -33,20 +30,28 @@ public class OAuth2TokenHandler {
 
     private final RestTemplate restTemplate;
 
+    public UserInfoRequestDto validateTokenAndGetUserInfo(String token) {
+        Map<String, Object> userAttribute = getUserAttribute(token);
+        OAuth2UserInfo oAuth2UserInfo = new OAuth2UserInfo(userAttribute);
+        return UserInfoRequestDto.builder()
+            .userId(oAuth2UserInfo.getUserId())
+            .userName(oAuth2UserInfo.getUserName())
+            .userProfileImg(oAuth2UserInfo.getUserProfileImg())
+            .userRole(ROLE_USER)
+            .build();
+    }
 
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId;
+    private User convertOAuth2UserToUser(OAuth2UserInfo oAuth2UserInfo) {
+        return User.builder()
+            .userId(oAuth2UserInfo.getUserId())
+            .userName(oAuth2UserInfo.getUserName())
+            .userProfileImg(oAuth2UserInfo.getUserProfileImg())
+            .userRole(ROLE_USER)
+            .build();
+    }
 
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret;
-
-    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
-    private String redirectURI;
-
-
-    public OAuth2TokenInfo getOAuthToken(String authorizationCode) {
-        String accessToken = "";
-        String refreshToken = "";
+    private Map<String, Object> getUserAttribute(String idToken) {
+        log.debug("[DEBUG/getUserAttribute] idToken : {}", idToken);
 
         Map<String, Object> userAttribute;
 
@@ -54,77 +59,35 @@ public class OAuth2TokenHandler {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        String googleAPI = "https://oauth2.googleapis.com/token";
-        URI googleURI = UriComponentsBuilder
-            .fromUriString(googleAPI)
-            .encode(StandardCharsets.UTF_8)
-            .build()
-            .toUri();
+        // URL 생성
+        String googleApi = "https://oauth2.googleapis.com/tokeninfo";
+        String targetURL = UriComponentsBuilder.fromHttpUrl(googleApi)
+            .queryParam("id_token", idToken).build().toUriString();
+        log.debug("[DEBUG/getUserAttribute] targetURL : {}", targetURL);
 
-        log.debug("[DEBUG/getOAuthToken] targetURL : {}", googleURI);
-
-        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap();
-        requestMap.add("grant_type", "authorization_code");
-        requestMap.add("client_id", clientId);
-        requestMap.add("redirect_uri", redirectURI);
-        requestMap.add("code", authorizationCode);
-
-        ResponseEntity<HashMap> response;
-        try {
-            response = restTemplate.exchange(googleURI, HttpMethod.POST, entity,
-                HashMap.class);
-        } catch (HttpClientErrorException e) {
-            e.printStackTrace();
-            throw new TokenException(INVALID_TOKEN.message());
-        }
-        log.debug("[DEBUG/getOAuthToken] response : {}", response);
-
-        return OAuth2TokenInfo.builder()
-            .accessToken(accessToken)
-            .refreshToken(refreshToken)
-            .build();
-    }
-
-    public String validateAccessTokenAndGetUserId(String accessToken) {
-        // TODO : access token invalid -> refresh token 유효성 검증 -> 새로 access token 발급 구현
-        // TODO : Refactoring
-        String googleApiURL = "https://oauth2.googleapis.com/tokeninfo?access_token=" + accessToken;
-        log.debug("[DEBUG/validateAccessToken] Google Api URL : {}", googleApiURL);
+        // Response 받아오기
         ResponseEntity<String> response;
         try {
-            response = restTemplate.getForEntity(googleApiURL, String.class);
-            log.debug("[DEBUG/validateAccessToken] Response To Access Token : {}", response);
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonBody = (JSONObject) jsonParser.parse(response.getBody());
-
-            return (String) jsonBody.get("email");
+            response = restTemplate.exchange(targetURL,
+                HttpMethod.GET,
+                entity,
+                String.class);
         } catch (HttpClientErrorException e) {
-            String errorMessage = e.getMessage();
-            log.debug("error: {}", errorMessage);
-            if (errorMessage.contains("invalid_token")) {
-                // TODO: refresh token으로 access token 받아오기
-                if (validateRefreshToken()) {
-                    accessToken = getAccessTokenFromRefreshToken();
-
-                } else {
-                    throw new TokenException(INVALID_TOKEN.message());
-                }
-                throw new TokenException(INVALID_TOKEN.message());
-            } else if (errorMessage.contains("expired_token")) {
-                throw new TokenException(EXPIRED_TOKEN.message());
-            } else {
-                throw new TokenException(INVALID_TOKEN.message());
-            }
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new TokenException(INVALID_TOKEN.message());
         }
+        log.debug("[DEBUG/response] response : {}", response);
+
+        // Response To Json 파싱
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonBody;
+        try {
+            jsonBody = (JSONObject) jsonParser.parse(response.getBody());
+            userAttribute = new ObjectMapper().readValue(jsonBody.toString(), Map.class);
+        } catch (ParseException | JsonProcessingException e) {
+            throw new TokenException(INVALID_TOKEN.message());
+        }
+        return userAttribute;
     }
 
-    private String getAccessTokenFromRefreshToken() {
-        return null;
-    }
 
-    private boolean validateRefreshToken() {
-        return true;
-    }
 }

@@ -7,8 +7,8 @@ import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.SIGN_IN_S
 import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.UPDATE_USER_MESSAGE_SUCCESS;
 
 import com.haru.ppobbi.domain.user.dto.TokenInfo;
-import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpOrInRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserInfoRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserResponseDto.AccessTokenResponseDto;
 import com.haru.ppobbi.domain.user.dto.UserResponseDto.UserInfoResponseDto;
 import com.haru.ppobbi.domain.user.service.UserService;
@@ -36,10 +36,10 @@ public class UserController {
 
     @PostMapping("")
     public ResponseEntity<ResponseDto<TokenInfo>> signUpOrIn(
-        @RequestBody SignUpOrInRequestDto signUpRequestDto) {
+        @RequestAttribute("userInfo") UserInfoRequestDto userInfoRequestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(SIGN_IN_SUCCESS,
-                userService.signUpOrIn(signUpRequestDto))
+                userService.signUpOrIn(userInfoRequestDto))
         );
     }
 
@@ -74,7 +74,7 @@ public class UserController {
     @GetMapping("/token")
     public ResponseEntity<ResponseDto<AccessTokenResponseDto>> reissueAccessToken(
         @RequestAttribute("userNo") Integer userNo) {
-        return ResponseEntity.status(HttpStatus.OK).body(
+        return ResponseEntity.status(HttpStatus.CREATED).body(
             ResponseDto.create(REISSUE_ACCESS_TOKEN__SUCCESS,
                 userService.reissueAccessToken(userNo))
         );

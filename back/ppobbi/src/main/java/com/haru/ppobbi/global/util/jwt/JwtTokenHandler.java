@@ -1,5 +1,7 @@
 package com.haru.ppobbi.global.util.jwt;
 
+import static com.haru.ppobbi.global.util.jwt.constant.TokenSubject.ACCESS_TOKEN;
+import static com.haru.ppobbi.global.util.jwt.constant.TokenSubject.REFRESH_TOKEN;
 import static com.haru.ppobbi.global.util.oauth.constant.OAuth2ExceptionMessage.EXPIRED_TOKEN;
 import static com.haru.ppobbi.global.util.oauth.constant.OAuth2ExceptionMessage.INVALID_TOKEN;
 
@@ -21,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class JwtTokenProvider {
+public class JwtTokenHandler {
 
     private final Key key;
 
@@ -31,7 +33,7 @@ public class JwtTokenProvider {
     @Value("${jwt.refresh-expired-in}")
     private long REFRESH_TOKEN_EXPIRED_IN;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
+    public JwtTokenHandler(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -42,7 +44,7 @@ public class JwtTokenProvider {
 
         Date accessTokenExpiresIn = new Date(currentTime + ACCESS_TOKEN_EXPIRED_IN);
         String accessToken = Jwts.builder()
-            .setSubject(String.valueOf(userNo))
+            .setSubject(ACCESS_TOKEN.message())
             .claim("user-no", userNo)
             .setExpiration(accessTokenExpiresIn)
             .signWith(key, SignatureAlgorithm.HS256)
@@ -55,7 +57,7 @@ public class JwtTokenProvider {
 
         Date refreshTokenExpiresIn = new Date(currentTime + REFRESH_TOKEN_EXPIRED_IN);
         String refreshToken = Jwts.builder()
-            .setSubject(String.valueOf(userNo))
+            .setSubject(REFRESH_TOKEN.message())
             .claim("user-no", userNo)
             .setExpiration(refreshTokenExpiresIn)
             .signWith(key, SignatureAlgorithm.HS256)
@@ -84,8 +86,8 @@ public class JwtTokenProvider {
         }
     }
 
-    public Integer getUserNoFromToken(String accessToken) {
-        Claims claims = parseClaims(accessToken);
+    public Integer getUserNoFromToken(String token) {
+        Claims claims = parseClaims(token);
         log.debug("[DEBUG/getFUserNoFromToken] claims : {}", claims);
 
         if (claims.get("user-no") == null) {
@@ -94,6 +96,11 @@ public class JwtTokenProvider {
         }
 
         return claims.get("user-no", Integer.class);
+    }
+
+    public String getTokenSubject(String token) {
+        Claims claims = parseClaims(token);
+        return claims.getSubject();
     }
 
     private Claims parseClaims(String accessToken) {
