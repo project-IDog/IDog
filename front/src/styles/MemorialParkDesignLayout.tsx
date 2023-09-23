@@ -87,9 +87,11 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
+		paddingTop: responsiveHeight(10),
+		
 	},
 	nftview: {
-		height: responsiveHeight(90),
+		height: responsiveHeight(50),
 		width: responsiveWidth(70),
 		alignItems: "center",
 		justifyContent: "center",
