@@ -21,8 +21,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping()
-    public ResponseEntity<ResponseDto<String>> registComment(@RequestAttribute("userId") String userId, @RequestBody RegistRequestDto registRequestDto){
-        Comment comment = commentService.registComment(userId, registRequestDto);
+    public ResponseEntity<ResponseDto<String>> registComment(@RequestAttribute("userNo") Integer userNo, @RequestBody RegistRequestDto registRequestDto){
+        Comment comment = commentService.registComment(userNo, registRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto.create(CREATE_SUCCESS));
     }

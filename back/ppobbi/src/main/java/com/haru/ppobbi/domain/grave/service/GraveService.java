@@ -10,11 +10,11 @@ public interface GraveService{
     /**
      * GraveRequestDto 객체를 받아 등록
      * @author Geon
-     * @param userId 관련된 User 기본 키
+     * @param userNo 관련된 User 기본 키
      * @param registRequestDto 등록할 registRequestDto 객체
      * @return Grave
      */
-    public Grave registGrave(String userId, RegistRequestDto registRequestDto);
+    public Grave registGrave(Integer userNo, RegistRequestDto registRequestDto);
     /**
      * graveNo를 받아 Grave 조회
      * @author Geon

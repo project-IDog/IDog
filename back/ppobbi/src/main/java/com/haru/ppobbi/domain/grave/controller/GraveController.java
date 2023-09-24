@@ -22,8 +22,8 @@ public class GraveController {
     private final GraveService graveService;
 
     @PostMapping()
-    public ResponseEntity<ResponseDto<String>> registGrave(@RequestAttribute("userId") String userId, @RequestBody RegistRequestDto registRequestDto){
-        Grave grave = graveService.registGrave(userId, registRequestDto);
+    public ResponseEntity<ResponseDto<String>> registGrave(@RequestAttribute("userNo") Integer userNo, @RequestBody RegistRequestDto registRequestDto){
+        Grave grave = graveService.registGrave(userNo, registRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto.create(CREATE_SUCCESS));
     }
