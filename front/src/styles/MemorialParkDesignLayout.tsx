@@ -83,24 +83,200 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		fontSize: 20,
 		height: 44,
 	},
+	ripdetailbtn: {},
+
+	ripnfbtn: {
+		position: "absolute",
+		top: responsiveHeight(40),
+		borderRadius: 20,
+		paddingHorizontal: responsiveWidth(5),
+		paddingVertical: responsiveHeight(1),
+		backgroundColor: "#91b4e6",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	ripnftbtntext: {
+		fontSize: 20,
+		color: "#ffffff",
+	},
 	nftcontainer: {
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
-		paddingTop: responsiveHeight(10),
-		
+	},
+	linearalign: {
+		position: "relative",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	lineralignbg: {
+		position: "absolute",
+		opacity: 0.5,
+		resizeMode: "cover",
+		transform: [{ scale: 0.8 }],
 	},
 	nftview: {
-		height: responsiveHeight(50),
-		width: responsiveWidth(70),
+		height: responsiveHeight(80),
+		width: responsiveWidth(100),
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "#ffffff",
+		marginHorizontal: responsiveWidth(20),
+	},
+	nftbg: {
+		marginTop: responsiveHeight(5),
+		// display: "flex",
+		height: responsiveHeight(40),
+		width: responsiveWidth(80),
+		// paddingHorizontal: responsiveWidth(30),
+		marginHorizontal: responsiveWidth(10),
+		backgroundColor: "rgba(0, 0, 0, 0.6)",
+		borderRadius: 30,
+		position: "relative",
+	},
+	nftbgtitle: {
+		justifyContent: "center",
+		alignItems: "center",
+		paddingVertical: responsiveHeight(2),
+		paddingHorizontal: responsiveWidth(2),
+	},
+	nftbgtitletext: {
+		fontSize: 20,
+		color: "#ffffff",
+		fontWeight: "bold",
+	},
+
+	nftinnercontainer: {
+		zIndex: 1,
+		paddingHorizontal: responsiveWidth(4),
+		paddingVertical: responsiveHeight(2),
+		display: "flex",
+		flexDirection: "row",
+	},
+	nfttext: {
+		fontSize: 20,
+		color: "#ffffff",
+	},
+	ripdetailalign: { justifyContent: "center", alignItems: "center" },
+
+	ripnftinnerbtncontainer: {
+		alignItems: "center",
+		justifyContent: "center",
+		width: responsiveWidth(30),
+	},
+	ripnftinnerbtn: {
+		borderRadius: 20,
+		paddingHorizontal: responsiveWidth(5),
+		paddingVertical: responsiveHeight(1),
+	},
+
+	ripnftinnertext: {
+		fontSize: 20,
+		color: "#ffffff",
+	},
+	ripnftinnermainimg: {
+		height: responsiveHeight(20),
+		width: responsiveWidth(30),
+		borderRadius: 20,
+		resizeMode: "cover",
+	},
+	ripnftinnersubimg: {
+		height: responsiveHeight(8),
+		width: responsiveWidth(12),
+		borderRadius: 10,
+		resizeMode: "cover",
+	},
+
+	ripnftrow1: {
+		display: "flex",
+		flexDirection: "column",
+	},
+	ripnftrow2: {
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "space-between",
+		paddingHorizontal: responsiveWidth(2),
+	},
+	ripnftbwn: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+	},
+	nfttextdate: {
+		fontSize: 14,
+		color: "#ffffff",
+	},
+	modalcontainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	modalinnercontainer: {
+		position: "relative",
+		width: responsiveWidth(80),
+		height: responsiveHeight(60),
+		backgroundColor: "rgba(255, 255, 255, 0.9)",
+		padding: 20,
+		borderRadius: 10,
+		elevation: 20,
+	},
+	modaltitlecontainer: {
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	nftbg: {
-		height: responsiveHeight(50),
-		// width: responsiveWidth(70),
-		alignItems: "center",
-		justifyContent: "center",
+	modaltitle: {
+		fontSize: 20,
+		fontWeight: "bold",
+		paddingVertical: responsiveHeight(2),
+		// backgroundColor: "red",
+	},
+	modalclosebtn: {
+		position: "absolute",
+		backgroundColor: "#2196F3",
+		paddingHorizontal: responsiveWidth(2),
+		paddingVertical: responsiveHeight(0.5),
+		borderRadius: 10,
+		top: 30,
+		right: 30,
+	},
+	modalclosetext: {
+		color: "black",
+		fontSize: 20,
+		fontWeight: "bold",
+	},
+	modalcontentcontainer: {
+		paddingVertical: responsiveHeight(2),
+		flexDirection: "row",
+		display: "flex",
+		// alignItems: "center",
+		justifyContent: "space-between",
+	},
+	modalcontents: {
+		display: "flex",
+		paddingHorizontal: responsiveWidth(5),
+		flexDirection: "column",
+		justifyContent: "space-between",
+		// backgroundColor: "red",
+		paddingVertical: responsiveHeight(2),
+	},
+	modalcontentrow: {
+		display: "flex",
+		flexDirection: "row",
+		// alignItems: "center",
+		justifyContent: "space-between",
+	},
+	modalcontentimg: {
+		height: responsiveHeight(12),
+		width: responsiveWidth(24),
+		borderRadius: 20,
+		resizeMode: "cover",
+	},
+	modalcontenttitle: {
+		fontSize: 20,
+		fontWeight: "bold",
+	},
+	modalcontentdatetitle: {
+		fontSize: 14,
 	},
 });
 

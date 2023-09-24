@@ -1,6 +1,7 @@
 import { observable } from "mobx";
 
 const colors = [
+	"rgb(255, 255, 255)",
 	"rgb(138, 172, 222)",
 	"rgb(136, 169, 218)",
 	"rgb(134, 166, 215)",
@@ -51,7 +52,8 @@ const colors = [
 	"rgb(40, 32, 54)",
 	"rgb(38, 29, 50)",
 	"rgb(36, 27, 47)",
-	"rgb(0,0,0)",
+	"rgb(0, 0, 0)",
 ];
 
 export default colors;
+

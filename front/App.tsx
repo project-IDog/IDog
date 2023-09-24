@@ -26,6 +26,7 @@ import WidgetText from "./src/screens/WidgetText";
 import DogHeaven from "./src/screens/DogHeaven";
 import CurrentAppState from "./src/components/CurrentAppState";
 import ChoiceDog from "./src/screens/ChoiceDog";
+import MemorialParkDetail from "./src/screens/MemorialParkDetail";
 
 const App = () => {
 	const Stack = createNativeStackNavigator();
@@ -62,6 +63,10 @@ const App = () => {
 					<Stack.Screen name="ProtectWallet" component={ProtectWallet} />
 					<Stack.Screen name="DogHeaven" component={DogHeaven} />
 					<Stack.Screen name="Three" component={Three} />
+					<Stack.Screen
+						name="MemorialParkDetail"
+						component={MemorialParkDetail}
+					/>
 					<Stack.Screen name="Ipfs" component={Ipfs} />
 					<Stack.Screen name="WidgetText" component={WidgetText} />
 					<Stack.Screen name="ChoiceDog" component={ChoiceDog} />
