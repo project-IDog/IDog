@@ -1,5 +1,5 @@
 import {useState,useEffect} from "react"
-import {View, Text, TextInput, Image, TouchableOpacity} from "react-native"
+import {View, Text, TextInput, Image, TouchableOpacity, Platform} from "react-native"
 import ColorHeader from "../components/ColorHeader"
 import CommonLayout from "../components/CommonLayout"
 import Footer from "../components/Footer"
@@ -7,6 +7,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker"
 import * as SecureStore from 'expo-secure-store';
 import {ethers, Transaction} from "ethers"
 import {mintAnimakTokenContract} from "../contracts/index";
+import * as ImagePicker from "expo-image-picker";
 
 import DatePickerIcon from "../../assets/images/date-picker-icon.png"
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
@@ -14,6 +15,7 @@ import AddPlusIcon from "../../assets/images/add-plus-icon.png"
 import CreateProfileLayout from "../styles/createProfileLayout"
 
 const CreateProfile = ({navigation} : any) => {
+	const [imageUri, setImageUri] = useState<string | null>(null);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [walletAddress, setWalletAddress] = useState<string>();
     const [walletPrivateKey, setWalletPrivateKey] = useState<string>();
@@ -30,6 +32,40 @@ const CreateProfile = ({navigation} : any) => {
         console.warn("사용자가 선택한 날짜: ", date);
         hideDatePicker();
     };
+
+    // 권한 요청
+	const getPermissionAsync = async () => {
+		if (Platform.OS !== "web") {
+			const { status } =
+				await ImagePicker.requestMediaLibraryPermissionsAsync();
+			if (status !== "granted") {
+				// 권한이 거부되었을 때 alert
+				alert("Sorry, we need camera roll permissions to make this work!");
+			}
+		}
+	};
+
+    // 이미지 선택
+	const pickImage = async () => {
+		await getPermissionAsync(); // 권한 확인
+
+		// 이미지 또는 동영상 선택 -> 당연히 비동기
+		let result = await ImagePicker.launchImageLibraryAsync({
+			// 일단 모든 타입 다 허용 동영상도 허용해뒀음
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			// 편집 가능하게
+			allowsEditing: true,
+			// 가로세로 비율
+			aspect: [3, 3],
+			// 0 ~ 1 사이의 숫자로 품질 나타냄
+			quality: 1,
+		});
+		console.log("result", result);
+		if (!result.canceled) {
+			setImageUri(result.assets[0].uri);
+		}
+	};
+
 
     const createProfile = async () => {
 
@@ -73,7 +109,7 @@ const CreateProfile = ({navigation} : any) => {
                         나의 반려견
                     </Text>
                 </View>
-                <TouchableOpacity activeOpacity={0.7}>
+                <TouchableOpacity activeOpacity={0.7} onPress={pickImage}>
                     <View style={CreateProfileLayout.imageUploadWrap}>
                         <Image
                             source={AddPlusIcon}
@@ -81,6 +117,11 @@ const CreateProfile = ({navigation} : any) => {
                         <Text>사진 등록하기</Text>
                     </View>
                 </TouchableOpacity>
+                <View>
+                    {imageUri && (
+                        <Image source={{ uri: imageUri }} style={CreateProfileLayout.selectedImage}/>
+                    )}
+                </View>
 
                 <View style={CreateProfileLayout.formWrap}>
 
