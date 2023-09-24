@@ -30,9 +30,9 @@ public class GraveServiceImpl implements GraveService{
     private final DogRepository dogRepository;
     private final UserRepository userRepository;
     @Override
-    public Grave registGrave(String userId, RegistRequestDto registRequestDto) {
+    public Grave registGrave(Integer userNo, RegistRequestDto registRequestDto) {
         // 그 강아지의 주인 가져오기
-        Optional<User> user = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
+        Optional<User> user = userRepository.findUserByUserNoAndCanceled(userNo, BaseConstant.NOTCANCELED);
         if(user.isEmpty()){ //조회된 사용자가 없을 경우
             throw new NotFoundException(GraveResponseMessage.CREATE_FAIL_NO_USER.message());
         }

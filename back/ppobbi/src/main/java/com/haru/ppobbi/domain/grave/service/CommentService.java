@@ -10,11 +10,11 @@ public interface CommentService {
     /**
      * CommentRequestDto 객체를 받아 등록
      * @author Geon
-     * @param userId 작성자 id
+     * @param userNo 작성자 id
      * @param registRequestDto 등록할 CommentRequestDto 객체
      * @return Comment
      */
-    public Comment registComment(String userId, RegistRequestDto registRequestDto);
+    public Comment registComment(Integer userNo, RegistRequestDto registRequestDto);
 
     /**
      * graveNo를 받아 Comment 조회

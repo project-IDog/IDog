@@ -22,9 +22,9 @@ public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     @Override
-    public Comment registComment(String userId, RegistRequestDto registRequestDto) {
+    public Comment registComment(Integer userNo, RegistRequestDto registRequestDto) {
         // commenter 찾기
-        Optional<User> commenter = userRepository.findUserByUserIdAndCanceled(userId, BaseConstant.NOTCANCELED);
+        Optional<User> commenter = userRepository.findUserByUserNoAndCanceled(userNo, BaseConstant.NOTCANCELED);
         // commenter가 존재할 경우 comment 등록
         if(commenter.isPresent()) {
             Comment comment = Comment.builder()
