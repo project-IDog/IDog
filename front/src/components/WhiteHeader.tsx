@@ -33,7 +33,7 @@ const WhiteHeader = ({title}: any) => {
                     />
                 </TouchableOpacity>
                 <View style={styles.logoWrap}>
-                    <Text style={styles.logoTitle}>LOGO</Text>
+                    <Text style={styles.logoTitle}>IDOG</Text>
                     <View style={styles.verticalLine}></View>
                     <Text style={styles.headerTitle}>{title}</Text>
                 </View>
