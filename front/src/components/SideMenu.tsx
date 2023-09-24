@@ -16,12 +16,12 @@ import TribeIcon from "../../assets/images/line-tribe-icon.png";
 const SideMenu = (props: any) => {
 	const navigation = useNavigation();
 	const authMoveMypage = () => {
-		if(LoginStore.isLogged){
+		if (LoginStore.isLogged) {
 			navigation.navigate("MyPage");
-		}else{
+		} else {
 			alert("로그인 후 이용하실 수 있는 서비스입니다.");
 		}
-	}
+	};
 	return (
 		<>
 			<View style={SideMenuLayout.sideMenuWrap}>

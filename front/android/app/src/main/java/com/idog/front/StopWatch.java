@@ -71,8 +71,8 @@ public class StopWatch extends AppWidgetProvider {
                 handler.removeMessages(0);
             }
             prefs.edit().putInt("number", 0).apply();
-            updateAllWidgets(context);
         }
+        updateAllWidgets(context);
     }
 
     static void updateAllWidgets(Context context) {
