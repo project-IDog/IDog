@@ -16,37 +16,19 @@ const Login = () => {
 		androidClientId: ANDROID_CLIENT_ID,
 	});
 	const handleSignInWithGoogle = async () => {
-		if (response?.type === "success") {
-			const tokenData = {
-				authorizationCode: response.params?.code,
-				idToken: response.authentication?.idToken,
-				accessToken: response.authentication?.accessToken,
-				refreshToken: response.authentication?.refreshToken,
-			};
-			const url = "https://idog.store/api/user";
-			console.log("tokenData : ", JSON.stringify(tokenData));
-			try {
-				// 테스트용 코드
-				await SecureStore.setItemAsync("accessToken", "testAccessToken");
-				await SecureStore.setItemAsync("refreshToken", "testRefreshToken");
-				stores.LoginStore.isLogged = true;
-				stores.LoginStore.userInfo = {
-					id: "testId",
-					name: "testName",
-					email: "testEmail",
-				};
-				// 이 사이 주석은 로그인이 되었을 시 지웁니다.
+		if (response?.type !== "success") return;
 
-				const data = await axios.post(url, JSON.stringify(tokenData), {
-					headers: {
-						"Content-Type": "application/json",
-						charset: "utf-8",
-					},
-					timeout: 1000,
-				});
-
-				console.warn("여기까지 찍히나 봅시다");
-				console.warn("data : ", data.data);
+		const idToken = response.authentication?.idToken;
+		const url = "https://idog.store/api/user";
+		try {
+			const data = await axios.post(url, null, {
+				headers: {
+					Authorization: `Bearer ${idToken}`,
+					"Content-Type": "application/json",
+				},
+			});
+			console.log(data.data.message);
+			if (data.data?.message === "로그인 완료") {
 				await SecureStore.setItemAsync(
 					"accessToken",
 					data.data.data.accessToken,
@@ -56,18 +38,11 @@ const Login = () => {
 					data.data.data.refreshToken,
 				);
 				stores.LoginStore.isLogged = true;
-			} catch (error: any) {
-				console.error("Error Message:", error.message);
-				if (error.response) {
-					console.error("Response Data:", error.response.data);
-					console.error("Response Status:", error.response.status);
-					console.error("Response Headers:", error.response.headers);
-				} else if (error.request) {
-					console.error("Request:", error.request);
-				}
+			} else {
+				console.log("else : data.data.data : ", data.data);
 			}
-
-			console.log("끝");
+		} catch (error) {
+			console.log("error : ", error);
 		}
 	};
 
