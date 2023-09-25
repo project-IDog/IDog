@@ -3,12 +3,12 @@ import { View, Text, Button, Image, TouchableOpacity } from "react-native";
 import { NativeModules, DeviceEventEmitter } from "react-native";
 import WalkLayout from "../styles/walkLayout";
 import TimerImg from "../../assets/images/timer.png";
-import { set } from "mobx";
 const { StopWatchModule } = NativeModules;
 
 const WidgetText = () => {
 	const [widgetData, setWidgetData] = useState("0:00:00");
 	const [isPlaying, setIsPlaying] = useState(false);
+	const [currentDate, setCurrentDate] = useState("");
 
 	useEffect(() => {
 		getWidgetData();
@@ -18,6 +18,7 @@ const WidgetText = () => {
 				getWidgetData();
 			},
 		);
+		console.log("listener : ", listener);
 		return () => {
 			if (listener) {
 				listener.remove();
@@ -27,8 +28,11 @@ const WidgetText = () => {
 
 	const getWidgetData = async () => {
 		const widgetData = await StopWatchModule.getNumber();
+		const strCurrentDate = await StopWatchModule.getDate();
 		setWidgetData(widgetData);
+		setCurrentDate(strCurrentDate);
 		console.log("widgetData : ", widgetData);
+		console.log("strCurrentDate : ", strCurrentDate);
 	};
 
 	const playTimer = () => {
@@ -42,6 +46,8 @@ const WidgetText = () => {
 	};
 
 	const resetTimer = () => {
+		console.log("widgetData : ", widgetData);
+		console.log("strCurrentDate : ", currentDate);
 		StopWatchModule.resetTimer();
 		setWidgetData("0:00:00");
 		setIsPlaying(false);
