@@ -8,9 +8,12 @@ import * as SecureStore from 'expo-secure-store';
 import {ethers, Transaction} from "ethers"
 import {mintAnimakTokenContract} from "../contracts/index";
 import * as ImagePicker from "expo-image-picker";
+import {NFT_STORAGE_KEY} from "@env"
+import axios from "axios"
 
 import DatePickerIcon from "../../assets/images/date-picker-icon.png"
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
+import YoonNftImg from "../../assets/images/yoonNft01.jpg"
 
 import CreateProfileLayout from "../styles/createProfileLayout"
 
@@ -19,6 +22,12 @@ const CreateProfile = ({navigation} : any) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [walletAddress, setWalletAddress] = useState<string>();
     const [walletPrivateKey, setWalletPrivateKey] = useState<string>();
+    const [imageCid, setImageCid] = useState<string|null>();
+    const [petName, setPetName] = useState<string|null>();
+    const [petSpecies, setPetSpecies] = useState<string|null>();
+    const [petGender, setPetGender] = useState<string|null>();
+    const [petBirth, setPetBirth] = useState<string|null>();
+    const [nftCid, setNftCid] = useState<string|null>();
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -29,9 +38,57 @@ const CreateProfile = ({navigation} : any) => {
     };
 
     const handleConfirm = (date:string) => {
-        console.warn("사용자가 선택한 날짜: ", date);
+        const dogBirth = date.split("T")[0];
+        setPetBirth(dogBirth);
         hideDatePicker();
     };
+
+    const getImage = async (imagePath: any) => {
+        const buffer = await imagePath;
+        return await new Blob([buffer], { type: "image/*" });
+    };
+
+    const uploadIpfs = async () => {
+        const nft_storage_url = "https://api.nft.storage/upload";
+        const blobImg = await getImage(YoonNftImg);
+        await axios.post(nft_storage_url, blobImg , {
+            headers: {
+                'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
+                'Content-Type': 'application/octet-stream'
+            }
+        })
+        .then((res) => {
+            setImageCid(res.data.value.cid);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+
+        await uploadMetaJSON();
+    }
+
+    const uploadMetaJSON = async () => {
+        const nft_storage_url = "https://api.nft.storage/upload";
+        const metaData = {
+            "dogName" : petName,
+            "dogBirthDate" : petBirth,
+            "dogBreed" : petSpecies,
+            "dogSex" : petGender,
+            "imageCID" : imageCid,
+        }
+        await axios.post(nft_storage_url, metaData , {
+            headers: {
+                'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((res) => {
+            setNftCid(res.data.value.cid);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
 
     // 권한 요청
 	const getPermissionAsync = async () => {
@@ -126,11 +183,23 @@ const CreateProfile = ({navigation} : any) => {
                 <View style={CreateProfileLayout.formWrap}>
 
                     <Text style={CreateProfileLayout.formTitle}>반려견의 이름을 입력해주세요.</Text>
-                    <TextInput style={CreateProfileLayout.formInput}></TextInput>
+                    <TextInput 
+                        style={CreateProfileLayout.formInput}
+                        onChangeText={(text) => setPetName(text)}
+                        value={petName}
+                    />
                     <Text style={CreateProfileLayout.formTitle}>반려견의 종을 입력해주세요.</Text>
-                    <TextInput style={CreateProfileLayout.formInput}></TextInput>
+                    <TextInput
+                        style={CreateProfileLayout.formInput}
+                        onChangeText={(text) => setPetSpecies(text)}
+                        value={petSpecies}
+                    />
                     <Text style={CreateProfileLayout.formTitle}>반려견의 성별을 입력해주세요.</Text>
-                    <TextInput style={CreateProfileLayout.formInput}></TextInput>
+                    <TextInput
+                        style={CreateProfileLayout.formInput}
+                        onChangeText={(text) => setPetSpecies(text)}
+                        value={petGender}
+                    />
                     <Text style={CreateProfileLayout.formTitle}>반려견의 생일을 입력해주세요.</Text>
                     <TouchableOpacity activeOpacity={0.7} onPress={showDatePicker}>
                         <View style={CreateProfileLayout.dateFormWrap}>
@@ -150,7 +219,7 @@ const CreateProfile = ({navigation} : any) => {
                 </View>
 
                 <View style={CreateProfileLayout.formButtonWrap}>
-                    <TouchableOpacity activeOpacity={0.7} onPress={createProfile}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={uploadIpfs}>
                         <View style={CreateProfileLayout.submitButton}>
                             <Text style={CreateProfileLayout.submitButtonText}>
                                 앨범 등록하기
