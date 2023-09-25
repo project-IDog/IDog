@@ -1,3 +1,4 @@
+import {useEffect} from "react"
 import {View, Text, TouchableOpacity} from "react-native"
 
 import CommonLayout from "../components/CommonLayout";
@@ -8,6 +9,9 @@ import Footer from "../components/Footer";
 import ProtectWalletLayout from "../styles/protectWalletLayout";
 
 const ProtectWallet = () => {
+    useEffect(() => {
+        
+    });
     return(
         <>
             <CommonLayout>

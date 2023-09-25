@@ -26,7 +26,7 @@ const SideMenu = (props: any) => {
 		<>
 			<View style={SideMenuLayout.sideMenuWrap}>
 				<View style={SideMenuLayout.sideMenuHeader}>
-					<Text style={SideMenuLayout.sideMenuLogo}>LOGO</Text>
+					<Text style={SideMenuLayout.sideMenuLogo}>IDOG</Text>
 					<TouchableOpacity
 						activeOpacity={0.7}
 						onPress={() => props.updateActiveSideMenu(false)}

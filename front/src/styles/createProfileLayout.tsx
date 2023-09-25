@@ -29,6 +29,13 @@ const CreateProfileLayout = StyleSheet.create({
         alignItems:"center",
         marginTop:24,
     },
+    selectedImage:{
+        width:100,
+        height:132,
+        marginHorizontal:responsiveWidth(4),
+        marginTop:12,
+        borderRadius:6,
+    },
     formWrap:{
         paddingHorizontal:responsiveWidth(4),
     },
