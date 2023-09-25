@@ -34,7 +34,7 @@ const Main = () => {
 				duration: 0,
 				useNativeDriver: true,
 			}),
-		]).start(() => {
+		]).start((event) => {
 			animatedLoop(animatedValue);
 		});
 	};
@@ -149,4 +149,4 @@ const MemorialParkDesignLayout = StyleSheet.create({
 	},
 });
 
-export default Main;
+export default React.memo(Main);

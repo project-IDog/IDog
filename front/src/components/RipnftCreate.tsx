@@ -7,16 +7,13 @@ import Animation from "../components/Animation";
 import exImg from "../../assets/images/photo-ex-img3.png";
 import { GraveData } from "src/stores/Gravedata";
 
-type RipnftCreateProps = {
-	dataList: GraveData[];
-};
 
-const RipnftCreate: React.FC<RipnftCreateProps> = ({ dataList }) => {
+const RipnftCreate: React.FC = () => {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	const handleClick = () => {
 		// 여기에 클릭 시 실행할 로직을 작성합니다.
-		alert({ dataList: dataList[0].data });
+		alert("hello");
 		// 다른 코드...
 	};
 
@@ -57,15 +54,15 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ dataList }) => {
 							<View style={MemorialParkDesignLayout.modalcontents}>
 								<View style={MemorialParkDesignLayout.modalcontentrow}>
 									<Text style={MemorialParkDesignLayout.modalcontenttitle}>
-										{dataList[0].data.dogName}
+										{/* {dataList[0].data.dogName} */}ddd
 									</Text>
 									<Text style={MemorialParkDesignLayout.modalcontenttitle}>
-										{dataList[0].data.dogBreed}
+										{/* {dataList[0].data.dogBreed} */}ssss
 									</Text>
 								</View>
 								<Text style={MemorialParkDesignLayout.modalcontentdatetitle}>
-									{dataList[0].data.dogBirthDate}~
-									{dataList[0].data.dogDeathDate}
+									{/* {dataList[0].data.dogBirthDate}~
+									{dataList[0].data.dogDeathDate} */}123123123
 								</Text>
 							</View>
 						</TouchableOpacity>

@@ -16,7 +16,10 @@ import SubMain from "../components/SubMain";
 import MemorialParkLoading from "./MemorialParkLoading";
 import { set } from "mobx";
 
-const MemorialPark: React.FC = () => {
+const MemorialPark: React.FC = (props) => {
+	const { route } = props;
+	const { data } = route.params;
+	console.log(data);
 	const loadingOpacity = useRef(new Animated.Value(1)).current;
 	const [isSkipped, setIsSkipped] = useState(false);
 	const [isFullyTransparent, setIsFullyTransparent] = useState(false);
@@ -91,17 +94,21 @@ const MemorialPark: React.FC = () => {
 
 				<View style={[MemorialParkLayout.mpTitlewrap]}>
 					<View style={[MemorialParkLayout.mpMarginwrap]}>
-						<Text style={[MemorialParkLayout.mpTitle]}>반려견 추모하기</Text>
+						<Text style={[MemorialParkLayout.mpTitle]}>RIP 반려견 프로필</Text>
 						<View style={[MemorialParkLayout.mpBtw]}>
 							<Image source={MpImage} style={[MemorialParkLayout.tabImage]} />
 							<View style={[MemorialParkLayout.mpCol]}>
 								<View style={[MemorialParkLayout.mpBtw]}>
-									<Text style={[MemorialParkLayout.mpTitle]}>뽀삐</Text>
-									<Text style={[MemorialParkLayout.mpTitle]}>진돗개</Text>
+									<Text style={[MemorialParkLayout.mpTitle]}>
+										{data.dogName}
+									</Text>
+									<Text style={[MemorialParkLayout.mpTitle]}>
+										{data.dogBreed}
+									</Text>
 								</View>
 								<View>
 									<Text style={[MemorialParkLayout.mpDate]}>
-										2015.03.02-2021.03.02
+										{data.dogBirthDate}~{data.dogDeathDate}
 									</Text>
 								</View>
 								<View style={[MemorialParkLayout.mpBtw]}>
@@ -111,7 +118,7 @@ const MemorialPark: React.FC = () => {
 											{ color: "blue", fontWeight: "900" },
 										]}
 									>
-										남
+										{data.dogSex}
 									</Text>
 									<Text style={[MemorialParkLayout.mpTitle]}>
 										Memorial 앨범

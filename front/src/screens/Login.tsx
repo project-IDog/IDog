@@ -25,18 +25,8 @@ const Login = () => {
 			};
 			const url = "https://idog.store/api/user";
 			console.log("tokenData : ", JSON.stringify(tokenData));
+			console.log("그냥토큰의 엑세스토큰:", tokenData.accessToken);
 			try {
-				// 테스트용 코드
-				await SecureStore.setItemAsync("accessToken", "testAccessToken");
-				await SecureStore.setItemAsync("refreshToken", "testRefreshToken");
-				stores.LoginStore.isLogged = true;
-				stores.LoginStore.userInfo = {
-					id: "testId",
-					name: "testName",
-					email: "testEmail",
-				};
-				// 이 사이 주석은 로그인이 되었을 시 지웁니다.
-
 				const data = await axios.post(url, JSON.stringify(tokenData), {
 					headers: {
 						"Content-Type": "application/json",
@@ -84,10 +74,11 @@ const Login = () => {
 		const accessToken = await SecureStore.getItemAsync("accessToken");
 		const refreshToken = await SecureStore.getItemAsync("refreshToken");
 		for (let key in stores) {
-			console.warn(key, stores[key]);
+			console.log("key : ", key, "stores[key] : ", stores[key]);
 		}
 		console.warn("refreshToken : ", refreshToken);
 		console.warn("accessToken : ", accessToken);
+		console.log(accessToken);
 	};
 
 	// Google 인증 응답이 바뀔때마다 실행

@@ -25,6 +25,7 @@ import mainprofileImg from "../../assets/images/adoption-main-img.png";
 import RipnftCreate from "../components/RipnftCreate";
 import { GraveData } from "src/stores/Gravedata";
 import nftbgcloud from "../../assets/images/nftbg.png";
+import axios from "../utils/axios";
 
 const Main = ({ navigation }: any) => {
 	const scrollViewRef = useRef<ScrollView>(null);
@@ -33,26 +34,31 @@ const Main = ({ navigation }: any) => {
 			scrollViewRef.current?.scrollToEnd({ animated: false });
 		}, 50);
 	}, []);
-
-	const initialData: GraveData = {
-		message: "무덤 조회 완료",
-		data: {
-			graveNo: "0",
-			userNo: "0",
-			userName: "나무",
-			dogNo: "0",
-			dogName: "강아지",
-			dogBirthDate: "2112.12.31",
-			dogBreed: "시간역행개",
-			dogDeathDate: "2100.01.01",
-			dogSex: "M",
-			dogNft: "0x...",
-			dogImg: mainprofileImg,
-		},
-	};
-
-	const [dataList, setDataList] = useState<GraveData[]>([initialData]);
 	const { LoginStore } = IndexStore();
+
+	console.log(LoginStore);
+	const [dataList, setDataList] = useState<Object[]>([]);
+	const [dogNftList, setDogNftList] = useState<Object[]>([]);
+	useEffect(() => {
+		axios.get("/grave").then((data) => {
+			if (data.data.message === "무덤 조회 성공") {
+				setDataList(data.data.data);
+			}
+		});
+		axios.get("/dog/list/8").then((data) => {
+			console.log("리스트데이터:", data);
+			if (data.data.message === "사용자의 모든 강아지 목록 조회 완료") {
+				setDogNftList(data.data.data);
+			}
+		});
+	}, []);
+
+	if (dogNftList.length !== 0) {
+		console.log(dogNftList);
+	}
+
+	const [RipdataList, setRipdataList] = useState<Object[]>([]);
+	const [ripIndex, setRipIndex] = useState<number>(0);
 
 	const authHandling = (pageName: string) => {
 		if (pageName === "Three") {
@@ -73,12 +79,8 @@ const Main = ({ navigation }: any) => {
 		const { contentOffset } = event.nativeEvent;
 
 		if (contentOffset.y <= 0) {
-			// 스크롤이 맨 위에 도달했을 때
 			setAtTop(true);
-			// const newData = getNewData(); // 새로운 데이터를 가져오는 함수
-			// setData((prevData) => [...newData, ...prevData]);
 		} else {
-			// 스크롤이 맨 위가 아닐 때
 			setAtTop(false);
 		}
 	};
@@ -91,18 +93,17 @@ const Main = ({ navigation }: any) => {
 
 		if (atTop && contentOffset.y <= 0) {
 			console.log("맨꼭데기여!!");
-			const newData = getNewData(); // 새로운 데이터를 가져오는 함수
-			setDataList((prevList) => [newData, ...prevList]); // 배열의 앞에 추가
+			// 만약에 index가 datalist의 크기의 -1보다 작다면
+			// ripdatalist에 datalist[index]추가
+			// index ++ 해주기
+			if (ripIndex < dataList.length) {
+				setRipdataList([...RipdataList, dataList[ripIndex]]);
+				setRipIndex(ripIndex + 1);
+			}
+
+			console.log(RipdataList.length);
 		}
 	};
-
-	const getNewData = (): GraveData => {
-		// 새로운 데이터를 반환하는 로직
-		// 이 부분은 데이터를 추가하는 로직
-		return initialData;
-	};
-
-	const [modalVisible, setModalVisible] = useState(false);
 
 	return (
 		<>
@@ -116,15 +117,15 @@ const Main = ({ navigation }: any) => {
 			>
 				<MainHeader></MainHeader>
 				<View style={MemorialParkDesignLayout.nftcontainer}>
-					{dataList.map((data, index) => {
+					{RipdataList?.map((data, index) => {
 						const startColor =
 							index >= Colors.length - 1
 								? "rgb(0, 0, 0)"
-								: Colors[dataList.length - (index % Colors.length)];
+								: Colors[RipdataList.length - (index % Colors.length)];
 						const endColor =
 							index >= Colors.length - 1
 								? "rgb(0, 0, 0)"
-								: Colors[dataList.length - (index % Colors.length) - 1];
+								: Colors[RipdataList.length - (index % Colors.length) - 1];
 
 						console.log(index, startColor, endColor);
 
@@ -165,21 +166,21 @@ const Main = ({ navigation }: any) => {
 											<View style={MemorialParkDesignLayout.ripnftrow2}>
 												<View style={MemorialParkDesignLayout.ripnftbwn}>
 													<Text style={MemorialParkDesignLayout.nfttext}>
-														{data.data.dogName}
+														{data.dogName}
 													</Text>
 													<Text style={MemorialParkDesignLayout.nfttext}>
-														{data.data.dogBreed}
+														{data.dogBreed}
 													</Text>
 												</View>
 												<Text style={MemorialParkDesignLayout.nfttextdate}>
-													{data.data.dogBirthDate} ~ {data.data.dogDeathDate}
+													{data.dogBirthDate} ~ {data.dogDeathDate}
 												</Text>
 												<View style={MemorialParkDesignLayout.ripnftbwn}>
 													<Text style={MemorialParkDesignLayout.nfttext}>
-														{data.data.dogSex}
+														{data.dogSex}
 													</Text>
 													<Text style={MemorialParkDesignLayout.nfttext}>
-														{data.data.dogName}의 앨범
+														{data.dogName}의 앨범
 													</Text>
 												</View>
 												<View style={MemorialParkDesignLayout.ripnftbwn}>
@@ -201,7 +202,7 @@ const Main = ({ navigation }: any) => {
 										<View style={MemorialParkDesignLayout.ripdetailalign}>
 											<TouchableOpacity
 												onPress={() =>
-													navigation.navigate("MemorialParkDetail")
+													navigation.navigate("MemorialParkDetail", { data })
 												}
 												style={MemorialParkDesignLayout.ripnftinnerbtncontainer}
 											>
@@ -226,7 +227,7 @@ const Main = ({ navigation }: any) => {
 					})}
 				</View>
 				<View>
-					<RipnftCreate dataList={dataList} />
+					<RipnftCreate />
 				</View>
 			</ScrollView>
 		</>
