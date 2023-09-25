@@ -1,6 +1,7 @@
 package com.haru.ppobbi.domain.dog.service;
 
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
 import com.haru.ppobbi.domain.dog.entity.Breed;
 import com.haru.ppobbi.domain.dog.entity.Dog;
 
@@ -23,7 +24,7 @@ public interface DogService {
      * @param userNo - User 기본 키
      * @return {@code List<Dog>}
      */
-    List<Dog> selectDogsByUserNo(Integer userNo);
+    List<DogProfileResposeDto> selectDogsByUserNo(Integer userNo);
 
     /**
      * dogNo를 받아 특정 Dog 1개 조회
@@ -31,7 +32,7 @@ public interface DogService {
      * @param dogNo - Dog 기본 키
      * @return {@code Dog}
      */
-    Dog selectDogByDogNo(Integer dogNo);
+    DogProfileResposeDto selectDogByDogNo(Integer dogNo);
 
     /**
      * 모든 견종 목록 조회
@@ -48,13 +49,7 @@ public interface DogService {
      */
     List<Breed> selectAllBreedsByKeyword(String keyword);
 
-    /**
-     * keyword 받아 검색조건에 해당하는 모든 견종 조회
-     * @author Sunhee
-     * @param keyword - 클라이언트로부터 받은 String
-     * @return {@code List<Breed>}
-     */
-//    Optional<Dog> checkUserDog();
+
 
 
 }

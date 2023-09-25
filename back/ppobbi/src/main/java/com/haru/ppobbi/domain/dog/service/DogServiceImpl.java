@@ -1,6 +1,7 @@
 package com.haru.ppobbi.domain.dog.service;
 
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
 import com.haru.ppobbi.domain.dog.entity.Breed;
 import com.haru.ppobbi.domain.dog.entity.Dog;
 import com.haru.ppobbi.domain.dog.repo.BreedRepository;
@@ -13,15 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static com.haru.ppobbi.domain.dog.constant.DogResponseMessage.DOG_NOT_FOUND_EXCEPTION;
-import static com.haru.ppobbi.domain.dog.constant.DogResponseMessage.DUPLICATED_DOG_EXCEPTION;
+import static com.haru.ppobbi.domain.dog.constant.DogResponseMessage.*;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DogServiceeImpl implements DogService{
+public class DogServiceImpl implements DogService{
 
     private final DogRepository dogRepository;
     private final BreedRepository breedRepository;
@@ -35,6 +35,8 @@ public class DogServiceeImpl implements DogService{
                 .dogBirthDate(dogSaveRequestDto.getDogBirthDate())
                 .dogSex(dogSaveRequestDto.getDogSex())
                 .dogIsDead(BaseConstant.NOTDEAD)
+                .dogNft(dogSaveRequestDto.getDogNft())
+                .dogImg(dogSaveRequestDto.getDogImg())
                 .build();
 
         // 유저의 모든 강아지 조회
@@ -52,16 +54,27 @@ public class DogServiceeImpl implements DogService{
     }
 
     @Override
-    public List<Dog> selectDogsByUserNo(Integer userNo) {
+    public List<DogProfileResposeDto> selectDogsByUserNo(Integer userNo) {
         List<Dog> dogList = dogRepository.findAllByUserNoAndCanceledOrderByDogName(userNo, BaseConstant.NOTCANCELED);
-        return dogList;
+        return  dogList.stream()
+                .map(DogProfileResposeDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Dog selectDogByDogNo(Integer dogNo) {
+    public DogProfileResposeDto selectDogByDogNo(Integer dogNo) {
         Dog dog = dogRepository.findDogByDogNoAndCanceled(dogNo, BaseConstant.NOTCANCELED)
                 .orElseThrow(() -> new NotFoundException(DOG_NOT_FOUND_EXCEPTION.message()));
-        return dog;
+        return DogProfileResposeDto.builder()
+                .userNo(dog.getUserNo())
+                .dogNo(dog.getDogNo())
+                .dogName(dog.getDogName())
+                .dogBreed(dog.getDogBreed())
+                .dogBirthDate(dog.getDogBirthDate())
+                .dogSex(dog.getDogSex())
+                .dogNft(dog.getDogNft())
+                .dogImg(dog.getDogImg())
+                .build();
     }
 
     @Override
@@ -72,7 +85,11 @@ public class DogServiceeImpl implements DogService{
 
     @Override
     public List<Breed> selectAllBreedsByKeyword(String keyword) {
-        List<Breed> breedList = breedRepository.searchBreedsByBreedNameLikeOrderByBreedName(keyword);
+        List<Breed> breedList = breedRepository.findBreedsByBreedNameContaining(keyword);
+        if(breedList.size() == 0){
+            throw new NotFoundException(BREED_NOT_FOUND_EXCEPTION.message());
+        }
+
         return breedList;
     }
 

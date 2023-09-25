@@ -3,6 +3,7 @@ package com.haru.ppobbi.domain.dog.controller;
 import static com.haru.ppobbi.domain.dog.constant.DogResponseMessage.*;
 
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
 import com.haru.ppobbi.domain.dog.entity.Breed;
 import com.haru.ppobbi.domain.dog.entity.Dog;
 import com.haru.ppobbi.domain.dog.service.DogService;
@@ -32,17 +33,17 @@ public class DogController {
     }
 
     @GetMapping("/list/{userNo}")
-    public ResponseEntity<ResponseDto<List<Dog>>> getAllDogs(@PathVariable Integer userNo) {
+    public ResponseEntity<ResponseDto<List<DogProfileResposeDto>>> getAllDogs(@PathVariable Integer userNo) {
         log.info("DogController - getAllDogs : 사용자의 전체 강아지 조회");
-        List<Dog> dogList = dogService.selectDogsByUserNo(userNo);
+        List<DogProfileResposeDto> dogList = dogService.selectDogsByUserNo(userNo);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(READ_ALL_DOG_BY_USER, dogList));
     }
 
     @GetMapping("/{dogNo}")
-    public ResponseEntity<ResponseDto<Dog>> getOneDog(@PathVariable Integer dogNo) {
+    public ResponseEntity<ResponseDto<DogProfileResposeDto>> getOneDog(@PathVariable Integer dogNo) {
         log.info("DogController - getOneDog {}: 강아지 상세 조회", dogNo);
-        Dog dog = dogService.selectDogByDogNo(dogNo);
+        DogProfileResposeDto dog = dogService.selectDogByDogNo(dogNo);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(READ_ONE_DOG, dog));
     }
