@@ -17,7 +17,7 @@ public class Photo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer photoNo;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dog_no")
     private Dog dog;
     @Column(name = "user_no")
@@ -30,12 +30,11 @@ public class Photo extends BaseEntity {
     private Integer photoIsGoat;
 
     @Builder
-    public Photo(Dog dog, Integer userNo, String photoUrl, String photoComment, Integer photoIsGoat){
+    public Photo(Dog dog, Integer userNo, String photoUrl, String photoComment){
         this.dog = dog;
         this.userNo = userNo;
         this.photoUrl = photoUrl;
         this.photoComment = photoComment;
-        this.photoIsGoat = photoIsGoat;
     }
 
     public void setPhotoIsGoat(Integer photoIsGoat) {

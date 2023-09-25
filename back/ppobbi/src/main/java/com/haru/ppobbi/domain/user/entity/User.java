@@ -32,8 +32,6 @@ public class User extends BaseEntity {
 
     private String userId;
 
-    private String userRefreshToken;
-
     private String userName;
 
     private String userWallet;
@@ -49,12 +47,11 @@ public class User extends BaseEntity {
 
 
     @Builder
-    public User(Integer userNo, String userId, String userRefreshToken, String userName,
+    public User(Integer userNo, String userId, String userName,
         String userWallet,
         String userMessage, String userProfileImg, String userPrivateKey, UserRole userRole) {
         this.userNo = userNo;
         this.userId = userId;
-        this.userRefreshToken = userRefreshToken;
         this.userName = userName;
         this.userWallet = userWallet;
         this.userMessage = userMessage;
@@ -63,12 +60,12 @@ public class User extends BaseEntity {
         this.userRole = userRole;
     }
 
-    public void updateUserInfo(UpdateUserInfoRequestDto updateUserInfoRequestDto) {
-        this.userProfileImg = updateUserInfoRequestDto.getUserProfileImg();
-        this.userName = updateUserInfoRequestDto.getUserName();
+    public void updateUserInfo(String userProfileImg, String userName) {
+        this.userProfileImg = userProfileImg;
+        this.userName = userName;
     }
 
-    public void updateUserRefreshToken(UpdateUserRefreshTokenDto updateUserRefreshTokenDto) {
-        this.userRefreshToken = updateUserRefreshTokenDto.getRefreshToken();
+    public void updateUserMessage(String userMessage) {
+        this.userMessage = userMessage;
     }
 }

@@ -5,9 +5,11 @@ import com.haru.ppobbi.global.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -30,14 +32,14 @@ public class Dog extends BaseEntity {
     @Column(name = "dog_breed")
     private String dogBreed;
 
-    @Column(name = "dog_brith_date")
-    private LocalDateTime dogBriteDate;
+    @Column(name = "dog_birth_date")
+    private LocalDate dogBirthDate;
 
     @Column(name = "dog_is_dead")
     private Integer dogIsDead;
 
     @Column(name = "dog_death_date")
-    private LocalDateTime dogDeathDate;
+    private LocalDate dogDeathDate;
 
     @Column(name = "dog_sex")
     private Character dogSex;
@@ -57,17 +59,34 @@ public class Dog extends BaseEntity {
         }
     }
 
+    public void setDogIsDead(Integer dogIsDead){
+        this.dogIsDead = dogIsDead;
+    }
+
+    public void setDogDeathDate(LocalDate dogDeathDate){
+        this.dogDeathDate = dogDeathDate;
+    }
+
     @Builder
-    public Dog(Integer userNo, String dogName, String dogBreed, LocalDateTime dogBriteDate, Character dogSex) {
+    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBirthDate, Character dogSex, Integer dogIsDead) {
         this.userNo = userNo;
         this.dogName = dogName;
         this.dogBreed = dogBreed;
-        this.dogBriteDate = dogBriteDate;
+        this.dogBirthDate = dogBirthDate;
         this.dogSex = dogSex;
+        this.dogIsDead = dogIsDead;
     }
 
-    //nft 업데이트
+    @Override
+    public boolean equals(Object anotherDog) {
+        if (this == anotherDog) return true;
+        if (!(anotherDog instanceof Dog)) return false;
+        Dog dog = (Dog) anotherDog;
+        return Objects.equals(userNo, dog.userNo) && Objects.equals(dogName, dog.dogName) && Objects.equals(dogBreed, dog.dogBreed) && Objects.equals(dogBirthDate, dog.dogBirthDate) && Objects.equals(dogSex, dog.dogSex);
+    }
 
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(userNo, dogName, dogBreed, dogBirthDate, dogSex);
+    }
 }

@@ -2,12 +2,13 @@ package com.haru.ppobbi.domain.walking.entity;
 
 import com.haru.ppobbi.domain.dog.entity.Dog;
 import com.haru.ppobbi.global.entity.BaseEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,11 +25,11 @@ public class Walking extends BaseEntity {
     @Column(name = "user_no")
     private Integer userNo;
 
-    @Column(name = "walking_starttime")
-    private Integer walkingStarttime;
+    @Column(name = "walking_startdate")
+    private LocalDateTime walkingStartDate;
 
-    @Column(name = "walking_endtime")
-    private Integer walkingEndtime;
+    @Column(name = "walking_count")
+    private Integer walkingCount;
 
     @Column(name = "walking_time")
     private Integer walkingTime;
@@ -36,6 +37,22 @@ public class Walking extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "dog_no")
     private Dog dog;
+
+    @Builder
+    public Walking(Integer userNo, LocalDate walkingStartDate, Integer walkingTime){
+        this.userNo = userNo;
+        this.walkingStartDate = walkingStartDate.atStartOfDay();
+        this.walkingCount = 1;
+        this.walkingTime = walkingTime;
+    }
+
+    public void addCountPlusOne(){
+        this.walkingCount++;
+    }
+
+    public void addWalkingTime(Integer walkingTime){
+        this.walkingTime += walkingTime;
+    }
 
     public void setDog(Dog dog) {
         this.dog = dog;

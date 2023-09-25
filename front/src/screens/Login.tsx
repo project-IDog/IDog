@@ -45,26 +45,14 @@ const Login = () => {
 					timeout: 1000,
 				});
 
-				console.warn("여기까지 찍히나 봅시다");
-				console.warn("data : ", data.data);
-				await SecureStore.setItemAsync(
-					"accessToken",
-					data.data.data.accessToken,
-				);
-				await SecureStore.setItemAsync(
-					"refreshToken",
-					data.data.data.refreshToken,
-				);
-				stores.LoginStore.isLogged = true;
-			} catch (error: any) {
-				console.error("Error Message:", error.message);
-				if (error.response) {
-					console.error("Response Data:", error.response.data);
-					console.error("Response Status:", error.response.status);
-					console.error("Response Headers:", error.response.headers);
-				} else if (error.request) {
-					console.error("Request:", error.request);
-				}
+	// Google 로그인 처리하는 함수
+	const handleSignInWithGoogle = async () => {
+		const user = await AsyncStorage.getItem("@user");
+		if (!user) {
+			if (response?.type === "success") {
+				// 인증 요청에 대한 응답이 성공이면, 토큰을 이용하여 유저 정보를 가져옴.
+				await getUserInfo(response.authentication?.accessToken);
+				console.log(response);
 			}
 
 			console.log("끝");
