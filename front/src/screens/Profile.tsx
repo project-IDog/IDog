@@ -1,8 +1,12 @@
+import {useEffect,useRef} from "react"
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native"
+import GestureFlipView from '../components/GestureFlipView';
 import CommonLayout from "../components/CommonLayout"
 import ProfileItem from "../components/ProfileItem"
 import NftProfile from "../components/NftProfile"
 import Footer from "../components/Footer"
+
+import axios from "../utils/axios"
 
 import WhiteHeader from "../components/WhiteHeader"
 import SubMain from "../components/SubMain"
@@ -17,6 +21,27 @@ import PuppyThumbnail1 from "../../assets/images/puppy-thumbnail1.png"
 
 
 const Profile = ({navigation}:any) => {
+    const flipView = useRef<any>();
+    const renderFront = () => {
+        return(
+            <View>
+                <NftProfile dogName="내 반려견 해피" createdTitle="등록한 날짜" createdAt="2023. 09. 02." species="시베리안허스키" bgImg={PuppyThumbnail1}/>
+            </View>
+        )
+    }
+
+    const renderBack = () => {
+        return(
+            <View>
+                <NftProfile createdTitle="좌우로 회전해보세요" bgImg={PuppyThumbnail1}/>
+            </View>
+        )
+    }
+
+    useEffect(() => {
+
+    }, []);
+    
     return(
         <>
             <CommonLayout>
@@ -49,7 +74,10 @@ const Profile = ({navigation}:any) => {
                         <Text style={ProfileLayout.myNftMore}>전체보기</Text>
                     </View>
                     <ScrollView horizontal={true} style={ProfileLayout.nftList}>
-                        <NftProfile dogName="해피" createdAt="2023. 09. 02." species="시베리안허스키" bgImg={PuppyThumbnail1} />
+                        <GestureFlipView width={100} height={132} ref={flipView} >
+                            {renderBack()}
+                            {renderFront()}
+                        </GestureFlipView>
                         <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CreateProfile')}>
                             <View style={ProfileLayout.addNewNftWrap}>
                                 <Image

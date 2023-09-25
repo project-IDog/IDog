@@ -1,25 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Image,
-	Button,
 	View,
-	Platform,
 	Text,
 	TouchableOpacity,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { S3 } from "aws-sdk";
-import {
-	AWS_ACCESS_KEY,
-	AWS_SECRET_ACCESS_KEY,
-	AWS_REGION,
-	AWS_BUCKET,
-} from "@env";
+import * as SecureStore from 'expo-secure-store';
 
 import CommonLayout from "../components/CommonLayout";
 import ColorHeader from "../components/ColorHeader";
 import Footer from "../components/Footer";
 import StatusCommentModal from "../components/StatusCommentModal";
+import axios from "../utils/axios";
 
 import GrayPenIcon from "../../assets/images/gray-pen-icon.png";
 import MyPetPhoto from "../../assets/images/mypage-thumbnail-img.png";
@@ -30,45 +22,17 @@ import PhotoImg3 from "../../assets/images/photo-ex-img3.png";
 import PhotoImg4 from "../../assets/images/photo-ex-img4.png";
 import PhotoImg5 from "../../assets/images/photo-ex-img5.png";
 import PhotoImg6 from "../../assets/images/photo-ex-img6.png";
+import WhitePenIcon from "../../assets/images/pen-icon.png";
 
 import AlbumLayout from "../styles/albumLayout";
 
 const Album = ({ navigation }: any) => {
-	// img uri 저장
-	const [imageUri, setImage] = useState<string | null>(null);
 	const [statusModalState, setStatusModalState] = useState<Boolean>(false);
-	const [feedList, setFeedList] = useState<Object[]>([
-		{
-			url: Image.resolveAssetSource(PhotoImg1),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg2),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg3),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg4),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg5),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg6),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg1),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg2),
-		},
-		{
-			url: Image.resolveAssetSource(PhotoImg3),
-		},
-	]);
+	const [feedList, setFeedList] = useState<Object[]>([]);
 
 	const [feedActiveState, setFeedActiveState] = useState<Boolean>(false);
 	const [albumActiveState, setAlbumActiveState] = useState<Boolean>(true);
+	const [statusComment, setStatusComment] = useState<string>("나의 반려견에게 하나뿐인 메시지를 전하세요.");
 
 	const toggleFeedState = () => {
 		switch (feedActiveState) {
@@ -100,67 +64,19 @@ const Album = ({ navigation }: any) => {
 		setStatusModalState(status);
 	};
 
-	// s3 클라이언트 초기화
-	const s3 = new S3({
-		accessKeyId: AWS_ACCESS_KEY,
-		secretAccessKey: AWS_SECRET_ACCESS_KEY,
-		region: AWS_REGION,
-	});
-
-	// 이미지 업로드
-	const uploadImage = async (uri: any) => {
-		const response = await fetch(uri);
-		const blob = await response.blob();
-		const filename = uri.split("/").pop();
-		const type = blob.type;
-		const params = {
-			Bucket: AWS_BUCKET,
-			Key: filename,
-			Body: blob,
-			ContentType: type,
-		};
-		console.log("params", params);
-		s3.upload(params, (err: any, data: any) => {
-			if (err) {
-				console.log("err", err);
-			} else {
-				console.log("data", data);
+	useEffect(() => {
+        axios.get('/photo/user/8').then((data) => {
+			if(data.data.message === "사진 조회 성공"){
+				setFeedList(data.data.data);
 			}
-		});
-	};
+		})
 
-	// 권한 요청
-	const getPermissionAsync = async () => {
-		if (Platform.OS !== "web") {
-			const { status } =
-				await ImagePicker.requestMediaLibraryPermissionsAsync();
-			if (status !== "granted") {
-				// 권한이 거부되었을 때 alert
-				alert("Sorry, we need camera roll permissions to make this work!");
+		axios.get('/user').then((data) => {
+			if(data.data.message === "회원 정보 조회 완료"){
+				setStatusComment(data.data.data.userMessage);
 			}
-		}
-	};
-
-	// 이미지 선택
-	const pickImage = async () => {
-		await getPermissionAsync(); // 권한 확인
-
-		// 이미지 또는 동영상 선택 -> 당연히 비동기
-		let result = await ImagePicker.launchImageLibraryAsync({
-			// 일단 모든 타입 다 허용 동영상도 허용해뒀음
-			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			// 편집 가능하게
-			allowsEditing: true,
-			// 가로세로 비율
-			aspect: [4, 3],
-			// 0 ~ 1 사이의 숫자로 품질 나타냄
-			quality: 1,
-		});
-		console.log("result", result);
-		if (!result.canceled) {
-			setImage(result.assets[0].uri);
-		}
-	};
+		})
+    }, []);
 
 	return (
 		<>
@@ -170,12 +86,20 @@ const Album = ({ navigation }: any) => {
 					<View style={AlbumLayout.profileWrap}>
 						<Text style={AlbumLayout.myNameTitle}>나의 닉네임</Text>
 						<Image source={MyPetPhoto} style={AlbumLayout.userPhoto} />
+						<TouchableOpacity activeOpacity={0.7} style={AlbumLayout.changeImageWrap}>
+							<View>
+								<Image
+									source={WhitePenIcon}
+									style={AlbumLayout.changeImageIcon}
+								/>
+							</View>
+						</TouchableOpacity>
 					</View>
 					<View style={AlbumLayout.newFeedWrap}>
 						<TouchableOpacity
 							activeOpacity={0.7}
 							style={AlbumLayout.newFeedFlexWrap}
-							onPress={() => navigation.navigate("CreateFeed")}
+							onPress={() => navigation.navigate("ChoiceDog")}
 						>
 							<View style={AlbumLayout.newFeedIconWrap}>
 								<Image source={NewFeedIcon} />
@@ -192,7 +116,7 @@ const Album = ({ navigation }: any) => {
 					<View style={AlbumLayout.statusMessageWrap}>
 						<Image source={GrayPenIcon} />
 						<Text style={AlbumLayout.statusMessageText}>
-							상태메시지 적을 공간 할 말 적기
+							{statusComment}
 						</Text>
 					</View>
 				</TouchableOpacity>
@@ -229,10 +153,10 @@ const Album = ({ navigation }: any) => {
 								activeOpacity={0.7}
 								key={index}
 								onPress={() =>
-									navigation.push("DetailFeed", { selectImg: value.url })
+									navigation.push("DetailFeed", { selectImg: {uri:value.photoUrl}, comment: value.photoComment, photoNo: value.photoNo})
 								}
 							>
-								<Image source={value.url} style={AlbumLayout.photoItem} />
+								<Image source={{uri:value.photoUrl}} style={AlbumLayout.photoItem} />
 							</TouchableOpacity>
 						);
 					})}
@@ -248,20 +172,7 @@ const Album = ({ navigation }: any) => {
 				)}
 			</CommonLayout>
 		</>
-		// <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-		//   <Button title="Pick an image from gallery" onPress={pickImage} />
-		//   {imageUri && (
-		//     <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />
-		//   )}
-		//   <Button title="upload to s3" onPress={() => uploadImage(imageUri)} />
-		// </View>
-		// <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-		// <Button title="Pick an image from gallery" onPress={pickImage} />
-		// {imageUri && (
-		// <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />
-		// )}
-		// <Button title="upload to s3" onPress={() => uploadImage(imageUri)} />
-		// </View>
+		
 	);
 };
 

@@ -6,11 +6,10 @@ import WhiteHeader from "../components/WhiteHeader"
 import SubMain from "../components/SubMain"
 import Footer from "../components/Footer"
 import WeekTimeItem from "../components/weekTimeItem"
+import MyPetScrollView from "../components/MyPetScrollView"
 
 import WalkMainImg from "../../assets/images/walk-main-img.png"
 import TimerImg from "../../assets/images/timer.png"
-import MyPetThumbnail1 from "../../assets/images/my-pet-thumbnail1.png"
-import MyPetThumbnail2 from "../../assets/images/my-pet-thumbnail2.png"
 import BottomArrowIcon from "../../assets/images/bottom-arrow-icon.png"
 
 import WalkLayout from "../styles/walkLayout"
@@ -27,17 +26,6 @@ const Walk = ({navigation}: any) => {
     const [weekList, setWeekList] = useState<Object[]>(
         [
 
-        ]
-    );
-
-    const [myPetList, setMyPetList] = useState<Object[]>(
-        [
-            {
-                url:MyPetThumbnail1
-            },
-            {
-                url:MyPetThumbnail2
-            }
         ]
     );
 
@@ -168,7 +156,6 @@ const Walk = ({navigation}: any) => {
                         }
                     </View>
                 </View>
-
                 <View style={WalkLayout.choiceWrap}>
                     <View style={WalkLayout.titleFlexWrap}>
                         <View>
@@ -185,23 +172,8 @@ const Walk = ({navigation}: any) => {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <ScrollView horizontal={true} style={WalkLayout.myPetContent}>
-                        {
-                            myPetList.map((myPetImage: Object, index: number) => {
-                                return(
-                                    <TouchableOpacity activeOpacity={0.7}>
-                                        <View key={index} style={WalkLayout.myPetItem}>
-                                            <Image
-                                                source={myPetImage.url}
-                                            />
-                                        </View>
-                                    </TouchableOpacity>
-                                )
-                            })
-                        }
-                    </ScrollView>
                 </View>
-
+                <MyPetScrollView/>
 
                 <View style={WalkLayout.timerWrap}>
                     <View style={WalkLayout.timerTitleWrap}>

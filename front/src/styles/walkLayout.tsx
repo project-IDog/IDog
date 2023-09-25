@@ -96,18 +96,12 @@ const WalkLayout = StyleSheet.create({
     tabText:{
         fontSize:12,
         fontWeight:"500",
-        color:"#D9D9D9",
+        color:"#C8C9CE",
     },
     tabImage:{
         width:10,
         height:10,
         marginLeft:4,
-    },
-    myPetContent:{
-        marginTop:20,
-    },
-    myPetItem:{
-        marginHorizontal:responsiveWidth(1),
     },
 
     timerWrap:{

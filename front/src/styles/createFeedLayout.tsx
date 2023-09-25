@@ -29,6 +29,12 @@ const CreateFeedLayout = StyleSheet.create({
         marginHorizontal:responsiveWidth(4),
         marginTop:26,
     },
+    imageOnLayout:{
+        width:200,
+        height:200,
+        marginHorizontal:responsiveWidth(4),
+        marginTop:13,
+    },
     createDescWrap:{
         width:responsiveWidth(92),
         height:132,

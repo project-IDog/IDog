@@ -9,6 +9,7 @@ const AlbumLayout = StyleSheet.create({
         justifyContent:"center",
         alignItems:"center",
         paddingHorizontal:responsiveWidth(4),
+        position:"relative",
     },
     myNameTitle:{
         fontSize:22,
@@ -16,7 +17,17 @@ const AlbumLayout = StyleSheet.create({
         color:"#5B5B5B",
         textAlign:"center",
     },
-    
+    changeImageWrap:{
+        padding:4,
+        borderRadius:50,
+        backgroundColor:"#EE8A72",
+        position:"absolute",
+        bottom:0,
+        left:responsiveWidth(50) - 49,
+    },
+    changeImageIcon:{
+        
+    },
     userPhoto:{
         width:98,
         height:98,
