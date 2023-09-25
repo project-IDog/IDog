@@ -1,5 +1,7 @@
 package com.haru.ppobbi.domain.challenge.service;
 
+import com.haru.ppobbi.domain.admin.entity.Challenge;
+
 import java.util.List;
 
 public interface ChallengeService {
