@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Text, TouchableOpacity } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import * as SecureStore from "expo-secure-store";
@@ -7,6 +8,8 @@ import { ANDROID_CLIENT_ID } from "@env";
 // import axios from "../utils/axios";
 import axios from "axios";
 import IndexStore from "../stores/IndexStore";
+import SideMenuLayout from "../styles/sideMenuLayout";
+import { set } from "mobx";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -15,6 +18,8 @@ const Login = () => {
 	const [request, response, promptAsync] = Google.useAuthRequest({
 		androidClientId: ANDROID_CLIENT_ID,
 	});
+	const [isLogged, setIsLogged] = useState<Boolean>(stores.LoginStore.isLogged);
+
 	const handleSignInWithGoogle = async () => {
 		if (response?.type !== "success") return;
 
@@ -29,6 +34,7 @@ const Login = () => {
 			});
 			console.log(data.data.message);
 			if (data.data?.message === "로그인 완료") {
+				setIsLogged(true);
 				await SecureStore.setItemAsync(
 					"accessToken",
 					data.data.data.accessToken,
@@ -39,7 +45,7 @@ const Login = () => {
 				);
 				stores.LoginStore.isLogged = true;
 			} else {
-				console.log("else : data.data.data : ", data.data);
+				console.log("else : data.data: ", data.data);
 			}
 		} catch (error) {
 			console.log("error : ", error);
@@ -48,6 +54,7 @@ const Login = () => {
 
 	const handleLogout = async () => {
 		stores.LoginStore.isLogged = false;
+		setIsLogged(false);
 		await SecureStore.deleteItemAsync("accessToken");
 		await SecureStore.deleteItemAsync("refreshToken");
 		for (let key in stores) {
@@ -72,15 +79,27 @@ const Login = () => {
 
 	return (
 		<View>
-			<Button
-				disabled={!request}
-				title="Login"
-				onPress={() => {
-					promptAsync();
-				}}
-			/>
-			<Button title="logout" onPress={() => handleLogout()} />
-			<Button title="getSecureStorage" onPress={() => getSecureStorage()} />
+			{!isLogged ? (
+				<TouchableOpacity
+					activeOpacity={0.7}
+					style={SideMenuLayout.googleAuthButton}
+					onPress={() => promptAsync()}
+				>
+					<View>
+						<Text style={SideMenuLayout.googleAuthButtonText}>로그인</Text>
+					</View>
+				</TouchableOpacity>
+			) : (
+				<TouchableOpacity
+					activeOpacity={0.7}
+					style={SideMenuLayout.googleAuthButton}
+					onPress={() => handleLogout()}
+				>
+					<View>
+						<Text style={SideMenuLayout.googleAuthButtonText}>로그아웃</Text>
+					</View>
+				</TouchableOpacity>
+			)}
 		</View>
 	);
 };
