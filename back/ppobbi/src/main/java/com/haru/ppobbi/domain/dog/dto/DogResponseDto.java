@@ -31,5 +31,16 @@ public class DogResponseDto {
             this.dogNft = dog.getDogNft();
             this.dogImg = dog.getDogImg();
         }
+
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class DogNftResponseDto {
+        private Integer dogNo;
+        private String dogNft;
+        private  String dogImg;
+
     }
 }

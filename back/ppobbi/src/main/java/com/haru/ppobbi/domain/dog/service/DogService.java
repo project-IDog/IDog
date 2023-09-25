@@ -1,6 +1,8 @@
 package com.haru.ppobbi.domain.dog.service;
 
+import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogOwnerUpdateRequestDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogNftResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
 import com.haru.ppobbi.domain.dog.entity.Breed;
 import com.haru.ppobbi.domain.dog.entity.Dog;
@@ -48,6 +50,32 @@ public interface DogService {
      * @return {@code List<Breed>}
      */
     List<Breed> selectAllBreedsByKeyword(String keyword);
+
+    /**
+     * dogNo를 받아 특정 Dog의 nft 조회
+     * @author Sunhee
+     * @param dogNo - Dog 기본 키
+     * @return {@code Dog}
+     */
+    DogNftResponseDto selectDogNftByDogNo(Integer dogNo);
+
+    /**
+     * userNo를 받아 모든 Dog 조회
+     * @author Sunhee
+     * @param userNo - User 기본 키
+     * @return {@code List<Dog>}
+     */
+    List<DogNftResponseDto> selectDogNftsByUserNo(Integer userNo);
+
+    /**
+     * DogOwnerUpdateRequestDto 객체를 받아 등록
+     * @author Sunhee
+     * @param dogOwnerUpdateRequestDto 등록할 DogOwnerUpdateRequestDto 객체
+     * @return Dog
+     */
+    void updateDogOwner(DogOwnerUpdateRequestDto dogOwnerUpdateRequestDto);
+
+
 
 
 

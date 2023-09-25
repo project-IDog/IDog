@@ -1,6 +1,8 @@
 package com.haru.ppobbi.domain.dog.service;
 
+import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogOwnerUpdateRequestDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogNftResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
 import com.haru.ppobbi.domain.dog.entity.Breed;
 import com.haru.ppobbi.domain.dog.entity.Dog;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +59,7 @@ public class DogServiceImpl implements DogService{
     @Override
     public List<DogProfileResposeDto> selectDogsByUserNo(Integer userNo) {
         List<Dog> dogList = dogRepository.findAllByUserNoAndCanceledOrderByDogName(userNo, BaseConstant.NOTCANCELED);
+
         return  dogList.stream()
                 .map(DogProfileResposeDto::new)
                 .collect(Collectors.toList());
@@ -91,6 +95,47 @@ public class DogServiceImpl implements DogService{
         }
 
         return breedList;
+    }
+
+    @Override
+    public DogNftResponseDto selectDogNftByDogNo(Integer dogNo) {
+        Dog dog = dogRepository.findDogByDogNoAndCanceled(dogNo, BaseConstant.NOTCANCELED)
+                .orElseThrow(() -> new NotFoundException(DOG_NFT_NOT_FOUND_EXCEPTION.message()));
+        DogNftResponseDto dogNftResponseDto = DogNftResponseDto.builder()
+                                                .dogNo(dog.getDogNo())
+                                                .dogNft(dog.getDogNft())
+                                                .dogImg(dog.getDogImg())
+                                                .build();
+        return dogNftResponseDto;
+    }
+
+    @Override
+    public List<DogNftResponseDto> selectDogNftsByUserNo(Integer userNo) {
+        List<Dog> dogList = dogRepository.findAllByUserNoAndCanceledOrderByDogName(userNo, BaseConstant.NOTCANCELED);
+        if(dogList.size() == 0) {
+            throw new NotFoundException(ALL_DOG_NOT_FOUND_EXCEPTION.message());
+        }
+
+        List<DogNftResponseDto> dogNftResponseDtoList = new ArrayList<>();
+        for (int i=0; i<dogList.size(); i++){
+            DogNftResponseDto dogNft = DogNftResponseDto.builder()
+                    .dogNo(dogList.get(i).getDogNo())
+                    .dogNft(dogList.get(i).getDogNft())
+                    .dogImg(dogList.get(i).getDogImg())
+                    .build();
+            dogNftResponseDtoList.add(dogNft);
+        }
+
+        return dogNftResponseDtoList;
+    }
+
+    @Override
+    public void updateDogOwner(DogOwnerUpdateRequestDto dogOwnerUpdateRequestDto) {
+        Integer nowDogNo = dogOwnerUpdateRequestDto.getDogNo();
+        Integer nowUserNo = dogOwnerUpdateRequestDto.getUserNo();
+        Dog dog = dogRepository.findDogByDogNoAndCanceled(nowDogNo, BaseConstant.NOTCANCELED)
+                .orElseThrow(() -> new NotFoundException(DOG_NOT_FOUND_EXCEPTION.message()));
+        dog.updateDogOwner(nowUserNo);
     }
 
 }

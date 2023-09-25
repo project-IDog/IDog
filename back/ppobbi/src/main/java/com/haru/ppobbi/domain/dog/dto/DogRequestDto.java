@@ -20,5 +20,14 @@ public class DogRequestDto {
         private String dogImg;
     }
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class DogOwnerUpdateRequestDto {
+        private Integer userNo;
+        private Integer dogNo;
+    }
+
 
 }

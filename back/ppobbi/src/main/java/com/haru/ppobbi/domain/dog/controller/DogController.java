@@ -2,7 +2,9 @@ package com.haru.ppobbi.domain.dog.controller;
 
 import static com.haru.ppobbi.domain.dog.constant.DogResponseMessage.*;
 
+import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogOwnerUpdateRequestDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogNftResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
 import com.haru.ppobbi.domain.dog.entity.Breed;
 import com.haru.ppobbi.domain.dog.entity.Dog;
@@ -62,6 +64,31 @@ public class DogController {
         List<Breed> breedList = dogService.selectAllBreedsByKeyword(keyword);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(READ_ALL_BREED_BY_KEYWORD, breedList));
+    }
+
+    @GetMapping("/nft/{dogNo}")
+    public ResponseEntity<ResponseDto<DogNftResponseDto>> getOneDogNftInfo(@PathVariable Integer dogNo) {
+        log.info("DogController - getOneDogNftInfo : 강아지 1마리 nft 조회 " );
+        DogNftResponseDto dogNftResponseDto = dogService.selectDogNftByDogNo(dogNo);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.create(READ_ONE_DOG_NFT, dogNftResponseDto));
+    }
+
+    @PostMapping("/nft")
+    public ResponseEntity<ResponseDto<Object>> changeOwner (@RequestBody DogOwnerUpdateRequestDto dogOwnerUpdateRequestDto){
+        log.info("DogController - changeOwner : 강아지 입양시 견주 변경 " );
+        dogService.updateDogOwner(dogOwnerUpdateRequestDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.create(UPDATE_DOG_NFT_OWNER_SUCCESS));
+    }
+
+    @GetMapping("/nft/list/{userNo}")
+    public ResponseEntity<ResponseDto<List<DogNftResponseDto>>> getAllDogNftInfo(@PathVariable Integer userNo){
+        log.info("DogController - getAllDogNftInfo : 사용자의 모든 강아지 NFT 조회 " );
+        List<DogNftResponseDto> dogNftResponseDtoList = dogService.selectDogNftsByUserNo(userNo);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.create(READ_All_DOG_NFT_BY_USER,dogNftResponseDtoList));
+
     }
 
 
