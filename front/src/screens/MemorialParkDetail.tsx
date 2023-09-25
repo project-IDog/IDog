@@ -8,11 +8,10 @@ import {
 	ScrollView,
 } from "react-native";
 import Footer from "../components/Footer";
-import CommonLayout from "../components/CommonLayout";
 import MainHeader from "../components/MainHeader";
 import MemorialParkLayout from "../styles/MemorialParkLayout";
 import MpImage from "../../assets/images/MpImg.jpg";
-import SubMain from "../components/SubMain";
+import SubMainRip from "../components/SubMainRip";
 import MemorialParkLoading from "./MemorialParkLoading";
 import { set } from "mobx";
 
@@ -34,7 +33,7 @@ const MemorialPark: React.FC = (props) => {
 					useNativeDriver: true,
 				}),
 			]).start();
-		}, 7500); // 예: 5초 후에 애니메이션 시작
+		}, 7500);
 	}, []);
 
 	useEffect(() => {
@@ -74,12 +73,9 @@ const MemorialPark: React.FC = (props) => {
 					{/* <View></View> */}
 				</Animated.View>
 				<MainHeader />
-				{/* <View style={[MemorialParkLayout.walkMainImg]}>
-					<Image source={MpImage} />
-				</View> */}
-				<SubMain
+				<SubMainRip
 					subTitle="추모공원"
-					mainTitle={`함께 했던\n행복했던 일상들을\n추억해보세요.`}
+					mainTitle={`반려견에게 영원한 평화와 \n행복을 기원합니다.`}
 					bgImg={MpImage}
 					desc="추모하기"
 				/>
