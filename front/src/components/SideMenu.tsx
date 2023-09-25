@@ -1,9 +1,10 @@
 import { View, Text, Image, TouchableOpacity, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useState, useEffect } from "react";
 
 import SideMenuIcon from "./SideMenuIcon";
 import SideMenuLayout from "../styles/sideMenuLayout";
-import LoginStore from "../stores/LoginStore";
+import IndexStore from "../stores/IndexStore";
 
 import CloseIcon from "../../assets/images/close-icon.png";
 import NftCardIcon from "../../assets/images/line-nft-card-icon.png";
@@ -13,15 +14,36 @@ import MedicalIcon from "../../assets/images/line-medical-icon.png";
 import WalkRootIcon from "../../assets/images/line-walk-root-icon.png";
 import TribeIcon from "../../assets/images/line-tribe-icon.png";
 
+import * as SecureStore from "expo-secure-store";
 const SideMenu = (props: any) => {
 	const navigation = useNavigation();
+	const stores = IndexStore();
+	const [isLogged, setIsLogged] = useState<Boolean>(stores.LoginStore.isLogged);
+	console.log("stores.LoginStore.isLogged : ", stores.LoginStore.isLogged);
+	console.log("isLogged : ", isLogged);
+
+	useEffect(() => {
+		setIsLogged(stores.LoginStore.isLogged);
+	}, [stores.LoginStore.isLogged]);
+
 	const authMoveMypage = () => {
-		if (LoginStore.isLogged) {
+		if (stores.LoginStore.isLogged) {
 			navigation.navigate("MyPage");
 		} else {
 			alert("로그인 후 이용하실 수 있는 서비스입니다.");
 		}
 	};
+
+	const handleLogout = async () => {
+		stores.LoginStore.isLogged = false;
+		setIsLogged(false);
+		await SecureStore.deleteItemAsync("accessToken");
+		await SecureStore.deleteItemAsync("refreshToken");
+		for (let key in stores) {
+			stores[key] = {};
+		}
+	};
+
 	return (
 		<>
 			<View style={SideMenuLayout.sideMenuWrap}>
@@ -78,15 +100,30 @@ const SideMenu = (props: any) => {
 					</View>
 				</View>
 				<View style={SideMenuLayout.authButtonWrap}>
-					<TouchableOpacity
-						activeOpacity={0.7}
-						style={SideMenuLayout.googleAuthButton}
-						onPress={() => navigation.navigate("Login")}
-					>
-						<View>
-							<Text style={SideMenuLayout.googleAuthButtonText}>로그인</Text>
-						</View>
-					</TouchableOpacity>
+					{/* loginstore의 isloggin에 따른 변화 */}
+					{!isLogged ? (
+						<TouchableOpacity
+							activeOpacity={0.7}
+							style={SideMenuLayout.googleAuthButton}
+							onPress={() => navigation.navigate("Login")}
+						>
+							<View>
+								<Text style={SideMenuLayout.googleAuthButtonText}>로그인</Text>
+							</View>
+						</TouchableOpacity>
+					) : (
+						<TouchableOpacity
+							activeOpacity={0.7}
+							style={SideMenuLayout.googleAuthButton}
+							onPress={() => handleLogout()}
+						>
+							<View>
+								<Text style={SideMenuLayout.googleAuthButtonText}>
+									로그아웃
+								</Text>
+							</View>
+						</TouchableOpacity>
+					)}
 					<TouchableOpacity
 						activeOpacity={0.7}
 						style={SideMenuLayout.moveMypageButton}
