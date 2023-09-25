@@ -5,6 +5,8 @@ import CommonLayout from "../components/CommonLayout"
 import Footer from "../components/Footer"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import * as SecureStore from 'expo-secure-store';
+import {ethers, Transaction} from "ethers"
+import {mintAnimakTokenContract} from "../contracts/index";
 
 import DatePickerIcon from "../../assets/images/date-picker-icon.png"
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
@@ -28,6 +30,22 @@ const CreateProfile = ({navigation} : any) => {
         console.warn("사용자가 선택한 날짜: ", date);
         hideDatePicker();
     };
+
+    const createProfile = async () => {
+
+        const walletAddress = await SecureStore.getItemAsync("walletAddress");
+        const walletPrivateKey = await SecureStore.getItemAsync("walletPrivateKey");
+        
+        const provider = await new ethers.JsonRpcProvider(process.env.RPC_URL);
+
+        const privateKey = process.env.ADMIN_WALLET_PRIVATE_KEY;
+        const gasPriceGwei = "0.00001";
+        const priceWei = ethers.parseUnits(gasPriceGwei, 'gwei');
+
+        const response = await mintAnimakTokenContract.mintAnimakToken();
+        console.log("response", response);
+
+    }
 
     useEffect(() => {
         const getWalletInfoFromStore = async () => {
@@ -91,7 +109,7 @@ const CreateProfile = ({navigation} : any) => {
                 </View>
 
                 <View style={CreateProfileLayout.formButtonWrap}>
-                    <TouchableOpacity activeOpacity={0.7}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={createProfile}>
                         <View style={CreateProfileLayout.submitButton}>
                             <Text style={CreateProfileLayout.submitButtonText}>
                                 앨범 등록하기
