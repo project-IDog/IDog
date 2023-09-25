@@ -72,5 +72,5 @@ const uploadMetaJSON = async () => {
 console.log(response);
 }
 
-// uploadImage();
-uploadMetaJSON();
+uploadImage();
+// uploadMetaJSON();
