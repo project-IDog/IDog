@@ -1,5 +1,6 @@
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { useState } from "react";
+import IdogLogo from "../../assets/images/idog-logo.png"
 import HamburgerMenu from "../../assets/images/hamburger-menu-icon.png";
 import SideMenu from "./SideMenu";
 
@@ -23,7 +24,7 @@ const MainHeader = () => {
   return (
     <>
         <View style={styles.header}>
-            <Text style={styles.logo}>LOGO</Text>
+            <Text style={styles.logo}><Image source={IdogLogo} style={styles.idogLogo}/></Text>
             <TouchableOpacity activeOpacity={0.7} onPress={clickHamburger}>
               <Image
                   source={HamburgerMenu}
@@ -54,6 +55,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: "#EE8A72",
+  },
+  idogLogo:{
+    width:60,
+    height:50,
+    marginBottom:-6,
   },
   menuIcon: {
     marginRight: 20,

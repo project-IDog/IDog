@@ -15,6 +15,7 @@ import com.facebook.soloader.SoLoader;
 
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
+import android.util.Log;
 
 import java.util.List;
 
@@ -27,16 +28,16 @@ public class MainApplication extends Application implements ReactApplication {
         return BuildConfig.DEBUG;
       }
 
-      @Override
-      protected List<ReactPackage> getPackages() {
-        @SuppressWarnings("UnnecessaryLocalVariable")
-        List<ReactPackage> packages = new PackageList(this).getPackages();
-        // Packages that cannot be autolinked yet can be added manually here, for example:
-        // packages.add(new MyReactNativePackage());
-        return packages;
-      }
+        @Override
+        protected List<ReactPackage> getPackages() {
+            @SuppressWarnings("UnnecessaryLocalVariable")
+            List<ReactPackage> packages = new PackageList(this).getPackages();
+            Log.d("packages ", "PACKAGES : " + packages.toString());
+            packages.add(new StopWatchPackage());
+            return packages;
+        }
 
-      @Override
+        @Override
       protected String getJSMainModuleName() {
         return ".expo/.virtual-metro-entry";
       }

@@ -1,28 +1,37 @@
 package com.idog.front;
 
+import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Looper;
 import android.widget.RemoteViews;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.ComponentName;
 import android.util.Log;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.WritableMap;
+import android.os.Handler;
+import android.os.Message;
+
+import java.lang.ref.WeakReference;
+
 /**
  * Implementation of App Widget functionality.
  */
 public class StopWatch extends AppWidgetProvider {
-
-    // 이 변수들을 추가하세요.
-    private static long startTime = 0;
-    private static long elapsedTime = 0;
+    private static MyHandler handler;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
+        StopWatchModule.emitDeviceEvent("onAppWidgetUpdate", Arguments.createMap());
     }
 
     @Override
@@ -38,51 +47,103 @@ public class StopWatch extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        Log.d("StopWatch", "Received intent: " + intent.getAction());
+
+        SharedPreferences prefs = context.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
+        boolean isRunning = prefs.getBoolean("isRunning" , false);
+        Log.d("StopWatch", "Received action: " + intent.getAction());
+
         if ("PLAY_ACTION".equals(intent.getAction())) {
-            startTime = System.currentTimeMillis();
-
-            Intent serviceIntent = new Intent(context, TimerService.class);
-            serviceIntent.setAction("PLAY_ACTION");
-            context.startService(serviceIntent);
+            if (!isRunning) {
+                prefs.edit().putBoolean("isRunning", true).apply();
+                if (handler == null) {
+                    handler = new MyHandler(context);
+                }
+                handler.sendMessage(handler.obtainMessage(0));
+            }
         } else if ("STOP_ACTION".equals(intent.getAction())) {
-            elapsedTime += System.currentTimeMillis() - startTime;
+            prefs.edit().putBoolean("isRunning", false).apply();
+            if (handler != null) {
+                handler.removeMessages(0);
+            }
+        } else if ("RESET_ACTION".equals(intent.getAction())) {
+            prefs.edit().putBoolean("isRunning", false).apply();
+            if (handler != null) {
+                handler.removeMessages(0);
+            }
+            prefs.edit().putInt("number", 0).apply();
+            updateAllWidgets(context);
+        }
+    }
 
-            Intent serviceIntent = new Intent(context, TimerService.class);
-            serviceIntent.setAction("STOP_ACTION");
-            context.startService(serviceIntent);
-        } else if (TimerService.ACTION_UPDATE.equals(intent.getAction())) {
-            elapsedTime += System.currentTimeMillis() - startTime;
-            startTime = System.currentTimeMillis();
-
-            // 이제 위젯 UI를 업데이트하십시오.
-            // 시간을 문자열로 변환하는 로직은 단순화되었습니다.
-            // 이를 더 발전시켜 올바른 시간을 표시하도록 해야 합니다.
-            String timeStr = String.format("%02d:%02d:%02d",
-                    (elapsedTime / 3600000),
-                    (elapsedTime / 60000) % 60,
-                    (elapsedTime / 1000) % 60);
-
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
-            views.setTextViewText(R.id.timer, timeStr);
-
-            AppWidgetManager.getInstance(context).updateAppWidget(new ComponentName(context, StopWatch.class), views);
+    static void updateAllWidgets(Context context) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, StopWatch.class));
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        SharedPreferences prefs = context.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
+        int number = prefs.getInt("number", 0);
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
+        views.setTextViewText(R.id.timer, formatTime(number));
 
         Intent playIntent = new Intent(context, StopWatch.class);
         playIntent.setAction("PLAY_ACTION");
-        PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.playButton, playPendingIntent);
 
         Intent stopIntent = new Intent(context, StopWatch.class);
         stopIntent.setAction("STOP_ACTION");
-        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 1, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.stopButton, stopPendingIntent);
 
+        Intent resetIntent = new Intent(context, StopWatch.class);
+        resetIntent.setAction("RESET_ACTION");
+        PendingIntent resetPendingIntent = PendingIntent.getBroadcast(context, 2, resetIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        views.setOnClickPendingIntent(R.id.resetButton, resetPendingIntent);
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    private static String formatTime(int totalSecond) {
+        int hours = totalSecond / 3600;
+        int minutes = (totalSecond % 3600) / 60;
+        int seconds = totalSecond % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    private static class MyHandler extends Handler {
+        private final WeakReference<Context> contextRef;
+
+        MyHandler(Context context) {
+            super(Looper.getMainLooper());
+            contextRef = new WeakReference<>(context);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            Context context = contextRef.get();
+            if (context == null) return;
+
+            SharedPreferences prefs = context.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
+            int number = prefs.getInt("number", 0);
+            boolean isRunning = prefs.getBoolean("isRunning", false);
+
+            prefs.edit().putInt("number", number + 1).apply();
+            updateAllWidgets(context);
+
+            // Emit event to React Native
+            WritableMap map = Arguments.createMap();
+            map.putString("number", formatTime(number + 1));
+            StopWatchModule.emitDeviceEvent("onAppWidgetUpdate", map);
+
+            if (isRunning) {
+                this.sendMessageDelayed(this.obtainMessage(0), 1000);
+            }
+        }
+
     }
 }
