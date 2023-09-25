@@ -1,7 +1,6 @@
 package com.haru.ppobbi.domain.challenge.service;
 
-import com.haru.ppobbi.domain.challenge.entity.Challenge;
-import com.haru.ppobbi.domain.challenge.entity.UserChallenge;
+import com.haru.ppobbi.domain.admin.entity.Challenge;
 
 import java.util.List;
 
