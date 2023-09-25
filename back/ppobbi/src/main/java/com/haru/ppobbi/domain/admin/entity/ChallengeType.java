@@ -1,4 +1,4 @@
-package com.haru.ppobbi.domain.challenge.entity;
+package com.haru.ppobbi.domain.admin.entity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
