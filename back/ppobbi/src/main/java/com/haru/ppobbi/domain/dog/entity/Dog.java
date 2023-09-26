@@ -45,7 +45,7 @@ public class Dog extends BaseEntity {
     private Character dogSex;
 
     @Column(name = "dog_nft")
-    private String dogNft;
+    private Integer dogNft;
 
     @Column(name = "dog_img")
     private  String dogImg;
@@ -75,7 +75,7 @@ public class Dog extends BaseEntity {
     }
 
     @Builder
-    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBirthDate, Character dogSex, Integer dogIsDead, String dogNft, String dogImg) {
+    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBirthDate, Character dogSex, Integer dogIsDead, Integer dogNft, String dogImg) {
         this.userNo = userNo;
         this.dogName = dogName;
         this.dogBreed = dogBreed;
