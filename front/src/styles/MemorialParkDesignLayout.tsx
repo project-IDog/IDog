@@ -249,17 +249,19 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		flexDirection: "row",
 		display: "flex",
 		// alignItems: "center",
-		justifyContent: "space-between",
+		// justifyContent: "space-between",
 	},
 	modalcontents: {
 		display: "flex",
-		paddingHorizontal: responsiveWidth(5),
+		paddingHorizontal: responsiveWidth(3),
 		flexDirection: "column",
 		justifyContent: "space-between",
 		// backgroundColor: "red",
 		paddingVertical: responsiveHeight(2),
+		// backgroundColor: "red",
 	},
 	modalcontentrow: {
+		width: responsiveWidth(35),
 		display: "flex",
 		flexDirection: "row",
 		// alignItems: "center",
@@ -278,6 +280,27 @@ const MemorialParkDesignLayout = StyleSheet.create({
 	modalcontentdatetitle: {
 		fontSize: 14,
 	},
+	ripregistercontainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(0,0,0,0.5)",
+	},
+	ripregistermodal: {
+		width: 300,
+		padding: 20,
+		backgroundColor: "white",
+		borderRadius: 10,
+	},
+	ripregistercontent: { fontSize: 18, marginBottom: 20 },
+	ripregistertitle: { fontSize: 18, fontWeight: "bold" },
+	ripregisterapplycontainer: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		paddingHorizontal: 50,
+	},
+	ripregisteryes: { fontSize: 16, color: "blue", fontWeight: "bold" },
+	ripregisterno: { fontSize: 16, color: "red", fontWeight: "bold" },
 });
 
 export default MemorialParkDesignLayout;

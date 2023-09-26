@@ -54,7 +54,7 @@ const Main = ({ navigation }: any) => {
 	}, []);
 
 	if (dogNftList.length !== 0) {
-		console.log(dogNftList);
+		console.log("아ㅣㄴㅅ?", dogNftList);
 	}
 
 	const [RipdataList, setRipdataList] = useState<Object[]>([]);
@@ -227,7 +227,7 @@ const Main = ({ navigation }: any) => {
 					})}
 				</View>
 				<View>
-					<RipnftCreate />
+					<RipnftCreate dogNftList={RipdataList} />
 				</View>
 			</ScrollView>
 		</>

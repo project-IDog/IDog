@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Text, TouchableOpacity } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import * as SecureStore from "expo-secure-store";
@@ -7,6 +8,8 @@ import { ANDROID_CLIENT_ID } from "@env";
 // import axios from "../utils/axios";
 import axios from "axios";
 import IndexStore from "../stores/IndexStore";
+import SideMenuLayout from "../styles/sideMenuLayout";
+import { set } from "mobx";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -15,28 +18,23 @@ const Login = () => {
 	const [request, response, promptAsync] = Google.useAuthRequest({
 		androidClientId: ANDROID_CLIENT_ID,
 	});
-	const handleSignInWithGoogle = async () => {
-		if (response?.type === "success") {
-			const tokenData = {
-				authorizationCode: response.params?.code,
-				idToken: response.authentication?.idToken,
-				accessToken: response.authentication?.accessToken,
-				refreshToken: response.authentication?.refreshToken,
-			};
-			const url = "https://idog.store/api/user";
-			console.log("tokenData : ", JSON.stringify(tokenData));
-			console.log("그냥토큰의 엑세스토큰:", tokenData.accessToken);
-			try {
-				const data = await axios.post(url, JSON.stringify(tokenData), {
-					headers: {
-						"Content-Type": "application/json",
-						charset: "utf-8",
-					},
-					timeout: 1000,
-				});
+	const [isLogged, setIsLogged] = useState<Boolean>(stores.LoginStore.isLogged);
 
-				console.warn("여기까지 찍히나 봅시다");
-				console.warn("data : ", data.data);
+	const handleSignInWithGoogle = async () => {
+		if (response?.type !== "success") return;
+
+		const idToken = response.authentication?.idToken;
+		const url = "https://idog.store/api/user";
+		try {
+			const data = await axios.post(url, null, {
+				headers: {
+					Authorization: `Bearer ${idToken}`,
+					"Content-Type": "application/json",
+				},
+			});
+			console.log(data.data.message);
+			if (data.data?.message === "로그인 완료") {
+				setIsLogged(true);
 				await SecureStore.setItemAsync(
 					"accessToken",
 					data.data.data.accessToken,
@@ -46,22 +44,17 @@ const Login = () => {
 					data.data.data.refreshToken,
 				);
 				stores.LoginStore.isLogged = true;
-			} catch (error: any) {
-				console.error("Error Message:", error.message);
-				if (error.response) {
-					console.error("Response Data:", error.response.data);
-					console.error("Response Status:", error.response.status);
-					console.error("Response Headers:", error.response.headers);
-				} else if (error.request) {
-					console.error("Request:", error.request);
-				}
+			} else {
+				console.log("else : data.data: ", data.data);
 			}
-			console.log("끝");
+		} catch (error) {
+			console.log("error : ", error);
 		}
 	};
 
 	const handleLogout = async () => {
 		stores.LoginStore.isLogged = false;
+		setIsLogged(false);
 		await SecureStore.deleteItemAsync("accessToken");
 		await SecureStore.deleteItemAsync("refreshToken");
 		for (let key in stores) {
@@ -77,7 +70,6 @@ const Login = () => {
 		}
 		console.warn("refreshToken : ", refreshToken);
 		console.warn("accessToken : ", accessToken);
-		console.log(accessToken);
 	};
 
 	// Google 인증 응답이 바뀔때마다 실행
@@ -87,15 +79,27 @@ const Login = () => {
 
 	return (
 		<View>
-			<Button
-				disabled={!request}
-				title="Login"
-				onPress={() => {
-					promptAsync();
-				}}
-			/>
-			<Button title="logout" onPress={() => handleLogout()} />
-			<Button title="getSecureStorage" onPress={() => getSecureStorage()} />
+			{!isLogged ? (
+				<TouchableOpacity
+					activeOpacity={0.7}
+					style={SideMenuLayout.googleAuthButton}
+					onPress={() => promptAsync()}
+				>
+					<View>
+						<Text style={SideMenuLayout.googleAuthButtonText}>로그인</Text>
+					</View>
+				</TouchableOpacity>
+			) : (
+				<TouchableOpacity
+					activeOpacity={0.7}
+					style={SideMenuLayout.googleAuthButton}
+					onPress={() => handleLogout()}
+				>
+					<View>
+						<Text style={SideMenuLayout.googleAuthButtonText}>로그아웃</Text>
+					</View>
+				</TouchableOpacity>
+			)}
 		</View>
 	);
 };

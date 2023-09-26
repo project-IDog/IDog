@@ -88,8 +88,8 @@ const AdoptionLayout = StyleSheet.create({
 		borderRadius: 25,
 	},
 	tabImage2: {
-		width: responsiveWidth(11),
-		height: responsiveHeight(10),
+		width: responsiveWidth(12),
+		height: responsiveHeight(9),
 		borderRadius: 10,
 	},
 	tabImage3: {

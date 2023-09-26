@@ -5,11 +5,10 @@ import {
 	StyleSheet,
 	ImageBackground,
 	TouchableOpacity,
-	Animated,
 } from "react-native";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PlayIcon from "../../assets/images/play-icon.png";
-import flower1 from "../../assets/flower1.json";
+import flower1 from "../../assets/flower3.json";
 import {
 	responsiveHeight,
 	responsiveWidth,
@@ -17,34 +16,30 @@ import {
 import LottieView from "lottie-react-native";
 
 const SubMain = ({ subTitle, mainTitle, bgImg, desc }: any) => {
-	const [flowers, setFlowers] = useState<Array<{ x: number; y: number }>>([]);
-	const [progress, setProgress] = useState(new Animated.Value(0));
+	const [flowers, setFlowers] = useState<
+		Array<{ x: number; y: number; animated: boolean }>
+	>([]);
 
+	const [lastClick, setLastClick] = useState<number>(0);
 	const handlePress = (event: any) => {
-		if (flowers.length >= 5) {
+		const currentTime = new Date().getTime();
+
+		if (currentTime - lastClick < 300) {
+			// 300ms 이내의 연속 클릭 무시
 			return;
 		}
-		const { pageX, pageY } = event.nativeEvent;
-		setFlowers([...flowers, { x: pageX, y: pageY }]);
 
-		console.log("flowers:", flowers);
+		setLastClick(currentTime);
+
+		const { pageX, pageY } = event.nativeEvent;
+		setFlowers([...flowers, { x: pageX, y: pageY, animated: false }]);
+		// console.log("flowers:", flowers);
 	};
 
-	// For demo purposes, I'll assume you want to animate the progress on component mount.
-	useEffect(() => {
-		Animated.timing(progress, {
-			toValue: 1,
-			duration: 5000,
-			useNativeDriver: false,
-		}).start();
-	}, []);
-
-	const flowers1 = [
-		{ x: 226.55691528320312, y: 242.2622833251953 },
-		{ x: 106.84989166259766, y: 280.82952880859375 },
-		{ x: 30.849609375, y: 237.9681854248047 },
-		{ x: 55.13253402709961, y: 175.12081909179688 },
-	];
+	const [lottieDimensions, setLottieDimensions] = useState({
+		width: 0,
+		height: 0,
+	});
 
 	return (
 		<>
@@ -52,25 +47,32 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc }: any) => {
 				<ImageBackground source={bgImg} style={styles.subMainBg}>
 					<TouchableOpacity onPress={handlePress}>
 						<View style={styles.garden}>
-							{flowers1.map((flower, index) => {
+							{flowers.map((flower, index) => {
 								return (
-									<Animated.View
-										key={index}
-										style={{
-											position: "absolute",
-											top: flower.y,
-											left: flower.x,
-											zIndex: 10,
-											height: responsiveHeight(50),
-										}}
-									>
+									<>
 										<LottieView
-											autoPlay
-											loop={true}
+											key={index}
+											style={[
+												styles.flower1,
+												{
+													position: "absolute",
+													left: -25 + index * responsiveWidth(4),
+													top: responsiveHeight(13),
+												},
+											]}
+											autoPlay={flower.animated === false}
+											loop={false}
 											source={flower1}
-											progress={progress}
+											speed={0.7}
+											onAnimationFinish={() => {
+												if (!flower.animated) {
+													const updatedFlowers = [...flowers];
+													updatedFlowers[index].animated = true;
+													setFlowers(updatedFlowers);
+												}
+											}}
 										/>
-									</Animated.View>
+									</>
 								);
 							})}
 						</View>
@@ -80,29 +82,13 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc }: any) => {
 						<Text style={styles.subMainSubTitle}>{subTitle}</Text>
 						<Text style={styles.subMainMainTitle}>{mainTitle}</Text>
 						<View style={styles.subMainDescWrap}>
-							<TouchableOpacity style={styles.Descbtn}>
+							<TouchableOpacity style={styles.Descbtn} onPress={handlePress}>
 								<Text style={styles.subMainDesc}>{desc}</Text>
 								<Image source={PlayIcon} />
 							</TouchableOpacity>
 						</View>
 					</View>
 				</ImageBackground>
-				<Animated.View style={{}}>
-					<LottieView
-						autoPlay
-						loop={true}
-						source={flower1}
-						style={styles.flower1}
-					/>
-				</Animated.View>
-				<Animated.View>
-					<LottieView
-						source={flower1}
-						style={styles.flower1}
-						// autoPlay
-						// loop={true}
-					/>
-				</Animated.View>
 			</View>
 		</>
 	);
@@ -112,9 +98,10 @@ const styles = StyleSheet.create({
 	subMainWrap: {
 		position: "relative",
 		top: -80,
-		zIndex: -1,
+		zIndex: -5,
 	},
 	subMainBg: {
+		zIndex: -3,
 		width: responsiveWidth(100),
 		height: responsiveHeight(60),
 		resizeMode: "cover",
@@ -157,6 +144,11 @@ const styles = StyleSheet.create({
 	},
 	flower1: {
 		zIndex: 10,
+		position: "absolute",
+		// transform: [{ scale: 0.5 }],
+		// height: responsiveHeight(20),
+		width: responsiveWidth(50),
+		// backgroundColor: "rgba(0,0,0,0.7)",
 	},
 	garden: {
 		backgroundColor: "rgba(0,0,0,0.1)",
@@ -165,4 +157,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default SubMain;
+export default React.memo(SubMain);

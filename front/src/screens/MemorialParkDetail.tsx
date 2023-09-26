@@ -14,6 +14,9 @@ import MpImage from "../../assets/images/MpImg.jpg";
 import SubMainRip from "../components/SubMainRip";
 import MemorialParkLoading from "./MemorialParkLoading";
 import { set } from "mobx";
+import flower1 from "../../assets/flower1.json";
+import LottieView from "lottie-react-native";
+import axios from "../utils/axios";
 
 const MemorialPark: React.FC = (props) => {
 	const { route } = props;
@@ -23,8 +26,16 @@ const MemorialPark: React.FC = (props) => {
 	const [isSkipped, setIsSkipped] = useState(false);
 	const [isFullyTransparent, setIsFullyTransparent] = useState(false);
 	const [scrollenable, setScrollenable] = useState(false);
+	const [commentList, setCommentList] = useState<Object[]>([]);
+	const [showAllComments, setShowAllComments] = useState(false);
 
 	useEffect(() => {
+		axios.get("/comment/3").then((data) => {
+			if (data.data.message === "추모 댓글 조회 성공") {
+				setCommentList(data.data.data);
+			}
+		});
+
 		setTimeout(() => {
 			Animated.parallel([
 				Animated.timing(loadingOpacity, {
@@ -59,6 +70,10 @@ const MemorialPark: React.FC = (props) => {
 		};
 	}, []);
 
+	if (commentList.length !== 0) {
+		console.log("코멘트: ", commentList);
+	}
+
 	return (
 		<>
 			<ScrollView scrollEnabled={scrollenable}>
@@ -87,7 +102,6 @@ const MemorialPark: React.FC = (props) => {
 						NFT를 확인해보세요
 					</Text>
 				</View>
-
 				<View style={[MemorialParkLayout.mpTitlewrap]}>
 					<View style={[MemorialParkLayout.mpMarginwrap]}>
 						<Text style={[MemorialParkLayout.mpTitle]}>RIP 반려견 프로필</Text>
@@ -146,38 +160,34 @@ const MemorialPark: React.FC = (props) => {
 				</View>
 				<View style={[MemorialParkLayout.mpTitlewrap3]}>
 					<View style={[MemorialParkLayout.mpMarginwrap]}>
-						<Text style={[MemorialParkLayout.mpTitle]}>댓글 (3)</Text>
-						<View style={[MemorialParkLayout.mpComentWarp]}>
-							<Text style={[MemorialParkLayout.mpComent]}>
-								뽀삐야 너는 정말 좋은 아이였어.
-							</Text>
-							<Text style={[MemorialParkLayout.mpComentDate]}>
-								Winseo, 2023.09.13 11:11
-							</Text>
-						</View>
-						<View style={[MemorialParkLayout.mpComentWarp]}>
-							<Text style={[MemorialParkLayout.mpComent]}>RIP</Text>
-							<Text style={[MemorialParkLayout.mpComentDate]}>
-								Winseo, 2023.09.14 11:11
-							</Text>
-						</View>
-						<View style={[MemorialParkLayout.mpComentWarp]}>
-							<Text style={[MemorialParkLayout.mpComent]}>
-								뽀삐야 잘지내고 있지? 나는 지금 너를 많이 생각하고 있어.
-								거기에서는 행복해야해
-							</Text>
-							<Text style={[MemorialParkLayout.mpComentDate]}>
-								Winseo, 2023.09.15 11:11
-							</Text>
-						</View>
-						<View style={[MemorialParkLayout.mpcommentbutton]}>
-							<TouchableOpacity>
-								<Text style={[MemorialParkLayout.mpComent]}>댓글 더보기</Text>
-							</TouchableOpacity>
-						</View>
+						<Text style={[MemorialParkLayout.mpTitle]}>
+							댓글 ({commentList.length})
+						</Text>
+						{commentList
+							.slice(0, showAllComments ? commentList.length : 3)
+							.map((comment, index) => {
+								const formattedTime = comment.createTime.replace("T", " ");
+								return (
+									<View style={[MemorialParkLayout.mpComentWarp]}>
+										<Text style={[MemorialParkLayout.mpComent]}>
+											{comment?.commentContent}
+										</Text>
+										<Text style={[MemorialParkLayout.mpComentDate]}>
+											{comment?.userName}, {formattedTime}
+										</Text>
+									</View>
+								);
+							})}
+
+						{commentList.length > 3 && !showAllComments && (
+							<View style={[MemorialParkLayout.mpcommentbutton]}>
+								<TouchableOpacity onPress={() => setShowAllComments(true)}>
+									<Text style={[MemorialParkLayout.mpComent]}>댓글 더보기</Text>
+								</TouchableOpacity>
+							</View>
+						)}
 					</View>
 				</View>
-
 				<View style={[MemorialParkLayout.mpTitlewrap2]}>
 					<Text style={MemorialParkLayout.MpDesc}>Memorial 앨범</Text>
 					<Text style={[MemorialParkLayout.MpTitle]}>
