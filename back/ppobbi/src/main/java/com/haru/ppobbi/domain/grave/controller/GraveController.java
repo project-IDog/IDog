@@ -43,9 +43,14 @@ public class GraveController {
                 .body(ResponseDto.create(READ_SUCCESSS, graveService.selectGraves()));
     }
 
-    @GetMapping("/test")
+    @GetMapping("/token")
     public ResponseEntity<TokenInfo> hi(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(jwtTokenHandler.generateToken(8));
+    }
+
+    @GetMapping("/log")
+    public ResponseEntity<String> hello(){
+        throw new RuntimeException("exception");
     }
 }
