@@ -6,10 +6,10 @@ import {
 
 const AdoptionLayout = StyleSheet.create({
 	Mpbackground: {
-        backgroundColor: "#F2F2F2",
+		backgroundColor: "#F2F2F2",
 		width: responsiveWidth(100),
 		height: responsiveHeight(100),
-        zIndex: 10,
+		zIndex: 10,
 		position: "absolute",
 	},
 	MpTitleWrap: {
@@ -104,6 +104,8 @@ const AdoptionLayout = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "500",
 		display: "flex",
+		width: responsiveWidth(78),
+
 	},
 	mpComentDate: {
 		marginHorizontal: responsiveWidth(3),
@@ -136,6 +138,40 @@ const AdoptionLayout = StyleSheet.create({
 		display: "flex",
 		marginBottom: 15,
 		flexWrap: "wrap",
+	},
+	commentcontainer: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		paddingHorizontal: responsiveWidth(1),
+		// backgroundColor: "#F2F2F2",
+	},
+	commentInput: {
+		paddingHorizontal: responsiveWidth(3),
+		height: 40,
+		borderColor: "gray",
+		borderWidth: 1,
+		borderRadius: 10,
+		marginBottom: 10,
+		backgroundColor: "white",
+		width: responsiveWidth(68),
+		fontSize: 18,
+	},
+	commentsubmit: {
+		backgroundColor: "#2196F3",
+		color: "white",
+		fontSize: 18,
+		marginBottom: 10,
+		justifyContent: "center",
+		alignItems: "center",
+		paddingHorizontal: responsiveWidth(2.5),
+		borderRadius: 10,
+	},
+
+	commentsubmittext: {
+		fontSize: 18,
+		fontWeight: "bold",
+		color: "white",
 	},
 });
 

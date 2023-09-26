@@ -6,6 +6,7 @@ import {
 	TouchableOpacity,
 	Animated,
 	ScrollView,
+	TextInput,
 } from "react-native";
 import Footer from "../components/Footer";
 import MainHeader from "../components/MainHeader";
@@ -28,6 +29,7 @@ const MemorialPark: React.FC = (props) => {
 	const [scrollenable, setScrollenable] = useState(false);
 	const [commentList, setCommentList] = useState<Object[]>([]);
 	const [showAllComments, setShowAllComments] = useState(false);
+	const [comment, setComment] = useState("");
 
 	useEffect(() => {
 		axios.get("/comment/3").then((data) => {
@@ -160,6 +162,18 @@ const MemorialPark: React.FC = (props) => {
 				</View>
 				<View style={[MemorialParkLayout.mpTitlewrap3]}>
 					<View style={[MemorialParkLayout.mpMarginwrap]}>
+						<Text style={[MemorialParkLayout.mpTitle]}>댓글 작성하기</Text>
+						<View style={MemorialParkLayout.commentcontainer}>
+							<TextInput
+								style={[MemorialParkLayout.commentInput]}
+								value={comment}
+								onChangeText={setComment}
+								placeholder="추모의 댓글을 작성할 수 있습니다."
+							/>
+							<TouchableOpacity style={MemorialParkLayout.commentsubmit}>
+								<Text style={MemorialParkLayout.commentsubmittext}>작성</Text>
+							</TouchableOpacity>
+						</View>
 						<Text style={[MemorialParkLayout.mpTitle]}>
 							댓글 ({commentList.length})
 						</Text>
@@ -168,7 +182,7 @@ const MemorialPark: React.FC = (props) => {
 							.map((comment, index) => {
 								const formattedTime = comment.createTime.replace("T", " ");
 								return (
-									<View style={[MemorialParkLayout.mpComentWarp]}>
+									<View style={[MemorialParkLayout.mpComentWarp]} key={index}>
 										<Text style={[MemorialParkLayout.mpComent]}>
 											{comment?.commentContent}
 										</Text>

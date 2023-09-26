@@ -46,16 +46,11 @@ const Main = ({ navigation }: any) => {
 			}
 		});
 		axios.get("/dog/list/8").then((data) => {
-			console.log("리스트데이터:", data);
 			if (data.data.message === "사용자의 모든 강아지 목록 조회 완료") {
 				setDogNftList(data.data.data);
 			}
 		});
 	}, []);
-
-	if (dogNftList.length !== 0) {
-		console.log("아ㅣㄴㅅ?", dogNftList);
-	}
 
 	const [RipdataList, setRipdataList] = useState<Object[]>([]);
 	const [ripIndex, setRipIndex] = useState<number>(0);

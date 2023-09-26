@@ -16,29 +16,12 @@ const getAuthorizationHeader = async (tokenKey: string) => {
 	return `Bearer ${await getValueFor(tokenKey)}`;
 };
 
-<<<<<<< HEAD
-instance.interceptors.request.use(
-	async (config) => {
-		config.headers["Content-Type"] = "application/json; charset=utf-8";
-		console.log("log:", tokenStore.accessToken);
-		config.headers["Authorization"] = `Bearer ${await getValueFor(
-			"accessToken",
-		)}`;
-		return config;
-	},
-	(error) => {
-		console.error(error);
-		return Promise.reject(error);
-	},
-);
-=======
 const setCommonHeaders = async (config) => {
 	// default header 설정
 	config.headers["Content-Type"] = CONTENT_TYPE;
 	config.headers["Authorization"] = await getAuthorizationHeader("accessToken");
 	return config;
 };
->>>>>>> front
 
 const refreshAccessTokenAndRetry = async (config: AxiosRequestConfig) => {
 	// accessToken 만료시 refreshToken으로 재발급
