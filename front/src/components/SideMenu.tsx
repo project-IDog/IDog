@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import SideMenuIcon from "./SideMenuIcon";
 import SideMenuLayout from "../styles/sideMenuLayout";
 import LoginStore from "../stores/LoginStore";
+import Login from "../screens/Login";
 
 import CloseIcon from "../../assets/images/close-icon.png";
 import NftCardIcon from "../../assets/images/line-nft-card-icon.png";
@@ -15,6 +16,7 @@ import TribeIcon from "../../assets/images/line-tribe-icon.png";
 
 const SideMenu = (props: any) => {
 	const navigation = useNavigation();
+
 	const authMoveMypage = () => {
 		if (LoginStore.isLogged) {
 			navigation.navigate("MyPage");
@@ -26,7 +28,7 @@ const SideMenu = (props: any) => {
 		<>
 			<View style={SideMenuLayout.sideMenuWrap}>
 				<View style={SideMenuLayout.sideMenuHeader}>
-					<Text style={SideMenuLayout.sideMenuLogo}>LOGO</Text>
+					<Text style={SideMenuLayout.sideMenuLogo}>IDOG</Text>
 					<TouchableOpacity
 						activeOpacity={0.7}
 						onPress={() => props.updateActiveSideMenu(false)}
@@ -83,24 +85,7 @@ const SideMenu = (props: any) => {
 					</View>
 				</View>
 				<View style={SideMenuLayout.authButtonWrap}>
-					<TouchableOpacity
-						activeOpacity={0.7}
-						style={SideMenuLayout.googleAuthButton}
-						onPress={() => navigation.navigate("WidgetText")}
-					>
-						<View>
-							<Text style={SideMenuLayout.googleAuthButtonText}>위젯</Text>
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity
-						activeOpacity={0.7}
-						style={SideMenuLayout.googleAuthButton}
-						onPress={() => navigation.navigate("Login")}
-					>
-						<View>
-							<Text style={SideMenuLayout.googleAuthButtonText}>로그인</Text>
-						</View>
-					</TouchableOpacity>
+					<Login />
 					<TouchableOpacity
 						activeOpacity={0.7}
 						style={SideMenuLayout.moveMypageButton}

@@ -51,9 +51,12 @@ const CreateWalletPassword = ({navigation}: any) => {
 
             const getMnemonic = await getValueFor("encryptedMnemonic");
 
-            const decrypted = decryptValue(getMnemonic, SECRET_SALT);
+            const decrypted = await decryptValue(getMnemonic, SECRET_SALT);
 
             const newAccount = await ethers.HDNodeWallet.fromPhrase(decrypted);
+
+            await console.log(SecureStore.setItemAsync("walletAddress", newAccount?.address));
+            await console.log(SecureStore.setItemAsync("privateKey", newAccount?.privateKey));
             
             await navigation.navigate('ProtectWallet');
             

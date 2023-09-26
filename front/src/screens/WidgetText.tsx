@@ -1,31 +1,24 @@
-import React, { useEffect } from "react";
-import { View, Text, Button } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Button, Image, TouchableOpacity } from "react-native";
 import { NativeModules, DeviceEventEmitter } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import WalkLayout from "../styles/walkLayout";
+import TimerImg from "../../assets/images/timer.png";
 const { StopWatchModule } = NativeModules;
 
 const WidgetText = () => {
-	const [widgetData, setWidgetData] = React.useState<String | null>(null);
-	const [appWidgetId, setAppWidgetId] = React.useState<String | null>(null);
+	const [widgetData, setWidgetData] = useState("0:00:00");
+	const [isPlaying, setIsPlaying] = useState(false);
+	const [currentDate, setCurrentDate] = useState("");
 
 	useEffect(() => {
-		const fetchStoredAppWidgetId = async () => {
-			const storedId = await AsyncStorage.getItem("appWidgetId");
-			if (storedId) {
-				setAppWidgetId(storedId);
-			}
-		};
-
-		fetchStoredAppWidgetId();
-
+		getWidgetData();
 		const listener = DeviceEventEmitter.addListener(
 			"onAppWidgetUpdate",
-			async (data) => {
-				setAppWidgetId(data.appWidgetId);
-				await AsyncStorage.setItem("appWidgetId", data.appWidgetId.toString());
+			async () => {
+				getWidgetData();
 			},
 		);
-
+		console.log("listener : ", listener);
 		return () => {
 			if (listener) {
 				listener.remove();
@@ -34,25 +27,61 @@ const WidgetText = () => {
 	}, []);
 
 	const getWidgetData = async () => {
-		if (appWidgetId) {
-			const widgetData = await StopWatchModule.getNumber(appWidgetId);
-			console.warn("appWidgetId", appWidgetId + "widgetData", widgetData);
-			setWidgetData(widgetData);
-		} else {
-			console.warn("AppWidgetId is not yet available.");
-		}
+		const widgetData = await StopWatchModule.getNumber();
+		const strCurrentDate = await StopWatchModule.getDate();
+		setWidgetData(widgetData);
+		setCurrentDate(strCurrentDate);
+		console.log("widgetData : ", widgetData);
+		console.log("strCurrentDate : ", strCurrentDate);
+	};
+
+	const playTimer = () => {
+		StopWatchModule.playTimer();
+		setIsPlaying(true);
+	};
+
+	const stopTimer = () => {
+		StopWatchModule.stopTimer();
+		setIsPlaying(false);
+	};
+
+	const resetTimer = () => {
+		console.log("widgetData : ", widgetData);
+		console.log("strCurrentDate : ", currentDate);
+		StopWatchModule.resetTimer();
+		setWidgetData("0:00:00");
+		setIsPlaying(false);
 	};
 
 	return (
-		<View>
-			<Text>{widgetData}</Text>
-			<Button
-				title="get widget data"
-				onPress={() => getWidgetData()}
-				disabled={!appWidgetId}
-			/>
-			<Text>{appWidgetId}</Text>
-			<Text>Current state</Text>
+		<View style={WalkLayout.contentWrap}>
+			<Text style={WalkLayout.todayTimerTitle}>오늘의 산책시간</Text>
+			<View style={WalkLayout.timer}>
+				<Image source={TimerImg} style={WalkLayout.timerImg} />
+				<Text style={WalkLayout.timerText}>{widgetData}</Text>
+			</View>
+
+			<View style={WalkLayout.todayTimerButtonWrap}>
+				{!isPlaying ? (
+					<TouchableOpacity activeOpacity={0.7} onPress={playTimer}>
+						<View style={WalkLayout.startButton}>
+							<Text style={WalkLayout.startButtonText}>산책 시작</Text>
+						</View>
+					</TouchableOpacity>
+				) : (
+					<TouchableOpacity activeOpacity={0.7} onPress={stopTimer}>
+						<View style={WalkLayout.stopButton}>
+							<Text style={WalkLayout.stopButtonText}>일시 정지</Text>
+						</View>
+					</TouchableOpacity>
+				)}
+
+				<TouchableOpacity activeOpacity={0.7} onPress={resetTimer}>
+					<View style={WalkLayout.finishButton}>
+						<Text style={WalkLayout.finishButtonText}>산책 종료</Text>
+					</View>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 };
