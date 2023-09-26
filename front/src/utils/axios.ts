@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as Sentry from "@sentry/react-native";
 import * as SecureStore from "expo-secure-store";
+import tokenStore from "../stores/tokenStore";
 
 const getValueFor = async (key: string) => {
 	return await SecureStore.getItemAsync(key);
@@ -14,6 +15,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
 	async (config) => {
 		config.headers["Content-Type"] = "application/json; charset=utf-8";
+		console.log("log:", tokenStore.accessToken);
 		config.headers["Authorization"] = `Bearer ${await getValueFor(
 			"accessToken",
 		)}`;

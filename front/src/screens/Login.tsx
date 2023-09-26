@@ -10,6 +10,7 @@ import axios from "axios";
 import IndexStore from "../stores/IndexStore";
 import SideMenuLayout from "../styles/sideMenuLayout";
 import { set } from "mobx";
+import tokenStore from "../stores/tokenStore";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -35,10 +36,12 @@ const Login = () => {
 			console.log(data.data.message);
 			if (data.data?.message === "로그인 완료") {
 				setIsLogged(true);
+				console.log("temp", data);
 				await SecureStore.setItemAsync(
 					"accessToken",
 					data.data.data.accessToken,
 				);
+				tokenStore.setAccessToken(data.data.data.accessToken);
 				await SecureStore.setItemAsync(
 					"refreshToken",
 					data.data.data.refreshToken,

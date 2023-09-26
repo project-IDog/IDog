@@ -227,7 +227,7 @@ const Main = ({ navigation }: any) => {
 					})}
 				</View>
 				<View>
-					<RipnftCreate dogNftList={RipdataList} />
+					<RipnftCreate dogNftList={dogNftList} />
 				</View>
 			</ScrollView>
 		</>

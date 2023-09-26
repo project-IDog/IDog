@@ -9,6 +9,7 @@ import {
 import Animation from "../components/Animation";
 import exImg from "../../assets/images/photo-ex-img3.png";
 import axios from "../utils/axios";
+import tokenStore from "../stores/tokenStore";
 
 const RipnftCreate: React.FC = ({ dogNftList }) => {
 	const [modalVisible, setModalVisible] = useState(false);
@@ -25,16 +26,23 @@ const RipnftCreate: React.FC = ({ dogNftList }) => {
 		// 죽음의 날짜 입력 모달을 엽니다.
 		setDeathDateInputModalVisible(true);
 	};
-	const handleConfirm = () => {
-		// 요청 보내기
-		axios
-			.post('/grave', {
-				dogNo: 6,
-				dogDeathDate: "2020-02-02",
-			})
-			.then((data) => {
-				console.log(data);
-			});
+	const handleConfirm = async () => {
+			await axios
+				.post("/grave", {
+					dogNo: 8,
+					dogDeathDate: new Date("2023-09-24"),
+				})
+				.then((data) => {
+					console.log(data);
+					// if (data.data.message === "회원 상태 메시지 수정 완료") {
+					// 	alert("상태 메시지가 수정되었습니다.");
+					// 	updateActiveStatusModal(false);
+					// 	navigation.replace("Album");
+					// }
+				})
+				.catch((error) => {
+					console.log(error);
+				});
 
 		// axios
 		// 	.post("/grave", {
