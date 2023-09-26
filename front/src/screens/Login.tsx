@@ -35,6 +35,11 @@ const Login = () => {
 			console.log(data.data.message);
 			if (data.data?.message === "로그인 완료") {
 				setIsLogged(true);
+				console.log("data.data.data.accessToken: ", data.data.data.accessToken);
+				console.log(
+					"data.data.data.refreshToken: ",
+					data.data.data.refreshToken,
+				);
 				await SecureStore.setItemAsync(
 					"accessToken",
 					data.data.data.accessToken,
