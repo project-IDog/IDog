@@ -26,48 +26,31 @@ const RipnftCreate: React.FC = ({ dogNftList }) => {
 		// 죽음의 날짜 입력 모달을 엽니다.
 		setDeathDateInputModalVisible(true);
 	};
-	const handleConfirm = async () => {
-			await axios
-				.post("/grave", {
-					dogNo: 8,
-					dogDeathDate: new Date("2023-09-24"),
-				})
-				.then((data) => {
-					console.log(data);
-					// if (data.data.message === "회원 상태 메시지 수정 완료") {
-					// 	alert("상태 메시지가 수정되었습니다.");
-					// 	updateActiveStatusModal(false);
-					// 	navigation.replace("Album");
-					// }
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+	const handleConfirm = () => {
+		axios
+			.post("/grave", {
+				dogNo: 4,
+				dogDeathDate: "2020-02-02",
+			})
+			.then((data) => {
+				console.log(selectedData?.dogNo, deathDate);
+				console.log("데이ㅓ받기!", data);
+				if (data.data.message === "무덤 생성 완료") {
+					//요청
+					Alert.alert(
+						"Memorial Sky",
+						"등록이 완료되었습니다.",
+						[{ text: "OK", onPress: () => setConfirmationModalVisible(false) }],
+						{ cancelable: false },
+					);
 
-		// axios
-		// 	.post("/grave", {
-		// 		dogNo: 4,
-		// 		dogDeathDate: 2020-02-02,
-		// 	})
-		// 	.then((data) => {
-		// 		console.log(selectedData?.dogNo, deathDate);
-		// 		console.log("데이ㅓ받기!", data);
-		// 		if (data.data.message === "무덤 생성 완료") {
-		// 			//요청
-		// 			Alert.alert(
-		// 				"Memorial Sky",
-		// 				"등록이 완료되었습니다.",
-		// 				[{ text: "OK", onPress: () => setConfirmationModalVisible(false) }],
-		// 				{ cancelable: false },
-		// 			);
-
-		// 			setConfirmationModalVisible(false);
-		// 			setDeathDateInputModalVisible(false);
-		// 		}
-		// 	})
-		// 	.catch((error) => {
-		// 		console.error("Error occurred during axios request:", error);
-		// 	});
+					setConfirmationModalVisible(false);
+					setDeathDateInputModalVisible(false);
+				}
+			})
+			.catch((error) => {
+				console.error("Error occurred during axios request:", error);
+			});
 	};
 
 	const handleCancel = () => {

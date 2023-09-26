@@ -7,6 +7,7 @@ import {
 	Animated,
 	ScrollView,
 	TextInput,
+	Alert,
 } from "react-native";
 import Footer from "../components/Footer";
 import MainHeader from "../components/MainHeader";
@@ -30,6 +31,38 @@ const MemorialPark: React.FC = (props) => {
 	const [commentList, setCommentList] = useState<Object[]>([]);
 	const [showAllComments, setShowAllComments] = useState(false);
 	const [comment, setComment] = useState("");
+
+	const fetchComments = () => {
+		axios.get(`/comment/${data.graveNo + 2}`).then((response) => {
+			if (response.data.message === "추모 댓글 조회 성공") {
+				setCommentList(response.data.data);
+			}
+		});
+	};
+
+	const commentSubmit = () => {
+		if (!comment.trim()) {
+			alert("댓글을 입력해주세요.");
+			return;
+		}
+		axios
+			.post("/comment", {
+				graveNo: data.graveNo + 2, // 이거 나중에 +2 제거해야 함
+				commentContent: comment,
+			})
+			.then((data) => {
+				console.log(data);
+				if (data.data.message === "추모 댓글 등록 완료") {
+					Alert.alert("Memorial Park", "댓글 등록이 완료되었습니다.");
+
+					setComment("");
+					fetchComments();
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
 
 	useEffect(() => {
 		axios.get("/comment/3").then((data) => {
@@ -71,10 +104,6 @@ const MemorialPark: React.FC = (props) => {
 			loadingOpacity.removeListener(listener);
 		};
 	}, []);
-
-	if (commentList.length !== 0) {
-		console.log("코멘트: ", commentList);
-	}
 
 	return (
 		<>
@@ -170,7 +199,10 @@ const MemorialPark: React.FC = (props) => {
 								onChangeText={setComment}
 								placeholder="추모의 댓글을 작성할 수 있습니다."
 							/>
-							<TouchableOpacity style={MemorialParkLayout.commentsubmit}>
+							<TouchableOpacity
+								style={MemorialParkLayout.commentsubmit}
+								onPress={commentSubmit}
+							>
 								<Text style={MemorialParkLayout.commentsubmittext}>작성</Text>
 							</TouchableOpacity>
 						</View>

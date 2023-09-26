@@ -155,7 +155,7 @@ const AdoptionLayout = StyleSheet.create({
 		marginBottom: 10,
 		backgroundColor: "white",
 		width: responsiveWidth(68),
-		fontSize: 18,
+		fontSize: 15,
 	},
 	commentsubmit: {
 		backgroundColor: "#2196F3",

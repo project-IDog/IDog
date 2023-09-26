@@ -7,7 +7,7 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import PlayIcon from "../../assets/images/play-icon.png";
+import flowerIcon from "../../assets/images/flowerIcon.png";
 import flower1 from "../../assets/flower3.json";
 import {
 	responsiveHeight,
@@ -24,22 +24,16 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc }: any) => {
 	const handlePress = (event: any) => {
 		const currentTime = new Date().getTime();
 
-		if (currentTime - lastClick < 300) {
+		if (currentTime - lastClick < 1000) {
 			// 300ms 이내의 연속 클릭 무시
 			return;
 		}
-
 		setLastClick(currentTime);
-
-		const { pageX, pageY } = event.nativeEvent;
-		setFlowers([...flowers, { x: pageX, y: pageY, animated: false }]);
-		// console.log("flowers:", flowers);
+		if (flowers.length < 10) {
+			const { pageX, pageY } = event.nativeEvent;
+			setFlowers([...flowers, { x: pageX, y: pageY, animated: false }]);
+		}
 	};
-
-	const [lottieDimensions, setLottieDimensions] = useState({
-		width: 0,
-		height: 0,
-	});
 
 	return (
 		<>
@@ -64,13 +58,6 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc }: any) => {
 											loop={false}
 											source={flower1}
 											speed={0.7}
-											onAnimationFinish={() => {
-												if (!flower.animated) {
-													const updatedFlowers = [...flowers];
-													updatedFlowers[index].animated = true;
-													setFlowers(updatedFlowers);
-												}
-											}}
 										/>
 									</>
 								);
@@ -82,9 +69,13 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc }: any) => {
 						<Text style={styles.subMainSubTitle}>{subTitle}</Text>
 						<Text style={styles.subMainMainTitle}>{mainTitle}</Text>
 						<View style={styles.subMainDescWrap}>
-							<TouchableOpacity style={styles.Descbtn} onPress={handlePress}>
+							<TouchableOpacity
+								delayPressOut={600}
+								style={styles.Descbtn}
+								onPress={handlePress}
+							>
 								<Text style={styles.subMainDesc}>{desc}</Text>
-								<Image source={PlayIcon} />
+								<Image source={flowerIcon} style={styles.flowerIcon} />
 							</TouchableOpacity>
 						</View>
 					</View>
@@ -141,6 +132,7 @@ const styles = StyleSheet.create({
 	},
 	Descbtn: {
 		flexDirection: "row",
+		alignItems: "center",
 	},
 	flower1: {
 		zIndex: 10,
@@ -154,6 +146,12 @@ const styles = StyleSheet.create({
 		backgroundColor: "rgba(0,0,0,0.1)",
 		height: responsiveHeight(37),
 		zIndex: 1,
+	},
+
+	flowerIcon: {
+		// justifyContent: "center",
+		width: responsiveHeight(2.5),
+		height: responsiveHeight(2.5),
 	},
 });
 
