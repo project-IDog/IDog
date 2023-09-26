@@ -71,7 +71,7 @@ public class UserController {
         );
     }
 
-    @GetMapping("/token")
+    @PostMapping("/token")
     public ResponseEntity<ResponseDto<AccessTokenResponseDto>> reissueAccessToken(
         @RequestAttribute("userNo") Integer userNo) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
