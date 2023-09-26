@@ -47,6 +47,9 @@ public class Dog extends BaseEntity {
     @Column(name = "dog_nft")
     private String dogNft;
 
+    @Column(name = "dog_img")
+    private  String dogImg;
+
     @OneToMany(mappedBy = "dog")
     private List<Walking> walkings = new ArrayList<Walking>();
 
@@ -67,14 +70,20 @@ public class Dog extends BaseEntity {
         this.dogDeathDate = dogDeathDate;
     }
 
+    public void updateDogOwner(Integer userNo) {
+        this.userNo = userNo;
+    }
+
     @Builder
-    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBirthDate, Character dogSex, Integer dogIsDead) {
+    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBirthDate, Character dogSex, Integer dogIsDead, String dogNft, String dogImg) {
         this.userNo = userNo;
         this.dogName = dogName;
         this.dogBreed = dogBreed;
         this.dogBirthDate = dogBirthDate;
         this.dogSex = dogSex;
         this.dogIsDead = dogIsDead;
+        this.dogNft = dogNft;
+        this.dogImg = dogImg;
     }
 
     @Override

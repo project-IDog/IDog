@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface BreedRepository extends JpaRepository<Breed, Integer> {
 
-    List<Breed> searchBreedsByBreedNameLikeOrderByBreedName(String keyword);
-
+    List<Breed> findBreedsByBreedNameContaining(String keyword);
 
 }
