@@ -9,11 +9,6 @@ import { ANDROID_CLIENT_ID } from "@env";
 import axios from "axios";
 import IndexStore from "../stores/IndexStore";
 import SideMenuLayout from "../styles/sideMenuLayout";
-import { set } from "mobx";
-<<<<<<< HEAD
-import tokenStore from "../stores/tokenStore";
-=======
->>>>>>> front
 
 WebBrowser.maybeCompleteAuthSession();
 
