@@ -74,6 +74,8 @@ public class JWTFilter implements Filter {
             return true;
         } else if (url.equals("/api/user") && method.equals("POST")) {
             return true;
+        } else if (url.equals("/api/walking") && method.equals("POST")){
+            return true;
         }
 
         return false;
