@@ -39,7 +39,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public List<CommentInfoDto> selectComments(Integer graveNo) {
-        List<Comment> commentList = commentRepository.findAllByGraveNoAndCanceled(graveNo, BaseConstant.NOTCANCELED);
+        List<Comment> commentList = commentRepository.findAllByGraveNoAndCanceledOrderByCreateDateDescCommentNoDesc(graveNo, BaseConstant.NOTCANCELED);
         return commentList.stream()
                 .map(CommentInfoDto::new)
                 .collect(Collectors.toList());

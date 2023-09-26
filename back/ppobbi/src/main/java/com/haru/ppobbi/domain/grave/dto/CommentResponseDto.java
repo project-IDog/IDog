@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 public class CommentResponseDto {
     @Getter
     @AllArgsConstructor
@@ -18,6 +20,7 @@ public class CommentResponseDto {
         private Integer userNo;
         private String userId;
         private String userName;
+        private LocalDateTime createTime;
 
         public CommentInfoDto(Comment comment){
             this.commentNo = comment.getCommentNo();
@@ -28,6 +31,7 @@ public class CommentResponseDto {
             this.userNo = user.getUserNo();
             this.userId = user.getUserId();
             this.userName = user.getUserName();
+            this.createTime = comment.getCreateDate();
         }
     }
 }
