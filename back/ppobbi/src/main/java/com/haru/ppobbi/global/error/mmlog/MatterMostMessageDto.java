@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 
+@Slf4j
 public class MatterMostMessageDto {
     @Getter
     @NoArgsConstructor
@@ -41,6 +43,9 @@ public class MatterMostMessageDto {
 
             JSONObject jsonObject = new JSONObject(map);
 
+            /* sb.append(jsonObject.toJSONString())
+                    .append(']').append(",\"props\": {\"card\": \"").append(props.card).append("\"}")
+                    .append("}");*/
             sb.append(jsonObject.toJSONString()).append("]}");
             return sb.toString();
         }
@@ -61,11 +66,13 @@ public class MatterMostMessageDto {
         private String text;
         private String footer; 
 
-        public void setText(Exception exception, String url, String params){
+        public void setText(Exception exception, String url, String method, String params){
             this.title = exception.getClass().getSimpleName();
             StringBuilder sb = new StringBuilder();
             sb.append("**Error Message**").append('\n').append('\n').append(exception.getMessage()).append('\n').append('\n');
+            sb.append("**Error Trace**").append('\n').append('\n').append(exception.getStackTrace()[0].toString()).append('\n').append('\n');
             sb.append("**Request Url**").append('\n').append('\n').append(url).append('\n').append('\n');
+            sb.append("**Request Method**").append('\n').append('\n').append(method).append('\n').append('\n');
             sb.append("**Parameters**").append('\n').append('\n').append(params).append('\n').append('\n');
             this.text = sb.toString();
         }
@@ -78,12 +85,16 @@ public class MatterMostMessageDto {
 
         public Props(Exception e){
             StringBuilder sb = new StringBuilder();
+            log.debug("{}", (Object) e.getStackTrace()[0]);
 
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
+            String converted = sw.toString().replaceAll("\r\n", " ")
+                    .replaceAll("\t", " ");
 
-            sb.append("**Stack Trace**").append("/n/n").append("```");
-            sb.append(sw.toString(), 0, Math.min(4000, sw.toString().length())).append("/n.../n/n");
+
+            sb.append("**Stack Trace**\\n\\n").append("```");
+            sb.append(converted, 0, Math.min(4000, converted.length())).append("```");
 
             this.card = sb.toString();
         }
