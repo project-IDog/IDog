@@ -31,7 +31,7 @@ public class MatterMostSender {
             attachment.setText(exception, url, method, params);
             attachments.addAttachment(attachment);
             // props 만들기
-            //attachments.addProps(exception);
+            attachments.addProps(exception);
             String payload = attachments.getJson();
 
             HttpHeaders headers = new HttpHeaders();

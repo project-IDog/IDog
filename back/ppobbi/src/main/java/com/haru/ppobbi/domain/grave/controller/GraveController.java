@@ -53,4 +53,6 @@ public class GraveController {
     public ResponseEntity<String> hello(){
         throw new RuntimeException("exception");
     }
+    @PostMapping("/log")
+    public ResponseEntity<String> holy(){throw new RuntimeException("post");}
 }

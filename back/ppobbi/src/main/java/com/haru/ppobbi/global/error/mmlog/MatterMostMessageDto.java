@@ -43,10 +43,10 @@ public class MatterMostMessageDto {
 
             JSONObject jsonObject = new JSONObject(map);
 
-            /* sb.append(jsonObject.toJSONString())
+            sb.append(jsonObject.toJSONString())
                     .append(']').append(",\"props\": {\"card\": \"").append(props.card).append("\"}")
-                    .append("}");*/
-            sb.append(jsonObject.toJSONString()).append("]}");
+                    .append("}");
+            //sb.append(jsonObject.toJSONString()).append("]}");
             return sb.toString();
         }
     }
@@ -74,6 +74,7 @@ public class MatterMostMessageDto {
             sb.append("**Request Url**").append('\n').append('\n').append(url).append('\n').append('\n');
             sb.append("**Request Method**").append('\n').append('\n').append(method).append('\n').append('\n');
             sb.append("**Parameters**").append('\n').append('\n').append(params).append('\n').append('\n');
+            log.debug("hmm: {}", params);
             this.text = sb.toString();
         }
     }

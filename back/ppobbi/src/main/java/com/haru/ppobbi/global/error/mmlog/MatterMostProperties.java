@@ -20,7 +20,7 @@ public class MatterMostProperties {
     private String authorName;
     private String authorIcon;
 
-    private String pretext = "@quso12358 @rabbit1999k @sunhee3859 안녕하세요?";
+    private String pretext = "안녕하세요?"; //"@quso12358 @rabbit1999k @sunhee3859 안녕하세요?";
     private String title;
     private String color = "#00d1d1";
     private String text;
