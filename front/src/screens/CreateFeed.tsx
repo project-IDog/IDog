@@ -96,7 +96,6 @@ const CreateFeed = ({navigation, route}: any) => {
 			dogNo:5,
 			photoUrl:imageUri,
 			photoComment:comment,
-
 		}).then((data) => {
 			if(data.data.message === "사진 등록 완료"){
 				alert("앨범 등록이 완료되었습니다.");

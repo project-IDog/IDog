@@ -1,7 +1,7 @@
 import { observable } from "mobx";
 
 const LoginStore = observable({
-	isLogged: false,
+	isLogged: true,
 	userInfo: {},
 });
 
