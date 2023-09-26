@@ -1,9 +1,12 @@
 package com.haru.ppobbi.domain.user.service;
 
-import com.haru.ppobbi.domain.user.dto.UserResponseDto.UserInfoResponseDto;
+import static com.haru.ppobbi.domain.user.constant.UserExceptionMessage.USER_NOT_FOUND_EXCEPTION;
+
 import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.domain.user.entity.UserInfo;
 import com.haru.ppobbi.domain.user.repo.UserRedisRepository;
+import com.haru.ppobbi.global.error.NotFoundException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,17 +39,35 @@ public class UserRedisServiceImpl implements UserRedisService {
     }
 
     @Override
-    public UserInfoResponseDto readUserInfoFromRedis(Integer userNo) {
-        return null;
+    public UserInfo readUserInfoFromRedis(Integer userNo) {
+        return userRedisRepository.findById(userNo).orElseThrow(
+            () -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message())
+        );
     }
 
     @Override
-    public void updateUserInfoToRedis(Integer userNo) {
-
+    public void updateUserInfoToRedis(User user) {
+        Optional<UserInfo> userInfoOptional = userRedisRepository.findById(user.getUserNo());
+        if (userInfoOptional.isPresent()) {
+            UserInfo userInfo = userInfoOptional.get();
+            userInfo.updateUserInfoMessage(user.getUserMessage());
+            userRedisRepository.save(userInfo);
+        } else {
+            userRedisRepository.save(UserInfo.builder()
+                .userNo(user.getUserNo())
+                .userId(user.getUserId())
+                .userName(user.getUserName())
+                .userMessage(user.getUserMessage())
+                .userProfileImg(user.getUserProfileImg())
+                .userPrivateKey(user.getUserPrivateKey())
+                .userWallet(user.getUserWallet())
+                .build()
+            );
+        }
     }
 
     @Override
     public void deleteUserInfoFromRedis(Integer userNo) {
-
+        userRedisRepository.deleteById(userNo);
     }
 }
