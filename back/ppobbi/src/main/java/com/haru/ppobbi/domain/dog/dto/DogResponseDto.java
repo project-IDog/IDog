@@ -1,28 +1,46 @@
 package com.haru.ppobbi.domain.dog.dto;
 
+import com.haru.ppobbi.domain.dog.entity.Dog;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class DogResponseDto {
     @Getter
+    @AllArgsConstructor
+    @Builder
     public static class DogProfileResposeDto {
         private final Integer userNo;
+        private final Integer dogNo;
         private final String dogName;
         private final String dogBreed;
-        private final LocalDateTime dogBirthDate;
+        private final LocalDate dogBirthDate;
         private final Character dogSex;
         private final String dogNft;
+        private final String dogImg;
 
-        @Builder
-        public DogProfileResposeDto(Integer userNo, String dogName, String dogBreed, LocalDateTime dogBirthDate, Character dogSex, String dogNft) {
-            this.userNo = userNo;
-            this.dogName = dogName;
-            this.dogBreed = dogBreed;
-            this.dogBirthDate = dogBirthDate;
-            this.dogSex = dogSex;
-            this.dogNft = dogNft;
+        public DogProfileResposeDto(Dog dog) {
+            this.userNo = dog.getUserNo();
+            this.dogNo = dog.getDogNo();
+            this.dogName = dog.getDogName();
+            this.dogBreed = dog.getDogBreed();
+            this.dogBirthDate = dog.getDogBirthDate();
+            this.dogSex = dog.getDogSex();
+            this.dogNft = dog.getDogNft();
+            this.dogImg = dog.getDogImg();
         }
+
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class DogNftResponseDto {
+        private Integer dogNo;
+        private String dogNft;
+        private  String dogImg;
+
     }
 }

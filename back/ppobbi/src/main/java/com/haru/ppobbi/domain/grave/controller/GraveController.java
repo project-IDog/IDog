@@ -6,7 +6,9 @@ import com.haru.ppobbi.domain.grave.dto.GraveRequestDto.RegistRequestDto;
 import com.haru.ppobbi.domain.grave.dto.GraveResponseDto.GraveInfoDto;
 import com.haru.ppobbi.domain.grave.entity.Grave;
 import com.haru.ppobbi.domain.grave.service.GraveService;
+import com.haru.ppobbi.domain.user.dto.TokenInfo;
 import com.haru.ppobbi.global.dto.ResponseDto;
+import com.haru.ppobbi.global.util.jwt.JwtTokenHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import java.util.List;
 @Slf4j
 public class GraveController {
     private final GraveService graveService;
+    private final JwtTokenHandler jwtTokenHandler;
 
     @PostMapping()
     public ResponseEntity<ResponseDto<String>> registGrave(@RequestAttribute("userNo") Integer userNo, @RequestBody RegistRequestDto registRequestDto){
@@ -40,8 +43,14 @@ public class GraveController {
                 .body(ResponseDto.create(READ_SUCCESSS, graveService.selectGraves()));
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> hi(){
-        throw new RuntimeException();
+    @GetMapping("/token")
+    public ResponseEntity<TokenInfo> hi(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(jwtTokenHandler.generateToken(8));
+    }
+
+    @GetMapping("/log")
+    public ResponseEntity<String> hello(){
+        throw new RuntimeException("exception");
     }
 }

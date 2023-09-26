@@ -47,7 +47,7 @@ public class RestControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDto<String>> handleAllUncaughtException(Exception exception, HttpServletRequest httpServletRequest){
-        matterMostSender.sendMessage(exception, httpServletRequest.getRequestURL().toString(), getParams(httpServletRequest));
+        matterMostSender.sendMessage(exception, httpServletRequest.getRequestURL().toString(), httpServletRequest.getMethod(), getParams(httpServletRequest));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ResponseDto.create(exception.getMessage()));
     }

@@ -14,7 +14,7 @@ public class MatterMostSender {
     private final RestTemplate restTemplate;
     private final MatterMostProperties matterMostProperties;
 
-    public void sendMessage(Exception exception, String url, String params){
+    public void sendMessage(Exception exception, String url, String method, String params){
         if(!matterMostProperties.isEnabled()){ // property 설정이 꺼져있을 경우 알림 금지
             return;
         }
@@ -28,10 +28,10 @@ public class MatterMostSender {
                     .authorIcon(matterMostProperties.getAuthorIcon())
                     .color(matterMostProperties.getColor())
                     .footer(matterMostProperties.getFooter()).build();
-            attachment.setText(exception, url, params);
+            attachment.setText(exception, url, method, params);
             attachments.addAttachment(attachment);
             // props 만들기
-            attachments.addProps(exception);
+            //attachments.addProps(exception);
             String payload = attachments.getJson();
 
             HttpHeaders headers = new HttpHeaders();

@@ -17,6 +17,16 @@ public class DogRequestDto {
         private LocalDate dogBirthDate;
         private Character dogSex;
         private String dogNft;
+        private String dogImg;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class DogOwnerUpdateRequestDto {
+        private Integer userNo;
+        private Integer dogNo;
     }
 
 

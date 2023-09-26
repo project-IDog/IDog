@@ -1,6 +1,7 @@
 package com.haru.ppobbi.domain.photo.entity;
 
 import com.haru.ppobbi.domain.dog.entity.Dog;
+import com.haru.ppobbi.global.constant.BaseConstant;
 import com.haru.ppobbi.global.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,11 +31,12 @@ public class Photo extends BaseEntity {
     private Integer photoIsGoat;
 
     @Builder
-    public Photo(Dog dog, Integer userNo, String photoUrl, String photoComment){
+    public Photo(Dog dog, Integer userNo, String photoUrl, String photoComment, Boolean photoIsGoat){
         this.dog = dog;
         this.userNo = userNo;
         this.photoUrl = photoUrl;
         this.photoComment = photoComment;
+        this.photoIsGoat = photoIsGoat ? BaseConstant.GOAT : BaseConstant.NOTGOAT;
     }
 
     public void setPhotoIsGoat(Integer photoIsGoat) {

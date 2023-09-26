@@ -15,6 +15,7 @@ public class PhotoRequestDto {
         private Integer dogNo;
         private String photoUrl;
         private String photoComment;
+        private Boolean photoIsGoat;
     }
 
 }

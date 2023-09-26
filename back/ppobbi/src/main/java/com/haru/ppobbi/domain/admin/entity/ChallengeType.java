@@ -1,5 +1,6 @@
-package com.haru.ppobbi.domain.challenge.entity;
+package com.haru.ppobbi.domain.admin.entity;
 
+import com.haru.ppobbi.global.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChallengeType {
+public class ChallengeType extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "challenge_type_no")
