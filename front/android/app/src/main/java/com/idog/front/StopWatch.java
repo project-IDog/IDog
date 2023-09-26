@@ -19,6 +19,9 @@ import android.os.Handler;
 import android.os.Message;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Implementation of App Widget functionality.
@@ -55,6 +58,12 @@ public class StopWatch extends AppWidgetProvider {
         if ("PLAY_ACTION".equals(intent.getAction())) {
             if (!isRunning) {
                 prefs.edit().putBoolean("isRunning", true).apply();
+                long now = System.currentTimeMillis();
+                Date date = new Date(now);
+                SimpleDateFormat currentDate = new SimpleDateFormat("yyyy-MM-dd");
+                String strCurrentDate = currentDate.format(date);
+                Log.d("strCurrentDate : ", "" + strCurrentDate);
+                prefs.edit().putString("date", strCurrentDate).apply();
                 if (handler == null) {
                     handler = new MyHandler(context);
                 }
@@ -71,8 +80,9 @@ public class StopWatch extends AppWidgetProvider {
                 handler.removeMessages(0);
             }
             prefs.edit().putInt("number", 0).apply();
-            updateAllWidgets(context);
+            prefs.edit().remove("date").apply();
         }
+        updateAllWidgets(context);
     }
 
     static void updateAllWidgets(Context context) {
@@ -86,7 +96,6 @@ public class StopWatch extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
         int number = prefs.getInt("number", 0);
-
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
         views.setTextViewText(R.id.timer, formatTime(number));
 
@@ -112,7 +121,7 @@ public class StopWatch extends AppWidgetProvider {
         int hours = totalSecond / 3600;
         int minutes = (totalSecond % 3600) / 60;
         int seconds = totalSecond % 60;
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return String.format("%01d:%02d:%02d", hours, minutes, seconds);
     }
 
     private static class MyHandler extends Handler {
