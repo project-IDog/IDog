@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-	Image,
-	View,
-	Text,
-	TouchableOpacity,
-} from "react-native";
-import * as SecureStore from 'expo-secure-store';
+import { Image, View, Text, TouchableOpacity } from "react-native";
+import * as SecureStore from "expo-secure-store";
 
 import CommonLayout from "../components/CommonLayout";
 import ColorHeader from "../components/ColorHeader";
@@ -32,7 +27,9 @@ const Album = ({ navigation }: any) => {
 
 	const [feedActiveState, setFeedActiveState] = useState<Boolean>(false);
 	const [albumActiveState, setAlbumActiveState] = useState<Boolean>(true);
-	const [statusComment, setStatusComment] = useState<string>("나의 반려견에게 하나뿐인 메시지를 전하세요.");
+	const [statusComment, setStatusComment] = useState<string>(
+		"나의 반려견에게 하나뿐인 메시지를 전하세요.",
+	);
 
 	const toggleFeedState = () => {
 		switch (feedActiveState) {
@@ -65,18 +62,18 @@ const Album = ({ navigation }: any) => {
 	};
 
 	useEffect(() => {
-        axios.get('/photo/user/8').then((data) => {
-			if(data.data.message === "사진 조회 성공"){
+		axios.get("/photo/user/8").then((data) => {
+			if (data.data.message === "사진 조회 성공") {
 				setFeedList(data.data.data);
 			}
-		})
+		});
 
-		axios.get('/user').then((data) => {
-			if(data.data.message === "회원 정보 조회 완료"){
+		axios.get("/user").then((data) => {
+			if (data.data.message === "회원 정보 조회 완료") {
 				setStatusComment(data.data.data.userMessage);
 			}
-		})
-    }, []);
+		});
+	}, []);
 
 	return (
 		<>
@@ -86,7 +83,10 @@ const Album = ({ navigation }: any) => {
 					<View style={AlbumLayout.profileWrap}>
 						<Text style={AlbumLayout.myNameTitle}>나의 닉네임</Text>
 						<Image source={MyPetPhoto} style={AlbumLayout.userPhoto} />
-						<TouchableOpacity activeOpacity={0.7} style={AlbumLayout.changeImageWrap}>
+						<TouchableOpacity
+							activeOpacity={0.7}
+							style={AlbumLayout.changeImageWrap}
+						>
 							<View>
 								<Image
 									source={WhitePenIcon}
@@ -115,9 +115,7 @@ const Album = ({ navigation }: any) => {
 				>
 					<View style={AlbumLayout.statusMessageWrap}>
 						<Image source={GrayPenIcon} />
-						<Text style={AlbumLayout.statusMessageText}>
-							{statusComment}
-						</Text>
+						<Text style={AlbumLayout.statusMessageText}>{statusComment}</Text>
 					</View>
 				</TouchableOpacity>
 
@@ -153,10 +151,17 @@ const Album = ({ navigation }: any) => {
 								activeOpacity={0.7}
 								key={index}
 								onPress={() =>
-									navigation.push("DetailFeed", { selectImg: {uri:value.photoUrl}, comment: value.photoComment, photoNo: value.photoNo})
+									navigation.push("DetailFeed", {
+										selectImg: { uri: value.photoUrl },
+										comment: value.photoComment,
+										photoNo: value.photoNo,
+									})
 								}
 							>
-								<Image source={{uri:value.photoUrl}} style={AlbumLayout.photoItem} />
+								<Image
+									source={{ uri: value.photoUrl }}
+									style={AlbumLayout.photoItem}
+								/>
 							</TouchableOpacity>
 						);
 					})}
@@ -172,7 +177,6 @@ const Album = ({ navigation }: any) => {
 				)}
 			</CommonLayout>
 		</>
-		
 	);
 };
 
