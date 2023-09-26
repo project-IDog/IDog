@@ -18,7 +18,7 @@ public class DogResponseDto {
         private final String dogBreed;
         private final LocalDate dogBirthDate;
         private final Character dogSex;
-        private final String dogNft;
+        private final Integer dogNft;
         private final String dogImg;
 
         public DogProfileResposeDto(Dog dog) {
@@ -39,7 +39,7 @@ public class DogResponseDto {
     @Builder
     public static class DogNftResponseDto {
         private Integer dogNo;
-        private String dogNft;
+        private Integer dogNft;
         private  String dogImg;
 
     }
