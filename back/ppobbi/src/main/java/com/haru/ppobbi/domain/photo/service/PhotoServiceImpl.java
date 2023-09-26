@@ -33,7 +33,9 @@ public class PhotoServiceImpl implements PhotoService{
                 .dog(dog)
                 .userNo(dog.getUserNo())
                 .photoUrl(registRequestDto.getPhotoUrl())
-                .photoComment(registRequestDto.getPhotoComment()).build();
+                .photoComment(registRequestDto.getPhotoComment())
+                .photoIsGoat(registRequestDto.getPhotoIsGoat())
+                .build();
         return photoRepository.save(photo);
     }
 
