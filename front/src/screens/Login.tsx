@@ -66,16 +66,6 @@ const Login = () => {
 		}
 	};
 
-	const getSecureStorage = async () => {
-		const accessToken = await SecureStore.getItemAsync("accessToken");
-		const refreshToken = await SecureStore.getItemAsync("refreshToken");
-		for (let key in stores) {
-			console.log("key : ", key, "stores[key] : ", stores[key]);
-		}
-		console.warn("refreshToken : ", refreshToken);
-		console.warn("accessToken : ", accessToken);
-	};
-
 	// Google 인증 응답이 바뀔때마다 실행
 	useEffect(() => {
 		handleSignInWithGoogle();
