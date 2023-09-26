@@ -62,7 +62,18 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
             String strCurrentDate = prefs.getString("date", "");
             promise.resolve(strCurrentDate);
         } catch (Exception e) {
-            promise.reject("GET_NUMBER_ERROR", e);
+            promise.reject("GET_DATE_ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getIsRunning(Promise promise) {
+        try {
+            SharedPreferences prefs = StopWatchModule.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
+            boolean isRunning = prefs.getBoolean("isRunning" , false);
+            promise.resolve(isRunning);
+        } catch (Exception e) {
+            promise.reject("GET_ISRUNNING_ERROR", e);
         }
     }
 

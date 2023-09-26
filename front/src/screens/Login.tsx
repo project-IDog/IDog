@@ -9,7 +9,7 @@ import { ANDROID_CLIENT_ID } from "@env";
 import axios from "axios";
 import IndexStore from "../stores/IndexStore";
 import SideMenuLayout from "../styles/sideMenuLayout";
-
+import { BASE_URL, CONTENT_TYPE, TIMEOUT } from "../constants/constants";
 WebBrowser.maybeCompleteAuthSession();
 
 const Login = () => {
@@ -23,17 +23,19 @@ const Login = () => {
 		if (response?.type !== "success") return;
 
 		const idToken = response.authentication?.idToken;
-		const url = "https://idog.store/api/user";
+		const url = `${BASE_URL}/user`;
 		try {
 			const data = await axios.post(url, null, {
 				headers: {
 					Authorization: `Bearer ${idToken}`,
-					"Content-Type": "application/json",
+					"Content-Type": CONTENT_TYPE,
 				},
+				timeout: TIMEOUT,
 			});
 			console.log(data.data.message);
 			if (data.data?.message === "로그인 완료") {
 				setIsLogged(true);
+				stores.LoginStore.isLogged = true;
 				console.log("data.data.data.accessToken: ", data.data.data.accessToken);
 				console.log(
 					"data.data.data.refreshToken: ",
@@ -48,7 +50,6 @@ const Login = () => {
 					"refreshToken",
 					data.data.data.refreshToken,
 				);
-				stores.LoginStore.isLogged = true;
 			} else {
 				console.log("else : data.data: ", data.data);
 			}
@@ -65,16 +66,6 @@ const Login = () => {
 		for (let key in stores) {
 			stores[key] = {};
 		}
-	};
-
-	const getSecureStorage = async () => {
-		const accessToken = await SecureStore.getItemAsync("accessToken");
-		const refreshToken = await SecureStore.getItemAsync("refreshToken");
-		for (let key in stores) {
-			console.log("key : ", key, "stores[key] : ", stores[key]);
-		}
-		console.warn("refreshToken : ", refreshToken);
-		console.warn("accessToken : ", accessToken);
 	};
 
 	// Google 인증 응답이 바뀔때마다 실행
