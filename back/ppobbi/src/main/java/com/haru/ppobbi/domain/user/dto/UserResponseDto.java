@@ -9,11 +9,9 @@ public class UserResponseDto {
     @Getter
     @AllArgsConstructor
     @Builder
-    public static class SignUpOrInResponseDto {
+    public static class AccessTokenResponseDto {
 
-        private String grantType;
         private String accessToken;
-        private String refreshToken;
     }
 
     @Getter

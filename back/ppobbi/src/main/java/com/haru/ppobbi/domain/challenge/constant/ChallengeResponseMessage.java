@@ -4,8 +4,7 @@ import com.haru.ppobbi.global.dto.ResponseMessage;
 
 public enum ChallengeResponseMessage implements ResponseMessage {
     READ_SUCCESS("챌린지 조회 성공"),
-    READ_FAIL("챌린지 조회 실패"),
-    UNAUTHORIZED("인증 실패");
+    READ_FAIL("챌린지 조회 실패");
 
     private final String message;
 

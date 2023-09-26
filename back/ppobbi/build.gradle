@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.16-SNAPSHOT'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.sonarqube' version '4.0.0.2929'
 }
 
 group = 'com.haru'
@@ -43,8 +44,27 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+apply plugin: 'org.sonarqube'
+
+sonarqube {
+    properties {
+        property 'sonar.host.url', 'http://j9a209.p.ssafy.io:8888'
+        property 'sonar.login', 'squ_f67d3cf3deb7187e35f8f957acf9e6763e17cb31'
+        property 'sonar.sources', 'src'
+        property 'sonar.language', 'java'
+        property 'sonar.projectVersion', '1.1.0-SNAPSHOT'
+        property 'sonar.sourceEncoding', 'UTF-8'
+        // property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/test/jacocoTestReport.xml'
+        property 'sonar.java.binaries', 'build/classes'
+        property 'sonar.test.inclusions', '**/*Test.java'
+        property 'sonar.exclusions', '**/test/**, **/Q*.java, **/*Doc*.java, **/resources/**'
+    }
 }

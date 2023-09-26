@@ -49,6 +49,8 @@ instance.interceptors.response.use(
 	},
 );
 
+export default instance;
+
 // import axios, { AxiosError } from "axios";
 // import * as Sentry from "@sentry/react-native";
 // import * as SecureStore from "expo-secure-store";

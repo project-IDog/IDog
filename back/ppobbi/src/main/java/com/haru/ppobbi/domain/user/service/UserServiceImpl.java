@@ -2,41 +2,24 @@ package com.haru.ppobbi.domain.user.service;
 
 
 import static com.haru.ppobbi.domain.user.constant.UserExceptionMessage.USER_NOT_FOUND_EXCEPTION;
-import static org.springframework.security.oauth2.core.OAuth2ErrorCodes.INVALID_TOKEN;
+import static com.haru.ppobbi.global.constant.BaseConstant.CANCELED;
+import static com.haru.ppobbi.global.constant.BaseConstant.NOTCANCELED;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.haru.ppobbi.domain.user.constant.UserRole;
-import com.haru.ppobbi.domain.user.dto.UserRequestDto.SignUpOrInRequestDto;
-import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserInfoRequestDto;
-import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserRefreshTokenDto;
+import com.haru.ppobbi.domain.user.dto.TokenInfo;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserInfoRequestDto;
+import com.haru.ppobbi.domain.user.dto.UserResponseDto.AccessTokenResponseDto;
 import com.haru.ppobbi.domain.user.dto.UserResponseDto.UserInfoResponseDto;
 import com.haru.ppobbi.domain.user.entity.User;
+import com.haru.ppobbi.domain.user.entity.UserInfo;
 import com.haru.ppobbi.domain.user.repo.UserRepository;
 import com.haru.ppobbi.global.error.NotFoundException;
-import com.haru.ppobbi.global.error.TokenException;
-import com.haru.ppobbi.global.util.jwt.JwtTokenProvider;
-import com.haru.ppobbi.global.util.oauth.OAuth2TokenProvider;
-import com.haru.ppobbi.global.util.oauth.OAuth2UserInfo;
-import java.util.Map;
+import com.haru.ppobbi.global.util.jwt.JwtTokenHandler;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 @RequiredArgsConstructor
@@ -45,151 +28,107 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RestTemplate restTemplate;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final OAuth2TokenProvider oauthTokenProvider;
+    private final JwtTokenHandler jwtTokenHandler;
+    private final UserRedisService userRedisService;
 
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId;
 
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret;
+    @Override
+    public TokenInfo signUpOrIn(UserInfoRequestDto userInfoRequestDto) {
+        User user = insertUser(userInfoRequestDto.toUser());
+        log.debug("[userServiceImpl - signUpOrIn] User : {}", user);
 
-    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
-    private String redirectURI;
+        userRedisService.insertUserInfoToRedis(user);
 
+        // 토큰 발급 후, 정보 반환
+        return jwtTokenHandler.generateToken(user.getUserNo());
+    }
 
     @Transactional
-    @Override
-    public void signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto)
-        throws ParseException, JsonProcessingException {
-        String idToken = signUpOrInRequestDto.getIdToken();
-        String refreshToken = signUpOrInRequestDto.getRefreshToken();
-        Map<String, Object> userAttribute = getUserAttribute(idToken);
-
-        User user = convertUserAttributeToUser(userAttribute, refreshToken);
+    public User insertUser(User user) {
         log.debug("### [DEBUG/UserService] 회원가입 user : {}", user);
 
         // DB에 정보 없을 경우 회원가입, 있을 경우 프로필 사진/이름 업데이트
-        Optional<User> optionalUser = userRepository.findByUserId(user.getUserId());
+        Optional<User> optionalUser = userRepository.findUserByUserIdAndCanceled(user.getUserId(),
+            NOTCANCELED);
         if (optionalUser.isEmpty()) {
             userRepository.save(user);
         } else {
             User foundUser = optionalUser.get();
-
-            foundUser.updateUserInfo(UpdateUserInfoRequestDto.builder()
-                .userName(user.getUserName())
-                .userProfileImg(user.getUserProfileImg())
-                .build());
-
-            foundUser.updateUserRefreshToken(UpdateUserRefreshTokenDto.builder()
-                .refreshToken(refreshToken)
-                .build());
-
+            foundUser.updateUserInfo(user.getUserName(), user.getUserProfileImg());
             userRepository.save(foundUser);
+        }
+        return userRepository.findUserByUserIdAndCanceled(user.getUserId(),
+            NOTCANCELED).get();
+    }
+
+    @Override
+    public UserInfoResponseDto getUserInfo(Integer userNo) {
+        try {
+            // redis 에서 먼저 검색
+            log.debug("[UserService] Get user info from redis !!");
+            UserInfo userInfo = userRedisService.readUserInfoFromRedis(userNo);
+            return UserInfoResponseDto.builder()
+                .userId(userInfo.getUserId())
+                .userName(userInfo.getUserName())
+                .userWallet(userInfo.getUserWallet())
+                .userMessage(userInfo.getUserMessage())
+                .userProfileImg(userInfo.getUserProfileImg())
+                .userPrivateKey(userInfo.getUserPrivateKey())
+                .build();
+        } catch (NotFoundException e) {
+            // 없으면 DB 검색
+            log.debug("[UserService] Get user info from DB !!");
+            User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
+            
+            // redis 에 저장
+            userRedisService.insertUserInfoToRedis(user);
+
+            return UserInfoResponseDto.builder()
+                .userId(user.getUserId())
+                .userName(user.getUserName())
+                .userWallet(user.getUserWallet())
+                .userMessage(user.getUserMessage())
+                .userProfileImg(user.getUserProfileImg())
+                .userPrivateKey(user.getUserPrivateKey())
+                .build();
         }
     }
 
     @Override
-    public UserInfoResponseDto getUserInfo(String accessToken) {
-
-        User user = userRepository.findByUserId(accessToken)
+    @Transactional
+    public void deleteUser(Integer userNo) {
+        // Redis 에서 삭제
+        userRedisService.deleteUserInfoFromRedis(userNo);
+        
+        // DB 에서 삭제
+        User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
-        return null;
+        user.setCanceled(CANCELED);
+        userRepository.save(user);
     }
 
-    // authorization code 검증
-//    @Transactional
-//    @Override
-//    public void signUpOrIn(SignUpOrInRequestDto signUpOrInRequestDto)
-//        throws ParseException, JsonProcessingException {
-//        String authorizationCode = signUpOrInRequestDto.getAuthorizationCode();
-//
-//        HttpEntity<MultiValueMap<String, String>> tokenRequest = makeHttpRequest(authorizationCode);
-//        String googleApiURL = "https://oauth2.googleapis.com/tokeninfo";
-//
-////        String targetURL = UriComponentsBuilder.fromHttpUrl(googleApiURL)
-////            .queryParam("grant_type", "authorization_code")
-////            .queryParam("client_id", clientId)
-////            .queryParam("redirect_uri", redirectURI)
-////            .queryParam("code", authorizationCode)
-////            .queryParam("client_secret", clientSecret)
-////            .build().toUriString();
-////
-////        HttpHeaders headers = new HttpHeaders();
-////        HttpEntity<String> entity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<String> response = restTemplate.exchange(googleApiURL,
-//            HttpMethod.POST,
-//            tokenRequest,
-//            String.class);
-//
-//        log.debug("[DEBUG/signUpOrIn] response : {}", response);
-//    }
+    @Override
+    @Transactional
+    public void updateUserMessage(Integer userNo,
+        UpdateUserMessageRequestDto updateUserMessageRequestDto) {
+        User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
+            .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
-    // authorization code 검증 용
-    private HttpEntity<MultiValueMap<String, String>> makeHttpRequest(String authorizationCode) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", clientId);
-        params.add("redirect_uri", redirectURI);
-        params.add("code", authorizationCode);
-        params.add("client_secret", clientSecret);
+        String message = updateUserMessageRequestDto.getUserMessage();
+        user.updateUserMessage(message);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        HttpEntity<MultiValueMap<String, String>> tokenRequest = new HttpEntity<>(params, headers);
-        return tokenRequest;
+        // redis 에 적용
+        userRedisService.updateUserInfoToRedis(user);
     }
 
-    private User convertUserAttributeToUser(Map<String, Object> userAttribute,
-        String refreshToken) {
-        OAuth2UserInfo oAuth2UserInfo = new OAuth2UserInfo(userAttribute);
+    @Override
+    public AccessTokenResponseDto reissueAccessToken(Integer userNo) {
+        String accessToken = jwtTokenHandler.generateToken(userNo).getAccessToken();
 
-        return User.builder()
-            .userId(oAuth2UserInfo.getUserId())
-            .userName(oAuth2UserInfo.getUserName())
-            .userProfileImg(oAuth2UserInfo.getUserProfileImg())
-            .userRole(UserRole.ROLE_USER)
-            .userRefreshToken(refreshToken)
+        return AccessTokenResponseDto.builder()
+            .accessToken(accessToken)
             .build();
-    }
-
-    private Map<String, Object> getUserAttribute(String idToken)
-        throws ParseException, JsonProcessingException {
-        log.debug("[DEBUG/getUserAttribute] idToken : {}", idToken);
-
-        Map<String, Object> userAttribute;
-
-        // Header 생성
-        HttpHeaders headers = new HttpHeaders();
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        // URL 생성
-        String googleApi = "https://oauth2.googleapis.com/tokeninfo";
-        String targetURL = UriComponentsBuilder.fromHttpUrl(googleApi)
-            .queryParam("id_token", idToken).build().toUriString();
-        log.debug("[DEBUG/getUserAttribute] targetURL : {}", targetURL);
-
-        // Response 받아오기
-        ResponseEntity<String> response;
-        try {
-            response = restTemplate.exchange(targetURL,
-                HttpMethod.GET,
-                entity,
-                String.class);
-        } catch (HttpClientErrorException e) {
-            throw new TokenException(INVALID_TOKEN);
-        }
-        log.debug("[DEBUG/response] response : {}", response);
-
-        // Response To Json 파싱
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonBody = (JSONObject) jsonParser.parse(response.getBody());
-
-        userAttribute = new ObjectMapper().readValue(jsonBody.toString(), Map.class);
-        return userAttribute;
     }
 }
