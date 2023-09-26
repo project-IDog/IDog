@@ -23,5 +23,5 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
      * @param canceled 삭제 여부
      * @return {@code List<Comment>}
      */
-    public List<Comment> findAllByGraveNoAndCanceled(Integer graveNo, Integer canceled);
+    public List<Comment> findAllByGraveNoAndCanceledOrderByCreateDateDescCommentNoDesc(Integer graveNo, Integer canceled);
 }

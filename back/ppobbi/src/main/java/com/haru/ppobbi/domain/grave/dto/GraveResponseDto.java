@@ -25,7 +25,7 @@ public class GraveResponseDto {
         private String dogBreed;
         private LocalDate dogDeathDate;
         private Character dogSex;
-        private String dogNft;
+        private Integer dogNft;
 
         public GraveInfoDto(Grave grave){
             this.graveNo = grave.getGraveNo();
