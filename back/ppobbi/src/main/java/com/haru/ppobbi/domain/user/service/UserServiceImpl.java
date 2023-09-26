@@ -28,14 +28,16 @@ import org.springframework.web.client.RestTemplate;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RestTemplate restTemplate;
     private final JwtTokenHandler jwtTokenHandler;
+    private final UserRedisService userRedisService;
 
 
     @Override
     public TokenInfo signUpOrIn(UserInfoRequestDto userInfoRequestDto) {
         User user = insertUser(userInfoRequestDto.toUser());
         log.debug("[userServiceImpl - signUpOrIn] User : {}", user);
+
+        userRedisService.insertUserInfoToRedis(user);
 
         // 토큰 발급 후, 정보 반환
         return jwtTokenHandler.generateToken(user.getUserNo());
