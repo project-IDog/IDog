@@ -2,6 +2,7 @@ package com.haru.ppobbi.domain.dog.service;
 
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogOwnerUpdateRequestDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogisAliveResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogNftResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
 import com.haru.ppobbi.domain.dog.entity.Breed;
@@ -136,6 +137,32 @@ public class DogServiceImpl implements DogService{
         Dog dog = dogRepository.findDogByDogNoAndCanceled(nowDogNo, BaseConstant.NOTCANCELED)
                 .orElseThrow(() -> new NotFoundException(DOG_NOT_FOUND_EXCEPTION.message()));
         dog.updateDogOwner(nowUserNo);
+    }
+
+    @Override
+    public List<DogisAliveResponseDto> selectAliveDogsByUserNo(Integer userNo) {
+        List<Dog> dogList = dogRepository.findAllByUserNoAndDogIsDeadAndCanceled(userNo, BaseConstant.NOTDEAD, BaseConstant.NOTCANCELED);
+        if(dogList.size() ==0) {
+            throw new NotFoundException(ALL_DOG_NOT_FOUND_EXCEPTION.message());
+        }
+
+        List<DogisAliveResponseDto> aliveResponseDtoList = new ArrayList<>();
+        for (int i=0; i<dogList.size(); i++){
+            DogisAliveResponseDto nowDog = DogisAliveResponseDto.builder()
+                    .userNo(dogList.get(i).getUserNo())
+                    .dogNo(dogList.get(i).getDogNo())
+                    .dogName(dogList.get(i).getDogName())
+                    .dogBreed(dogList.get(i).getDogBreed())
+                    .dogBirthDate(dogList.get(i).getDogBirthDate())
+                    .dogIsDead(dogList.get(i).getDogIsDead())
+                    .dogSex(dogList.get(i).getDogSex())
+                    .dogNft(dogList.get(i).getDogNft())
+                    .dogImg(dogList.get(i).getDogImg())
+                    .build();
+            aliveResponseDtoList.add(nowDog);
+
+        }
+        return aliveResponseDtoList;
     }
 
 }

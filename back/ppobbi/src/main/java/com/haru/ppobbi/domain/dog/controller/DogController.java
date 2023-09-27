@@ -4,10 +4,10 @@ import static com.haru.ppobbi.domain.dog.constant.DogResponseMessage.*;
 
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogOwnerUpdateRequestDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogisAliveResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogNftResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
 import com.haru.ppobbi.domain.dog.entity.Breed;
-import com.haru.ppobbi.domain.dog.entity.Dog;
 import com.haru.ppobbi.domain.dog.service.DogService;
 import com.haru.ppobbi.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +34,8 @@ public class DogController {
                 .body(ResponseDto.create(CREATE_DOG));
     }
 
-    @GetMapping("/list/{userNo}")
-    public ResponseEntity<ResponseDto<List<DogProfileResposeDto>>> getAllDogs(@PathVariable Integer userNo) {
+    @GetMapping("/list")
+    public ResponseEntity<ResponseDto<List<DogProfileResposeDto>>> getAllDogs(@RequestAttribute("userNo") Integer userNo) {
         log.info("DogController - getAllDogs : 사용자의 전체 강아지 조회");
         List<DogProfileResposeDto> dogList = dogService.selectDogsByUserNo(userNo);
         return ResponseEntity.status(HttpStatus.OK)
@@ -82,13 +82,20 @@ public class DogController {
                 .body(ResponseDto.create(UPDATE_DOG_NFT_OWNER_SUCCESS));
     }
 
-    @GetMapping("/nft/list/{userNo}")
-    public ResponseEntity<ResponseDto<List<DogNftResponseDto>>> getAllDogNftInfo(@PathVariable Integer userNo){
+    @GetMapping("/nft/list")
+    public ResponseEntity<ResponseDto<List<DogNftResponseDto>>> getAllDogNftInfo(@RequestAttribute("userNo") Integer userNo){
         log.info("DogController - getAllDogNftInfo : 사용자의 모든 강아지 NFT 조회 " );
         List<DogNftResponseDto> dogNftResponseDtoList = dogService.selectDogNftsByUserNo(userNo);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(READ_All_DOG_NFT_BY_USER,dogNftResponseDtoList));
+    }
 
+    @GetMapping("/alive")
+    public ResponseEntity<ResponseDto<List<DogisAliveResponseDto>>> getAllAliveDogInfo(@RequestAttribute("userNo") Integer userNo){
+        log.info("DogController - getAllDogNftInfo : 사용자의 모든 생존한 강아지 NFT 조회 " );
+        List<DogisAliveResponseDto> aliveDogResponseDtoList = dogService.selectAliveDogsByUserNo(userNo);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.create(READ_ALL_ALIVE_DOG, aliveDogResponseDtoList));
     }
 
 
