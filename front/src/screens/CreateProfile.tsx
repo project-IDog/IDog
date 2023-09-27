@@ -1,33 +1,43 @@
 import {useState,useEffect} from "react"
-import {View, Text, TextInput, Image, TouchableOpacity, Platform} from "react-native"
+import {View, Text, TextInput, Image, TouchableOpacity, Platform, Alert} from "react-native"
 import ColorHeader from "../components/ColorHeader"
 import CommonLayout from "../components/CommonLayout"
 import Footer from "../components/Footer"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import * as SecureStore from 'expo-secure-store';
 import {ethers, Transaction} from "ethers"
-import {mintAnimakTokenContract} from "../contracts/index";
+import {mintDogTokenContract} from "../contracts/index";
 import * as ImagePicker from "expo-image-picker";
 import {NFT_STORAGE_KEY} from "@env"
+import axiosApi from "../utils/axios"
 import axios from "axios"
+import { Picker } from '@react-native-picker/picker';
+import { S3 } from "aws-sdk";
+import {
+	AWS_ACCESS_KEY,
+	AWS_SECRET_ACCESS_KEY,
+	AWS_REGION,
+	AWS_BUCKET,
+} from "@env";
+import * as RNFS from "react-native-fs"
 
 import DatePickerIcon from "../../assets/images/date-picker-icon.png"
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
-import YoonNftImg from "../../assets/images/yoonNft01.jpg"
 
 import CreateProfileLayout from "../styles/createProfileLayout"
 
 const CreateProfile = ({navigation} : any) => {
-	const [imageUri, setImageUri] = useState<string | null>(null);
+	const [imageUri, setImageUri] = useState<any>(null);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [walletAddress, setWalletAddress] = useState<string>();
     const [walletPrivateKey, setWalletPrivateKey] = useState<string>();
-    const [imageCid, setImageCid] = useState<string|null>();
+    const [imageCid, setImageCid] = useState<any>();
     const [petName, setPetName] = useState<string|null>();
     const [petSpecies, setPetSpecies] = useState<string|null>();
-    const [petGender, setPetGender] = useState<string|null>();
+    const [petGender, setPetGender] = useState<string|null>('M');
     const [petBirth, setPetBirth] = useState<string|null>();
     const [nftCid, setNftCid] = useState<string|null>();
+    const [speciesList, setSpeciesList] = useState<any>();
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -37,34 +47,72 @@ const CreateProfile = ({navigation} : any) => {
         setDatePickerVisibility(false);
     };
 
-    const handleConfirm = (date:string) => {
-        const dogBirth = date.split("T")[0];
-        setPetBirth(dogBirth);
+    const handleConfirm = async (date:string) => {
+        const dateAll = new Date(date);
+        const year = dateAll.getFullYear();
+        const month = dateAll.getMonth();
+        const day = dateAll.getDate();
+        await setPetBirth(year+"-"+month+"-"+day);
         hideDatePicker();
     };
 
-    const getImage = async (imagePath: any) => {
-        const buffer = await imagePath;
-        return await new Blob([buffer], { type: "image/*" });
+    const getImage = async () => {
+        return await imageUri;
     };
 
+    // s3 클라이언트 초기화
+	const s3 = new S3({
+		accessKeyId: AWS_ACCESS_KEY,
+		secretAccessKey: AWS_SECRET_ACCESS_KEY,
+		region: AWS_REGION,
+	});
+
+    // 이미지 업로드
+	const uploadImage = async (uri: any) => {
+		const response = await fetch(uri);
+		const blob = await response.blob();
+		const filename = uri.split("/").pop();
+		const type = blob.type;
+		const params = {
+			Bucket: AWS_BUCKET,
+			Key: filename,
+			Body: blob,
+			ContentType: type,
+		};
+		s3.upload(params, async (err: any, data: any) => {
+			if (err) {
+				console.log("err", err);
+			} else {
+                const reader = new FileReader();
+                const blob = await new Blob(['<img src="',data.Location,'" />'], {type:"text/html"});
+                reader.readAsDataURL(blob);
+                reader.onload = () => {
+                    const base64data = reader.result;
+                    setImageCid(base64data);
+                }
+			}
+		});
+	};
+
     const uploadIpfs = async () => {
+        await uploadImage(imageUri);
+
         const nft_storage_url = "https://api.nft.storage/upload";
-        const blobImg = await getImage(YoonNftImg);
+        const blobImg = await getImage();
         await axios.post(nft_storage_url, blobImg , {
             headers: {
                 'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
                 'Content-Type': 'application/octet-stream'
             }
-        })
-        .then((res) => {
-            setImageCid(res.data.value.cid);
-        })
-        .catch((err) => {
+        }).then((res) => {
+            console.log("ImageCid", res.data);
+        }).catch((err) => {
             console.error(err);
         });
 
         await uploadMetaJSON();
+
+        await createProfile();
     }
 
     const uploadMetaJSON = async () => {
@@ -76,16 +124,17 @@ const CreateProfile = ({navigation} : any) => {
             "dogSex" : petGender,
             "imageCID" : imageCid,
         }
+
+        console.log("metadata", metaData);
         await axios.post(nft_storage_url, metaData , {
             headers: {
                 'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
                 'Content-Type': 'application/json'
             }
-        })
-        .then((res) => {
+        }).then((res) => {
+            console.log("nftCid", res.data.value.cid);
             setNftCid(res.data.value.cid);
-        })
-        .catch((err) => {
+        }).catch((err) => {
             console.log(err);
         });
     }
@@ -119,6 +168,9 @@ const CreateProfile = ({navigation} : any) => {
 		});
 		console.log("result", result);
 		if (!result.canceled) {
+            console.log("img", result.assets[0].uri);
+            const buffer = new Blob([result.assets[0].uri], { type: "image/**" });
+            console.log("buffer", buffer);
 			setImageUri(result.assets[0].uri);
 		}
 	};
@@ -126,8 +178,8 @@ const CreateProfile = ({navigation} : any) => {
 
     const createProfile = async () => {
 
-        const walletAddress = await SecureStore.getItemAsync("walletAddress");
-        const walletPrivateKey = await SecureStore.getItemAsync("walletPrivateKey");
+        // const walletAddress = await SecureStore.getItemAsync("walletAddress");
+        // const walletPrivateKey = await SecureStore.getItemAsync("walletPrivateKey");
         
         const provider = await new ethers.JsonRpcProvider(process.env.RPC_URL);
 
@@ -135,7 +187,7 @@ const CreateProfile = ({navigation} : any) => {
         const gasPriceGwei = "0.00001";
         const priceWei = ethers.parseUnits(gasPriceGwei, 'gwei');
 
-        const response = await mintAnimakTokenContract.mintAnimakToken();
+        const response = await mintDogTokenContract.mintDogProfile('0xD9C645DBE4F116080E716614B82eBE341e554Eb5', `ipfs://${nftCid}`);
         console.log("response", response);
 
     }
@@ -152,7 +204,16 @@ const CreateProfile = ({navigation} : any) => {
             }
         }
 
+        const getPetSpecies = async () => {
+            axiosApi.get('/dog/breed').then((data) => {
+                // if(data.data.message === "견종 전체 목록 조회 완료"){
+                //     setSpeciesList(data.data.data);
+                // }
+            })
+        }
+
         getWalletInfoFromStore();
+        getPetSpecies();
     }, [])
 
     return(
@@ -179,7 +240,6 @@ const CreateProfile = ({navigation} : any) => {
                         <Image source={{ uri: imageUri }} style={CreateProfileLayout.selectedImage}/>
                     )}
                 </View>
-
                 <View style={CreateProfileLayout.formWrap}>
 
                     <Text style={CreateProfileLayout.formTitle}>반려견의 이름을 입력해주세요.</Text>
@@ -195,11 +255,16 @@ const CreateProfile = ({navigation} : any) => {
                         value={petSpecies}
                     />
                     <Text style={CreateProfileLayout.formTitle}>반려견의 성별을 입력해주세요.</Text>
-                    <TextInput
+                    <Picker
+                        selectedValue = {petGender}
+                        onValueChange = {(itemValue, itemIndex) => 
+                            setPetGender(itemValue)
+                        }
                         style={CreateProfileLayout.formInput}
-                        onChangeText={(text) => setPetSpecies(text)}
-                        value={petGender}
-                    />
+                        >
+                        <Picker.Item label = 'M' value = 'M' />
+                        <Picker.Item label = 'F' value = 'F' />
+                    </Picker>
                     <Text style={CreateProfileLayout.formTitle}>반려견의 생일을 입력해주세요.</Text>
                     <TouchableOpacity activeOpacity={0.7} onPress={showDatePicker}>
                         <View style={CreateProfileLayout.dateFormWrap}>
