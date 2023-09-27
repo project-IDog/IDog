@@ -43,4 +43,8 @@ public class UserInfo {
     public void updateUserInfoMessage(String userMessage) {
         this.userMessage = userMessage;
     }
+    public void updateUserNameMessage(String userName) {
+        this.userName = userName;
+    }
+
 }
