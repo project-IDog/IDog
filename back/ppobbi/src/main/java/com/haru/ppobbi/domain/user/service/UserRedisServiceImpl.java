@@ -33,6 +33,7 @@ public class UserRedisServiceImpl implements UserRedisService {
             .userPrivateKey(user.getUserPrivateKey())
             .userProfileImg(user.getUserProfileImg())
             .userWallet(user.getUserWallet())
+            .userName(user.getUserName())
             .ttl(USER_INFO_TTL)
             .build()
         );
