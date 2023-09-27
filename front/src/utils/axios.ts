@@ -25,6 +25,7 @@ const setCommonHeaders = async (config) => {
 
 const refreshAccessTokenAndRetry = async (config: AxiosRequestConfig) => {
 	// accessToken 만료시 refreshToken으로 재발급
+	console.log("refreshAccessTokenAndRetry");
 	try {
 		const response = await axios.post(
 			`${BASE_URL}/user/token`,
@@ -37,10 +38,13 @@ const refreshAccessTokenAndRetry = async (config: AxiosRequestConfig) => {
 			},
 		);
 		if (response.data.message === "액세스 토큰 발급 완료") {
-			await SecureStore.setItemAsync(
-				"accessToken",
-				response.data.data.accessToken,
-			);
+			const newAccessToken = response.data.data.accessToken;
+			await SecureStore.setItemAsync("accessToken", newAccessToken);
+			console.log("accessToken 갱신 완료 : config" + config);
+			if (!config.headers) {
+				config.headers = {};
+			}
+			config.headers["Authorization"] = `Bearer ${newAccessToken}`;
 			return axios(config);
 		}
 	} catch (error) {

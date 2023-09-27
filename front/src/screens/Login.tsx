@@ -45,7 +45,6 @@ const Login = () => {
 					"accessToken",
 					data.data.data.accessToken,
 				);
-				tokenStore.setAccessToken(data.data.data.accessToken);
 				await SecureStore.setItemAsync(
 					"refreshToken",
 					data.data.data.refreshToken,
