@@ -25,9 +25,9 @@ public class Flower {
     private long ttl;
 
     @Builder
-    Flower(Integer graveNo, long ttl){
+    Flower(Integer graveNo, List<LocalDateTime> flowers, long ttl){
         this.graveNo = graveNo;
+        this.flowers = flowers;
         this.ttl = ttl;
-        this.flowers = new ArrayList<>();
     }
 }
