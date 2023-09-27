@@ -39,27 +39,24 @@ const refreshAccessTokenAndRetry = async (config: AxiosRequestConfig) => {
 			},
 		);
 		console.log("response data ㅇㅇㅇ :", response.status);
-		switch (response.status) {
-			case 201:
-				const newAccessToken = response.data.data.accessToken;
-				await SecureStore.setItemAsync("accessToken", newAccessToken);
-				if (!config.headers) {
-					config.headers = {};
-				}
-				config.headers["Authorization"] = `Bearer ${newAccessToken}`;
-				return axios(config);
-			case 401:
-				// 현재 저장되어있는 모든 정보 삭제
-				await logout();
-				alert("토큰 갱신에 실패했습니다. 다시 로그인 해주세요.");
-				break;
-			default:
-				console.error("refreshAccessTokenAndRetry error :", response);
-				return Promise.reject(response);
+		if (response.status === 201) {
+			const newAccessToken = response.data.data.accessToken;
+			await SecureStore.setItemAsync("accessToken", newAccessToken);
+			if (!config.headers) {
+				config.headers = {};
+			}
+			config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+			return axios(config);
 		}
-	} catch (error) {
-		console.error("refreshAccessTokenAndRetry error :", error);
-		return Promise.reject(error);
+		console.error("refreshAccessTokenAndRetry error :", response);
+		return Promise.reject(response);
+	} catch (error: any) {
+		console.error(error.response.status);
+		if (error.response.status === 401) {
+			await logout();
+			alert("토큰 갱신에 실패했습니다. 다시 로그인 해주세요.");
+			return Promise.reject(error);
+		}
 	}
 };
 
