@@ -36,18 +36,11 @@ const Main = ({ navigation }: any) => {
 	}, []);
 	const { LoginStore } = IndexStore();
 
-	console.log(LoginStore);
 	const [dataList, setDataList] = useState<Object[]>([]);
-	const [dogNftList, setDogNftList] = useState<Object[]>([]);
 	useEffect(() => {
 		axios.get("/grave").then((data) => {
 			if (data.data.message === "무덤 조회 성공") {
 				setDataList(data.data.data);
-			}
-		});
-		axios.get("/dog/list/8").then((data) => {
-			if (data.data.message === "사용자의 모든 강아지 목록 조회 완료") {
-				setDogNftList(data.data.data);
 			}
 		});
 	}, []);
@@ -222,7 +215,7 @@ const Main = ({ navigation }: any) => {
 					})}
 				</View>
 				<View>
-					<RipnftCreate dogNftList={dogNftList} />
+					<RipnftCreate />
 				</View>
 			</ScrollView>
 		</>

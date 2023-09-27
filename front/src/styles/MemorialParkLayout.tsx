@@ -45,6 +45,13 @@ const AdoptionLayout = StyleSheet.create({
 		backgroundColor: "rgba(187,166,166, 0.5)",
 		borderRadius: 15,
 	},
+	mpTitlewrap4: {
+		marginHorizontal: responsiveWidth(4),
+		marginVertical: responsiveHeight(4),
+		backgroundColor: "rgba(187,166,166, 0.5)",
+		borderRadius: 15,
+		// width: responsiveWidth(40),
+	},
 	mpTitle: {
 		paddingHorizontal: responsiveWidth(3),
 		marginTop: 5,
@@ -97,6 +104,7 @@ const AdoptionLayout = StyleSheet.create({
 		height: responsiveHeight(17),
 		borderRadius: 7,
 		display: "flex",
+		marginTop: responsiveHeight(1),
 	},
 
 	mpComent: {
@@ -105,7 +113,6 @@ const AdoptionLayout = StyleSheet.create({
 		fontWeight: "500",
 		display: "flex",
 		width: responsiveWidth(78),
-
 	},
 	mpComentDate: {
 		marginHorizontal: responsiveWidth(3),
@@ -127,7 +134,6 @@ const AdoptionLayout = StyleSheet.create({
 	},
 	mpAlbumTitle: {
 		paddingHorizontal: responsiveWidth(3),
-		marginBottom: responsiveWidth(3),
 		marginTop: 5,
 		fontSize: 18,
 		fontWeight: "900",
@@ -172,6 +178,25 @@ const AdoptionLayout = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: "bold",
 		color: "white",
+	},
+	mpAlbumcontainer: {
+		paddingHorizontal: responsiveWidth(4),
+		paddingBottom: responsiveHeight(3),
+		flexDirection: "row",
+		justifyContent: "space-between",
+		flexWrap: "wrap",
+	},
+	mpAlbumText: {
+		paddingHorizontal: responsiveWidth(4),
+		paddingTop: responsiveHeight(2),
+	},
+	mpAlbumplusbtn: {
+		marginHorizontal: responsiveWidth(3),
+		fontSize: 16,
+		fontWeight: "500",
+		display: "flex",
+		width: responsiveWidth(78),
+		paddingBottom: responsiveHeight(2),
 	},
 });
 

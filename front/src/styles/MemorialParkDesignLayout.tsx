@@ -297,10 +297,20 @@ const MemorialParkDesignLayout = StyleSheet.create({
 	ripregisterapplycontainer: {
 		flexDirection: "row",
 		justifyContent: "space-between",
-		paddingHorizontal: 50,
 	},
-	ripregisteryes: { fontSize: 16, color: "blue", fontWeight: "bold" },
-	ripregisterno: { fontSize: 16, color: "red", fontWeight: "bold" },
+	ripregisteryes: {
+		fontSize: 16,
+		color: "blue",
+		fontWeight: "bold",
+		paddingHorizontal: responsiveWidth(10),
+		// backgroundColor: "red",
+	},
+	ripregisterno: {
+		fontSize: 16,
+		color: "red",
+		fontWeight: "bold",
+		paddingHorizontal: responsiveWidth(10),
+	},
 });
 
 export default MemorialParkDesignLayout;

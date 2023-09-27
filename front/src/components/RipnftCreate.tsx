@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Modal } from "react-native";
 import MemorialParkDesignLayout from "../styles/MemorialParkDesignLayout";
 import { Text, TouchableOpacity, Image, TextInput, Alert } from "react-native";
@@ -9,9 +9,21 @@ import {
 import Animation from "../components/Animation";
 import exImg from "../../assets/images/photo-ex-img3.png";
 import axios from "../utils/axios";
-import tokenStore from "../stores/tokenStore";
 
-const RipnftCreate: React.FC = ({ dogNftList }) => {
+const RipnftCreate: React.FC = () => {
+	const fetchNftList = () => {
+		axios.get("/dog/alive").then((data) => {
+			if (data.data.message === "사용자의 생존한 강아지 조회 완료") {
+				setDogNftList(data.data.data);
+			}
+		});
+	};
+	const [dogNftList, setDogNftList] = useState<Object[]>([]);
+
+	useEffect(() => {
+		fetchNftList();
+	}, []);
+
 	const [modalVisible, setModalVisible] = useState(false);
 	const [confirmationModalVisible, setConfirmationModalVisible] =
 		useState(false);
@@ -29,27 +41,33 @@ const RipnftCreate: React.FC = ({ dogNftList }) => {
 	const handleConfirm = () => {
 		axios
 			.post("/grave", {
-				dogNo: 4,
-				dogDeathDate: "2020-02-02",
+				dogNo: selectedData?.dogNo,
+				dogDeathDate: deathDate,
 			})
 			.then((data) => {
 				console.log(selectedData?.dogNo, deathDate);
 				console.log("데이ㅓ받기!", data);
 				if (data.data.message === "무덤 생성 완료") {
-					//요청
+					// setDogNftList([]);
 					Alert.alert(
 						"Memorial Sky",
 						"등록이 완료되었습니다.",
-						[{ text: "OK", onPress: () => setConfirmationModalVisible(false) }],
+						[
+							{
+								text: "OK",
+								onPress: () => setConfirmationModalVisible(false),
+							},
+						],
 						{ cancelable: false },
 					);
 
 					setConfirmationModalVisible(false);
 					setDeathDateInputModalVisible(false);
+					fetchNftList();
 				}
 			})
 			.catch((error) => {
-				console.error("Error occurred during axios request:", error);
+				console.error("Error occurred during axios request:", error.response);
 			});
 	};
 
@@ -86,6 +104,7 @@ const RipnftCreate: React.FC = ({ dogNftList }) => {
 						{dogNftList?.map((data: any) => {
 							return (
 								<TouchableOpacity
+									key={data.dogNo}
 									style={MemorialParkDesignLayout.modalcontentcontainer}
 									onPress={() => {
 										handleClick(data);

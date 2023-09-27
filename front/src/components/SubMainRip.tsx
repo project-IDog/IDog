@@ -45,7 +45,7 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc }: any) => {
 								return (
 									<>
 										<LottieView
-											key={index}
+											key={`flower_${index}`}
 											style={[
 												styles.flower1,
 												{
