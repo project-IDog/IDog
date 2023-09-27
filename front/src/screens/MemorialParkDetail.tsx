@@ -20,7 +20,7 @@ import flower1 from "../../assets/flower1.json";
 import LottieView from "lottie-react-native";
 import axios from "../utils/axios";
 
-const MemorialPark: React.FC = (props) => {
+const MemorialPark: React.FC<any> = ({ navigation, props }) => {
 	const { route } = props;
 	const { data } = route.params;
 	console.log(data);
@@ -31,6 +31,7 @@ const MemorialPark: React.FC = (props) => {
 	const [commentList, setCommentList] = useState<Object[]>([]);
 	const [showAllComments, setShowAllComments] = useState(false);
 	const [comment, setComment] = useState("");
+	const [feedList, setFeedList] = useState<Object[]>([]);
 
 	const fetchComments = () => {
 		axios.get(`/comment/${data.graveNo + 2}`).then((response) => {
@@ -104,6 +105,18 @@ const MemorialPark: React.FC = (props) => {
 			loadingOpacity.removeListener(listener);
 		};
 	}, []);
+
+	useEffect(() => {
+		axios.get("/photo/user/9").then((data) => {
+			if (data.data.message === "사진 조회 성공") {
+				setFeedList(data.data.data);
+			}
+		});
+	}, []);
+
+	if (feedList.length !== 0) {
+		console.log("feedList:d", feedList);
+	}
 
 	return (
 		<>
@@ -245,7 +258,8 @@ const MemorialPark: React.FC = (props) => {
 						<Text style={[MemorialParkLayout.mpAlbumTitle]}>
 							뽀삐의 Memorial 앨범
 						</Text>
-						<View>
+
+						<View style={{ justifyContent: "center", alignItems: "center" }}>
 							<View style={[MemorialParkLayout.mpAlbumwarp]}>
 								<Image
 									source={MpImage}
@@ -260,6 +274,7 @@ const MemorialPark: React.FC = (props) => {
 									style={[MemorialParkLayout.tabImage3]}
 								/>
 							</View>
+
 							<View style={[MemorialParkLayout.mpAlbumwarp]}>
 								<Image
 									source={MpImage}
@@ -289,13 +304,35 @@ const MemorialPark: React.FC = (props) => {
 								/>
 							</View>
 						</View>
-
 						<View style={[MemorialParkLayout.mpcommentbutton]}>
 							<TouchableOpacity>
 								<Text style={[MemorialParkLayout.mpComent]}>앨범 더보기</Text>
 							</TouchableOpacity>
 						</View>
 					</View>
+				</View>
+
+				<View style={[MemorialParkLayout.mpTitlewrap3]}>
+					{feedList.map((value: any, index: number) => {
+						return (
+							<TouchableOpacity
+								activeOpacity={0.7}
+								key={index}
+								onPress={() =>
+									navigation.push("DetailFeed", {
+										selectImg: { uri: value.photoUrl },
+										comment: value.photoComment,
+										photoNo: value.photoNo,
+									})
+								}
+							>
+								<Image
+									source={{ uri: value.photoUrl }}
+									style={[MemorialParkLayout.tabImage3]}
+								/>
+							</TouchableOpacity>
+						);
+					})}
 				</View>
 				<Footer />
 			</ScrollView>
