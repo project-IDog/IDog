@@ -16,7 +16,8 @@ public enum DogResponseMessage implements ResponseMessage {
     READ_ONE_DOG_NFT("강아지 NFT 상세조회 성공"),
     ALL_DOG_NOT_FOUND_EXCEPTION("사용자의 모든 강아지 목록 조회 실패"),
     DOG_NFT_NOT_FOUND_EXCEPTION("강아지 1마리 NFT 상세 조회 실패"),
-    UPDATE_DOG_NFT_OWNER_SUCCESS("강아지 NFT 소유권 이전 성공");
+    UPDATE_DOG_NFT_OWNER_SUCCESS("강아지 NFT 소유권 이전 성공"),
+    READ_ALL_ALIVE_DOG("사용자의 생존한 강아지 조회 완료");
 
 
     private final String message;
