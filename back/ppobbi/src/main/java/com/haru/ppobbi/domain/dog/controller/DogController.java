@@ -27,9 +27,9 @@ public class DogController {
     private final DogService dogService;
 
     @PostMapping()
-    public ResponseEntity<ResponseDto<Object>> registDog(@RequestBody DogSaveRequestDto dogSaveRequestDto) {
+    public ResponseEntity<ResponseDto<Object>> registDog(@RequestAttribute("userNo") Integer userNo, @RequestBody DogSaveRequestDto dogSaveRequestDto) {
         log.info("DogController - registDog : 강아지 등록");
-        dogService.registDog(dogSaveRequestDto);
+        dogService.registDog(userNo, dogSaveRequestDto);
         return  ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto.create(CREATE_DOG));
     }
