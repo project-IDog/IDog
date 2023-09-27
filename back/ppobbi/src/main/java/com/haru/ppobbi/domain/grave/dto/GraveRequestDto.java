@@ -5,11 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+import java.time.LocalDate;
+
 public class GraveRequestDto {
-    private Integer userNo;
-    private Integer dogNo;
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class RegistRequestDto{
+        private Integer dogNo;
+        private LocalDate dogDeathDate;
+    }
 }

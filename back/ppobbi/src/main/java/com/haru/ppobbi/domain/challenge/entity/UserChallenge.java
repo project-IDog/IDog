@@ -1,5 +1,6 @@
 package com.haru.ppobbi.domain.challenge.entity;
 
+import com.haru.ppobbi.domain.admin.entity.Challenge;
 import com.haru.ppobbi.global.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,8 +27,6 @@ public class UserChallenge extends BaseEntity {
     private Integer userNo;
     @Column(name = "user_challenge_cnt")
     private Integer userChallengeCnt;
-    @Column(name = "user_challenge_time")
-    private LocalDateTime userChallengeTime;
     @Column(name = "user_challenge_iscomplete")
     private Integer userChallengeIscomplete;
     @Column(name = "completed_date")

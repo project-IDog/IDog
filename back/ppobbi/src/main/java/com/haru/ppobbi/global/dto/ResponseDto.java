@@ -20,4 +20,9 @@ public class ResponseDto<T> {
     public static <T> ResponseDto<T> create(ResponseMessage rm, T data){
         return new ResponseDto<>(rm.message(), data);
     }
+
+    // 예외 처리 용 -> super(string) 이어서
+    public static <T> ResponseDto<T> create(String msg){
+        return new ResponseDto<>(msg, null);
+    }
 }

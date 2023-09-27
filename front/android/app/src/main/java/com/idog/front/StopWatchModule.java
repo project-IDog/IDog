@@ -42,16 +42,38 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
     public void getNumber(Promise promise) {
         try {
             SharedPreferences prefs = StopWatchModule.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
-            int number = prefs.getInt("number", 0); // Remove appWidgetId usage
-            Log.d("StopWatchModule Number", "This is a simple log from Native Module!" + number + " prefs : " + prefs);
+            int number = prefs.getInt("number", 0);
+            Log.d("StopWatchModule Number", "log from Native Module" + number + " prefs : " + prefs);
             int hours = number / 3600;
             int minutes = (number % 3600) / 60;
             int seconds = number % 60;
-            String formattedTime = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+            String formattedTime = String.format("%01d:%02d:%02d", hours, minutes, seconds);
             Log.d("StopWatchModule Number", "Formatted time: " + formattedTime + " prefs : " + prefs);
             promise.resolve(formattedTime);
         } catch (Exception e) {
             promise.reject("GET_NUMBER_ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getDate(Promise promise) {
+        try {
+            SharedPreferences prefs = StopWatchModule.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
+            String strCurrentDate = prefs.getString("date", "");
+            promise.resolve(strCurrentDate);
+        } catch (Exception e) {
+            promise.reject("GET_DATE_ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getIsRunning(Promise promise) {
+        try {
+            SharedPreferences prefs = StopWatchModule.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
+            boolean isRunning = prefs.getBoolean("isRunning" , false);
+            promise.resolve(isRunning);
+        } catch (Exception e) {
+            promise.reject("GET_ISRUNNING_ERROR", e);
         }
     }
 

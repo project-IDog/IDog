@@ -5,13 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+
 public class PhotoRequestDto {
-    private Integer dogNo;
-    private Integer userNo;
-    private String photoUrl;
-    private String photoComment;
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class RegistRequestDto{
+        private Integer dogNo;
+        private String photoUrl;
+        private String photoComment;
+        private Boolean photoIsGoat;
+    }
+
 }

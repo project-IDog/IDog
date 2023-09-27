@@ -16,16 +16,17 @@ import CreateFeed from "./src/screens/CreateFeed";
 import DetailFeed from "./src/screens/DetailFeed";
 import Walk from "./src/screens/Walk";
 import Login from "./src/screens/Login";
-import Ani from "./src/screens/Ani";
-import Three from "./src/screens/Memorial Park";
+import Three from "./src/screens/MemorialPark";
 import CreateWalletMain from "./src/screens/CreateWalletMain";
 import AgreeWallet from "./src/screens/AgreeWallet";
 import CreateWalletPassword from "./src/screens/CreateWalletPassword";
 import ProtectWallet from "./src/screens/ProtectWallet";
 import Ipfs from "./src/screens/Ipfs";
 import WidgetText from "./src/screens/WidgetText";
+import DogHeaven from "./src/screens/DogHeaven";
 import CurrentAppState from "./src/components/CurrentAppState";
 import ChoiceDog from "./src/screens/ChoiceDog";
+import MemorialParkDetail from "./src/screens/MemorialParkDetail";
 
 const App = () => {
 	const Stack = createNativeStackNavigator();
@@ -60,8 +61,12 @@ const App = () => {
 						component={CreateWalletPassword}
 					/>
 					<Stack.Screen name="ProtectWallet" component={ProtectWallet} />
-					<Stack.Screen name="Ani" component={Ani} />
+					<Stack.Screen name="DogHeaven" component={DogHeaven} />
 					<Stack.Screen name="Three" component={Three} />
+					<Stack.Screen
+						name="MemorialParkDetail"
+						component={MemorialParkDetail}
+					/>
 					<Stack.Screen name="Ipfs" component={Ipfs} />
 					<Stack.Screen name="WidgetText" component={WidgetText} />
 					<Stack.Screen name="ChoiceDog" component={ChoiceDog} />

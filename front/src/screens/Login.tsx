@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Text, TouchableOpacity } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import * as SecureStore from "expo-secure-store";
@@ -7,7 +8,8 @@ import { ANDROID_CLIENT_ID } from "@env";
 // import axios from "../utils/axios";
 import axios from "axios";
 import IndexStore from "../stores/IndexStore";
-
+import SideMenuLayout from "../styles/sideMenuLayout";
+import { BASE_URL, CONTENT_TYPE, TIMEOUT } from "../constants/constants";
 WebBrowser.maybeCompleteAuthSession();
 
 const Login = () => {
@@ -15,79 +17,55 @@ const Login = () => {
 	const [request, response, promptAsync] = Google.useAuthRequest({
 		androidClientId: ANDROID_CLIENT_ID,
 	});
+	const [isLogged, setIsLogged] = useState<Boolean>(stores.LoginStore.isLogged);
+
 	const handleSignInWithGoogle = async () => {
-		if (response?.type === "success") {
-			const tokenData = {
-				authorizationCode: response.params?.code,
-				idToken: response.authentication?.idToken,
-				accessToken: response.authentication?.accessToken,
-				refreshToken: response.authentication?.refreshToken,
-			};
-			const url = "https://idog.store/api/user";
-			console.log("tokenData : ", JSON.stringify(tokenData));
-			try {
-				// 테스트용 코드
-				await SecureStore.setItemAsync("accessToken", "testAccessToken");
-				await SecureStore.setItemAsync("refreshToken", "testRefreshToken");
+		if (response?.type !== "success") return;
+
+		const idToken = response.authentication?.idToken;
+		const url = `${BASE_URL}/user`;
+		try {
+			const data = await axios.post(url, null, {
+				headers: {
+					Authorization: `Bearer ${idToken}`,
+					"Content-Type": CONTENT_TYPE,
+				},
+				timeout: TIMEOUT,
+			});
+			console.log(data.data.message);
+			if (data.data?.message === "로그인 완료") {
+				setIsLogged(true);
 				stores.LoginStore.isLogged = true;
-				stores.LoginStore.userInfo = {
-					id: "testId",
-					name: "testName",
-					email: "testEmail",
-				};
-				// 이 사이 주석은 로그인이 되었을 시 지웁니다.
-
-				const data = await axios.post(url, JSON.stringify(tokenData), {
-					headers: {
-						"Content-Type": "application/json",
-						charset: "utf-8",
-					},
-					timeout: 1000,
-				});
-
-				console.warn("여기까지 찍히나 봅시다");
-				console.warn("data : ", data.data);
+				console.log("data.data.data.accessToken: ", data.data.data.accessToken);
+				console.log(
+					"data.data.data.refreshToken: ",
+					data.data.data.refreshToken,
+				);
 				await SecureStore.setItemAsync(
 					"accessToken",
 					data.data.data.accessToken,
 				);
+				tokenStore.setAccessToken(data.data.data.accessToken);
 				await SecureStore.setItemAsync(
 					"refreshToken",
 					data.data.data.refreshToken,
 				);
-				stores.LoginStore.isLogged = true;
-			} catch (error: any) {
-				console.error("Error Message:", error.message);
-				if (error.response) {
-					console.error("Response Data:", error.response.data);
-					console.error("Response Status:", error.response.status);
-					console.error("Response Headers:", error.response.headers);
-				} else if (error.request) {
-					console.error("Request:", error.request);
-				}
+			} else {
+				console.log("else : data.data: ", data.data);
 			}
-
-			console.log("끝");
+		} catch (error) {
+			console.log("error : ", error);
 		}
 	};
 
 	const handleLogout = async () => {
 		stores.LoginStore.isLogged = false;
+		setIsLogged(false);
 		await SecureStore.deleteItemAsync("accessToken");
 		await SecureStore.deleteItemAsync("refreshToken");
 		for (let key in stores) {
 			stores[key] = {};
 		}
-	};
-
-	const getSecureStorage = async () => {
-		const accessToken = await SecureStore.getItemAsync("accessToken");
-		const refreshToken = await SecureStore.getItemAsync("refreshToken");
-		for (let key in stores) {
-			console.log("key : ", key, "stores[key] : ", stores[key]);
-		}
-		console.warn("refreshToken : ", refreshToken);
-		console.warn("accessToken : ", accessToken);
 	};
 
 	// Google 인증 응답이 바뀔때마다 실행
@@ -97,15 +75,27 @@ const Login = () => {
 
 	return (
 		<View>
-			<Button
-				disabled={!request}
-				title="Login"
-				onPress={() => {
-					promptAsync();
-				}}
-			/>
-			<Button title="logout" onPress={() => handleLogout()} />
-			<Button title="getSecureStorage" onPress={() => getSecureStorage()} />
+			{!isLogged ? (
+				<TouchableOpacity
+					activeOpacity={0.7}
+					style={SideMenuLayout.googleAuthButton}
+					onPress={() => promptAsync()}
+				>
+					<View>
+						<Text style={SideMenuLayout.googleAuthButtonText}>로그인</Text>
+					</View>
+				</TouchableOpacity>
+			) : (
+				<TouchableOpacity
+					activeOpacity={0.7}
+					style={SideMenuLayout.googleAuthButton}
+					onPress={() => handleLogout()}
+				>
+					<View>
+						<Text style={SideMenuLayout.googleAuthButtonText}>로그아웃</Text>
+					</View>
+				</TouchableOpacity>
+			)}
 		</View>
 	);
 };
