@@ -27,7 +27,7 @@ public class FlowerRedisServiceImpl implements FlowerRedisService {
         Optional<Flower> optionalFlower = flowerRedisRepository.findById(registRequestDto.getGraveNo());
         List<LocalDateTime> flowers;
         if(optionalFlower.isPresent()){ // 이미 존재하면 시든 꽃 처내고 꽃 추가
-            flowers = arrangeFlowers(optionalFlower.get());
+            flowers = arrangeFlowers(optionalFlower.get(), true);
         }else{ // 꽃 추가 후 새로 만들기
             flowers = new ArrayList<>(){{
                add(LocalDateTime.now());
@@ -41,7 +41,7 @@ public class FlowerRedisServiceImpl implements FlowerRedisService {
         Optional<Flower> optionalFlower = flowerRedisRepository.findById(graveNo);
         Integer count;
         if(optionalFlower.isPresent()){// 이미 존재하면 시든 꽃 쳐내고 개수 세기
-            List<LocalDateTime> flowers = arrangeFlowers(optionalFlower.get());
+            List<LocalDateTime> flowers = arrangeFlowers(optionalFlower.get(), false);
             count = Math.min(flowers.size(), 30);
             updateFlower(graveNo, flowers);
         }else{
@@ -53,7 +53,7 @@ public class FlowerRedisServiceImpl implements FlowerRedisService {
                 .build();
     }
 
-    private List<LocalDateTime> arrangeFlowers(Flower flower){
+    private List<LocalDateTime> arrangeFlowers(Flower flower, boolean isUpdated){
         List<LocalDateTime> flowers = flower.getFlowers();
         // 시든 꽃 쳐내기
         List<LocalDateTime> fresh = flowers.stream()
@@ -61,7 +61,10 @@ public class FlowerRedisServiceImpl implements FlowerRedisService {
                 .collect(Collectors.toList());
         
         // 현재 꽃 더한 후 반환
-        fresh.add(LocalDateTime.now());
+        if(isUpdated){
+            fresh.add(LocalDateTime.now());
+        }
+
         return fresh;
     }
 
