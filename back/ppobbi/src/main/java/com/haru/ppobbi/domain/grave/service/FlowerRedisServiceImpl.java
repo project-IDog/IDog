@@ -42,7 +42,7 @@ public class FlowerRedisServiceImpl implements FlowerRedisService {
         Integer count;
         if(optionalFlower.isPresent()){// 이미 존재하면 시든 꽃 쳐내고 개수 세기
             List<LocalDateTime> flowers = arrangeFlowers(optionalFlower.get());
-            count = flowers.size();
+            count = Math.min(flowers.size(), 30);
             updateFlower(graveNo, flowers);
         }else{
             count = 0;
