@@ -6,6 +6,7 @@ import static com.haru.ppobbi.global.constant.BaseConstant.CANCELED;
 import static com.haru.ppobbi.global.constant.BaseConstant.NOTCANCELED;
 
 import com.haru.ppobbi.domain.user.dto.TokenInfo;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserInfoRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserInfoRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserResponseDto.AccessTokenResponseDto;
@@ -52,10 +53,6 @@ public class UserServiceImpl implements UserService {
             NOTCANCELED);
         if (optionalUser.isEmpty()) {
             userRepository.save(user);
-        } else {
-            User foundUser = optionalUser.get();
-            foundUser.updateUserInfo(user.getUserName(), user.getUserProfileImg());
-            userRepository.save(foundUser);
         }
         return userRepository.findUserByUserIdAndCanceled(user.getUserId(),
             NOTCANCELED).get();
@@ -130,5 +127,16 @@ public class UserServiceImpl implements UserService {
         return AccessTokenResponseDto.builder()
             .accessToken(accessToken)
             .build();
+    }
+
+    @Override
+    @Transactional
+    public void updateUserName(Integer userNo, UpdateUserInfoRequestDto updateUserInfoRequestDto) {
+        User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
+            .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
+        log.debug("[userService/updateUserName] update user name : {}",
+            updateUserInfoRequestDto.getUserName());
+        user.updateUserName(updateUserInfoRequestDto.getUserName());
+        userRepository.save(user);
     }
 }

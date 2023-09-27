@@ -60,8 +60,7 @@ public class User extends BaseEntity {
         this.userRole = userRole;
     }
 
-    public void updateUserInfo(String userProfileImg, String userName) {
-        this.userProfileImg = userProfileImg;
+    public void updateUserName(String userName) {
         this.userName = userName;
     }
 

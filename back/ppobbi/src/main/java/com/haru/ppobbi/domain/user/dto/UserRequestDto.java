@@ -37,7 +37,6 @@ public class UserRequestDto {
     public static class UpdateUserInfoRequestDto {
 
         private String userName;
-        private String userProfileImg;
     }
 
     @Data
@@ -66,6 +65,15 @@ public class UserRequestDto {
     public static class UpdateUserMessageRequestDto {
 
         private String userMessage;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateUserNameRequestDto {
+
+        private String userName;
     }
 
 }
