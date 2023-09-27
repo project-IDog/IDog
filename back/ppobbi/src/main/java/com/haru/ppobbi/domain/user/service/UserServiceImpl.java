@@ -113,11 +113,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
-        String message = updateUserMessageRequestDto.getUserMessage();
-        user.updateUserMessage(message);
+        user.updateUserMessage(updateUserMessageRequestDto.getUserMessage());
+        userRepository.save(user);
 
         // redis 에 적용
-        userRedisService.updateUserInfoToRedis(user);
+        userRedisService.updateUserMessageToRedis(user);
     }
 
     @Override
@@ -136,7 +136,11 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
         log.debug("[userService/updateUserName] update user name : {}",
             updateUserInfoRequestDto.getUserName());
+
         user.updateUserName(updateUserInfoRequestDto.getUserName());
         userRepository.save(user);
+
+        // redis 에 적용
+        userRedisService.updateUserNameToRedis(user);
     }
 }
