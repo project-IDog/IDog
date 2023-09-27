@@ -19,7 +19,7 @@ public interface DogService {
      * @param dogSaveRequestDto 등록할 DogSaveRequestDto 객체
      * @return Dog
      */
-    Dog registDog(DogSaveRequestDto dogSaveRequestDto);
+    Dog registDog(Integer userNo, DogSaveRequestDto dogSaveRequestDto);
 
     /**
      * userNo를 받아 모든 Dog 조회

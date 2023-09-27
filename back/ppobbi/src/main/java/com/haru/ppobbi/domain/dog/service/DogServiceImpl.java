@@ -31,9 +31,9 @@ public class DogServiceImpl implements DogService{
     private final BreedRepository breedRepository;
 
     @Override
-    public Dog registDog(DogSaveRequestDto dogSaveRequestDto) {
+    public Dog registDog(Integer userNo, DogSaveRequestDto dogSaveRequestDto) {
         Dog dog = Dog.builder()
-                .userNo(dogSaveRequestDto.getUserNo())
+                .userNo(userNo)
                 .dogName(dogSaveRequestDto.getDogName())
                 .dogBreed(dogSaveRequestDto.getDogBreed())
                 .dogBirthDate(dogSaveRequestDto.getDogBirthDate())
@@ -44,7 +44,6 @@ public class DogServiceImpl implements DogService{
                 .build();
 
         // 유저의 모든 강아지 조회
-        Integer userNo = dogSaveRequestDto.getUserNo();
         List<Dog> dogList = dogRepository.findAllByUserNoAndCanceledOrderByDogName(userNo, BaseConstant.NOTCANCELED);
         // 이미 같은 정보로 저장된 강아지가 있는지 체크
         for (int i=0; i<dogList.size(); i++){
