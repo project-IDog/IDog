@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import * as Sentry from "@sentry/react-native";
 import * as SecureStore from "expo-secure-store";
 import { BASE_URL, CONTENT_TYPE, TIMEOUT } from "../constants/constants";
+import { logout } from "../utils/logout";
 
 const instance = axios.create({
 	baseURL: BASE_URL,
@@ -37,19 +38,28 @@ const refreshAccessTokenAndRetry = async (config: AxiosRequestConfig) => {
 				},
 			},
 		);
-		if (response.data.message === "액세스 토큰 발급 완료") {
-			const newAccessToken = response.data.data.accessToken;
-			await SecureStore.setItemAsync("accessToken", newAccessToken);
-			console.log("accessToken 갱신 완료 : config" + config);
-			if (!config.headers) {
-				config.headers = {};
-			}
-			config.headers["Authorization"] = `Bearer ${newAccessToken}`;
-			return axios(config);
+		console.log("response data ㅇㅇㅇ :", response.status);
+		switch (response.status) {
+			case 201:
+				const newAccessToken = response.data.data.accessToken;
+				await SecureStore.setItemAsync("accessToken", newAccessToken);
+				if (!config.headers) {
+					config.headers = {};
+				}
+				config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+				return axios(config);
+			case 401:
+				// 현재 저장되어있는 모든 정보 삭제
+				await logout();
+				alert("토큰 갱신에 실패했습니다. 다시 로그인 해주세요.");
+				break;
+			default:
+				console.error("refreshAccessTokenAndRetry error :", response);
+				return Promise.reject(response);
 		}
 	} catch (error) {
-		alert("토큰 갱신에 실패했습니다. 다시 로그인 해주세요.");
-		throw error;
+		console.error("refreshAccessTokenAndRetry error :", error);
+		return Promise.reject(error);
 	}
 };
 
