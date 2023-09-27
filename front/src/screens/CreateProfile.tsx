@@ -5,8 +5,8 @@ import CommonLayout from "../components/CommonLayout"
 import Footer from "../components/Footer"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import * as SecureStore from 'expo-secure-store';
-import {ethers, Transaction} from "ethers"
-import {mintDogTokenContract} from "../contracts/index";
+import {ethers} from "ethers"
+import {mintDogTokenContract} from "../contracts/contract";
 import * as ImagePicker from "expo-image-picker";
 import {NFT_STORAGE_KEY} from "@env"
 import axiosApi from "../utils/axios"
@@ -19,7 +19,7 @@ import {
 	AWS_REGION,
 	AWS_BUCKET,
 } from "@env";
-import * as RNFS from "react-native-fs"
+import WalletLoading from "../components/WalletLoading"
 
 import DatePickerIcon from "../../assets/images/date-picker-icon.png"
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
@@ -38,6 +38,8 @@ const CreateProfile = ({navigation} : any) => {
     const [petBirth, setPetBirth] = useState<string|null>();
     const [nftCid, setNftCid] = useState<string|null>();
     const [speciesList, setSpeciesList] = useState<any>();
+    const [hashId, setHashId] = useState<any>();
+    const [isLoading, setIsLoading] = useState<Boolean>(false);
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -71,30 +73,31 @@ const CreateProfile = ({navigation} : any) => {
 	const uploadImage = async (uri: any) => {
 		const response = await fetch(uri);
 		const blob = await response.blob();
-		const filename = uri.split("/").pop();
-		const type = blob.type;
-		const params = {
+		const filename = await uri.split("/").pop();
+		const type = await blob.type;
+		const params = await {
 			Bucket: AWS_BUCKET,
 			Key: filename,
 			Body: blob,
 			ContentType: type,
 		};
-		s3.upload(params, async (err: any, data: any) => {
+		await s3.upload(params, async (err: any, data: any) => {
 			if (err) {
 				console.log("err", err);
 			} else {
-                const reader = new FileReader();
+                const reader = await new FileReader();
                 const blob = await new Blob(['<img src="',data.Location,'" />'], {type:"text/html"});
-                reader.readAsDataURL(blob);
-                reader.onload = () => {
-                    const base64data = reader.result;
-                    setImageCid(base64data);
+                await reader.readAsDataURL(blob);
+                reader.onload = async () => {
+                    const base64data = await reader.result;
+                    await setImageCid(base64data);
                 }
 			}
 		});
 	};
 
     const uploadIpfs = async () => {
+        await setIsLoading(true);
         await uploadImage(imageUri);
 
         const nft_storage_url = "https://api.nft.storage/upload";
@@ -113,6 +116,25 @@ const CreateProfile = ({navigation} : any) => {
         await uploadMetaJSON();
 
         await createProfile();
+
+        await enrollProfile();
+
+        await setIsLoading(false);
+        await alert("프로필 생성이 완료되었습니다.");
+        // await navigation.navigate('Profile');
+    }
+
+    const enrollProfile = async () => {
+        axiosApi.post('/dog',{
+            "dogName": petName,
+            "dogBreed": petSpecies,
+            "dogBirthDate": "2023-09-27",
+            "dogSex": petGender,
+            "dogNft": 29, 
+            "dogImg": imageCid,
+        }).then((data) => {
+            console.log(data);
+        })
     }
 
     const uploadMetaJSON = async () => {
@@ -188,6 +210,8 @@ const CreateProfile = ({navigation} : any) => {
         const priceWei = ethers.parseUnits(gasPriceGwei, 'gwei');
 
         const response = await mintDogTokenContract.mintDogProfile('0xD9C645DBE4F116080E716614B82eBE341e554Eb5', `ipfs://${nftCid}`);
+        console.log("tokenURI", provider.getTransactionReceipt(response.hash));
+        setHashId(response.hash);
         console.log("response", response);
 
     }
@@ -271,7 +295,7 @@ const CreateProfile = ({navigation} : any) => {
                             <Image
                                 source={DatePickerIcon}
                             />
-                            <Text style={CreateProfileLayout.dateFormText}>2023. 09. 04.</Text>
+                            <Text style={CreateProfileLayout.dateFormText}>2023-09-27</Text>
                         </View>
                     </TouchableOpacity>
                     <DateTimePickerModal
@@ -299,8 +323,14 @@ const CreateProfile = ({navigation} : any) => {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <Footer/>
+                <Footer/> 
             </CommonLayout>
+            {
+                isLoading?
+                <WalletLoading title="프로필 생성중.. 잠시만 기다려주세요."/>
+                :
+                <></>
+            }
         </>
     );
 }

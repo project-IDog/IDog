@@ -20,6 +20,7 @@ const Login = () => {
 	const [isLogged, setIsLogged] = useState<Boolean>(stores.LoginStore.isLogged);
 
 	const handleSignInWithGoogle = async () => {
+		console.log("response 변화 체크 : ", response?.type);
 		if (response?.type !== "success") return;
 
 		const idToken = response.authentication?.idToken;
@@ -45,7 +46,6 @@ const Login = () => {
 					"accessToken",
 					data.data.data.accessToken,
 				);
-				tokenStore.setAccessToken(data.data.data.accessToken);
 				await SecureStore.setItemAsync(
 					"refreshToken",
 					data.data.data.refreshToken,

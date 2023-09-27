@@ -145,7 +145,7 @@ const CreateWalletPassword = ({navigation}: any) => {
             </CommonLayout>
             {
                 isLoading ?
-                <WalletLoading/>
+                <WalletLoading title="지갑 생성 중.. 잠시만 기다려주세요"/>
                 :
                 <></>
             }

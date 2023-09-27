@@ -1,4 +1,4 @@
-import {useEffect,useRef} from "react"
+import {useEffect,useRef,useState} from "react"
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native"
 import GestureFlipView from '../components/GestureFlipView';
 import CommonLayout from "../components/CommonLayout"
@@ -22,6 +22,7 @@ import PuppyThumbnail1 from "../../assets/images/puppy-thumbnail1.png"
 
 const Profile = ({navigation}:any) => {
     const flipView = useRef<any>();
+    const [dogList, setDogList] = useState<any>([]);
     const renderFront = () => {
         return(
             <View>
@@ -39,7 +40,12 @@ const Profile = ({navigation}:any) => {
     }
 
     useEffect(() => {
-
+        axios.get('/dog/list').then((data) => {
+            if(data.data.message === "사용자의 모든 강아지 목록 조회 완료"){
+                console.log("data", data.data.data);
+                setDogList(data.data.data);
+            }
+        })
     }, []);
     
     return(
@@ -78,6 +84,16 @@ const Profile = ({navigation}:any) => {
                             {renderBack()}
                             {renderFront()}
                         </GestureFlipView>
+                        {
+                            dogList.map((dogItem:any, index:any) => {
+                                console.log(dogItem);
+                                return(
+                                    <View key={index} style={{marginLeft:10}}>
+                                        <NftProfile dogName={`내 반려견 ${dogItem.dogName}`} createdTitle="등록한 날짜" createdAt="2023. 09. 02." species={dogItem.dogBreed} bgImg={dogItem.dogImg}/>
+                                    </View>
+                                );
+                            })
+                        }
                         <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CreateProfile')}>
                             <View style={ProfileLayout.addNewNftWrap}>
                                 <Image
