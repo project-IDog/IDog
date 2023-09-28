@@ -129,7 +129,6 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 						isSkipped={isSkipped}
 						setIsSkipped={setIsSkipped}
 					/>
-					{/* <View></View> */}
 				</Animated.View>
 				<MainHeader />
 				<SubMainRip
@@ -137,6 +136,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 					mainTitle={`반려견에게 영원한 평화와 \n행복을 기원합니다.`}
 					bgImg={MpImage}
 					desc="추모하기"
+					graveNo={data.graveNo}
 				/>
 				<View style={MemorialParkLayout.MpTitleWrap}>
 					<Text style={MemorialParkLayout.MpDesc}>Memorial Park</Text>

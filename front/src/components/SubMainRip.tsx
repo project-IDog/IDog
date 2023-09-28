@@ -16,39 +16,46 @@ import {
 import LottieView from "lottie-react-native";
 import axios from "../utils/axios";
 
-const SubMain = ({ subTitle, mainTitle, bgImg, desc }: any) => {
-	const [flowers, setFlowers] = useState<Array<{ x: number; y: number }>>([]);
+const SubMain = ({ subTitle, mainTitle, bgImg, desc, graveNo }: any) => {
+	const [flowersCnt, setFlowersCnt] = useState<number>(0);
 
 	const [lastClick, setLastClick] = useState<number>(0);
 	const handlePress = (event: any) => {
 		const currentTime = new Date().getTime();
 
 		if (currentTime - lastClick < 1000) {
-			// 300ms 이내의 연속 클릭 무시
 			return;
 		}
-		setLastClick(currentTime);
-		if (flowers.length < 10) {
-			const { pageX, pageY } = event.nativeEvent;
-			setFlowers([...flowers, { x: pageX, y: pageY }]);
+
+		if (flowersCnt < 10) {
+			// flowersCnt가 10 미만인지 확인
+			axios
+				.post("/flower", {
+					graveNo: graveNo,
+				})
+				.then((data) => {
+					if (data.data.message === "헌화 등록 성공") {
+						setFlowersCnt((prevCount) => prevCount + 1);
+					}
+				});
 		}
 	};
 
-	// useEffect(() => {
-	// 	// axios.get요청을 보내서 flowers 넘버 받아오기
-	// 	axios.get("/grave").then((data) => {
-	// 		if (data.data.message === "무덤 조회 성공") {
-	// 			setDataList(data.data.data);
-	// 		}
-	// 	});
-	// }, []);
+	useEffect(() => {
+		axios.get(`/flower/${graveNo + 3}`).then((data) => {
+			if (data.data.message === "헌화 등록 성공") {
+				setFlowersCnt(data.data.data.count);
+			}
+		});
+	}, []);
 
 	return (
 		<>
 			<View style={styles.subMainWrap}>
 				<ImageBackground source={bgImg} style={styles.subMainBg}>
 					<View style={styles.garden}>
-						{flowers.map((flower, index) => {
+						{Array.from({ length: flowersCnt }).map((_, index) => {
+							console.log("플라어 콘ㅅ로!:", flowersCnt, graveNo);
 							return (
 								<>
 									<LottieView
