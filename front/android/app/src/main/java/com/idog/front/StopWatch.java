@@ -24,12 +24,15 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import com.google.gson.Gson;
 
 /**
  * Implementation of App Widget functionality.
@@ -93,14 +96,13 @@ public class StopWatch extends AppWidgetProvider {
             if (handler != null) {
                 handler.removeMessages(0);
             }
-            prefs.edit().putInt("number", 0).apply();
-            prefs.edit().remove("date").apply();
-            StopWatchModule.emitDeviceEvent("RESET_ACTION_EVENT", null);
-            // Retrofit API 호출
             int walkingTime = prefs.getInt("number", 0);
             String walkingStartDate = prefs.getString("date", "");
-            int dogNo = 1; // 임시값
+            prefs.edit().remove("date").apply();
+            prefs.edit().putInt("number", 0).apply();
+            StopWatchModule.emitDeviceEvent("RESET_ACTION_EVENT", null);
 
+            int dogNo = 31; // 임시값
             WalkingData walkingData = new WalkingData(dogNo, walkingTime, walkingStartDate);
             sendWalkingDataToServer(walkingData, context);
         }
@@ -124,13 +126,18 @@ public class StopWatch extends AppWidgetProvider {
                 .baseUrl("https://idog.store/api/walking/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-    Log.d("WalkingData ", "data : " + data);
+        Gson gson = new Gson();
+        String json = gson.toJson(data);
+        Log.d("API RESPONSE : ", "json : " + json);
+
+        RequestBody requestBody = RequestBody.Companion.create(json, MediaType.parse("application/json; charset=utf-8"));
+
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<Void> call = apiService.sendWalkingData(data);
+        Call<Void> call = apiService.sendWalkingData(requestBody);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d("API RESPOHNSE : ", "defalut : " + response);
+                Log.d("API RESPONSE : ", "default : " + response);
                 if (response.isSuccessful()) {
                     Log.d("API Response", "Success");
                 } else {
@@ -175,9 +182,9 @@ public class StopWatch extends AppWidgetProvider {
         PendingIntent resetPendingIntent = PendingIntent.getBroadcast(context, 2, resetIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.resetButton, resetPendingIntent);
 
-        Intent mainActivityIntent = new Intent(context, MainActivity.class); // MainActivity는 시작하려는 액티비티의 이름입니다. 필요에 따라 변경하세요.
-        PendingIntent mainActivityPendingIntent = PendingIntent.getActivity(context, 3, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        views.setOnClickPendingIntent(R.id.widget_container, mainActivityPendingIntent);
+        Intent startAppIntent = new Intent(context, MainActivity.class);
+        PendingIntent startAppIntentPendingIntent = PendingIntent.getActivity(context, 3, startAppIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        views.setOnClickPendingIntent(R.id.widget_container, startAppIntentPendingIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

@@ -1,12 +1,16 @@
 package com.idog.front;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface ApiService {
     @POST("https://idog.store/api/walking/")
-    Call<Void> sendWalkingData(@Body WalkingData data);
+    @Headers("Content-Type: application/json")
+//    Call<Void> sendWalkingData(@Body String data);
+    Call<Void> sendWalkingData(@Body RequestBody data);
 }
 
 class WalkingData {
