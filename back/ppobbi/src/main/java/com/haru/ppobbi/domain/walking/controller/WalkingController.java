@@ -22,9 +22,9 @@ public class WalkingController {
     private final WalkingService walkingService;
 
     @PostMapping()
-    public ResponseEntity<ResponseDto<String>> registOrUpdateWalking(@RequestAttribute("userNo") Integer userNo, @RequestBody RegistRequestDto registRequestDto){
+    public ResponseEntity<ResponseDto<String>> registOrUpdateWalking(@RequestBody RegistRequestDto registRequestDto){
         log.debug("service start: {}", registRequestDto.getWalkingStartDate());
-        Walking walking = walkingService.registOrUpdateWalking(userNo, registRequestDto);
+        Walking walking = walkingService.registOrUpdateWalking(registRequestDto);
         log.debug("service end");
         return (walking.getWalkingCount() == 1) ?
                 ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.create(CREATE_SUCCESS)) :

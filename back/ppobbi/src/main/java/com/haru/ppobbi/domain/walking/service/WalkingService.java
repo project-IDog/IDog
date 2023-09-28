@@ -7,7 +7,7 @@ import com.haru.ppobbi.domain.walking.entity.Walking;
 import java.util.List;
 
 public interface WalkingService {
-    public Walking registOrUpdateWalking(Integer userNo, RegistRequestDto registRequestDto);
+    public Walking registOrUpdateWalking(RegistRequestDto registRequestDto);
 
     public List<WalkingInfoDto> selectWalkingsByUserNo(Integer userNo);
 
