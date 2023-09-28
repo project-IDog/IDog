@@ -4,8 +4,8 @@
     android:background="@drawable/background_idog_widget"
     android:visibility="visible"
     android:orientation="horizontal"
+    android:id="@+id/widget_container"
     android:padding="16dp">
-
     <ImageView
         android:id="@+id/profile"
         android:layout_width="0dp"

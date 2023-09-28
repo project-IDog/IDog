@@ -175,8 +175,13 @@ public class StopWatch extends AppWidgetProvider {
         PendingIntent resetPendingIntent = PendingIntent.getBroadcast(context, 2, resetIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.resetButton, resetPendingIntent);
 
+        Intent mainActivityIntent = new Intent(context, MainActivity.class); // MainActivity는 시작하려는 액티비티의 이름입니다. 필요에 따라 변경하세요.
+        PendingIntent mainActivityPendingIntent = PendingIntent.getActivity(context, 3, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        views.setOnClickPendingIntent(R.id.widget_container, mainActivityPendingIntent);
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
+
 
     private static String formatTime(int totalSecond) {
         int hours = totalSecond / 3600;
