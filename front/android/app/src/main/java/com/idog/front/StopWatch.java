@@ -68,12 +68,14 @@ public class StopWatch extends AppWidgetProvider {
                     handler = new MyHandler(context);
                 }
                 handler.sendMessage(handler.obtainMessage(0));
+                StopWatchModule.emitDeviceEvent("PLAY_ACTION_EVENT", null);
             }
         } else if ("STOP_ACTION".equals(intent.getAction())) {
             prefs.edit().putBoolean("isRunning", false).apply();
             if (handler != null) {
                 handler.removeMessages(0);
             }
+            StopWatchModule.emitDeviceEvent("STOP_ACTION_EVENT", null);
         } else if ("RESET_ACTION".equals(intent.getAction())) {
             prefs.edit().putBoolean("isRunning", false).apply();
             if (handler != null) {
@@ -81,6 +83,7 @@ public class StopWatch extends AppWidgetProvider {
             }
             prefs.edit().putInt("number", 0).apply();
             prefs.edit().remove("date").apply();
+            StopWatchModule.emitDeviceEvent("RESET_ACTION_EVENT", null);
         }
         updateAllWidgets(context);
     }

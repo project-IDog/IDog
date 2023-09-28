@@ -26,13 +26,46 @@ const WidgetText = () => {
 		};
 	}, []);
 
+	useEffect(() => {
+		const playListener = DeviceEventEmitter.addListener(
+			"PLAY_ACTION_EVENT",
+			() => {
+				setIsPlaying(true);
+			},
+		);
+
+		const stopListener = DeviceEventEmitter.addListener(
+			"STOP_ACTION_EVENT",
+			() => {
+				setIsPlaying(false);
+			},
+		);
+
+		const resetListener = DeviceEventEmitter.addListener(
+			"RESET_ACTION_EVENT",
+			() => {
+				setWidgetData("0:00:00");
+				setIsPlaying(false);
+			},
+		);
+
+		return () => {
+			playListener.remove();
+			stopListener.remove();
+			resetListener.remove();
+		};
+	}, []);
+
 	const getWidgetData = async () => {
 		const widgetData = await StopWatchModule.getNumber();
 		const strCurrentDate = await StopWatchModule.getDate();
+		const isRunning = await StopWatchModule.getIsRunning();
 		setWidgetData(widgetData);
 		setCurrentDate(strCurrentDate);
+		setIsPlaying(isRunning);
 		console.log("widgetData : ", widgetData);
 		console.log("strCurrentDate : ", strCurrentDate);
+		console.log("isRunning : ", isRunning);
 	};
 
 	const playTimer = () => {
