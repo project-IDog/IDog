@@ -24,6 +24,13 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+
 /**
  * Implementation of App Widget functionality.
  */
@@ -89,6 +96,13 @@ public class StopWatch extends AppWidgetProvider {
             prefs.edit().putInt("number", 0).apply();
             prefs.edit().remove("date").apply();
             StopWatchModule.emitDeviceEvent("RESET_ACTION_EVENT", null);
+            // Retrofit API 호출
+            int walkingTime = prefs.getInt("number", 0);
+            String walkingStartDate = prefs.getString("date", "");
+            int dogNo = 1; // 임시값
+
+            WalkingData walkingData = new WalkingData(dogNo, walkingTime, walkingStartDate);
+            sendWalkingDataToServer(walkingData, context);
         }
         isRunning = prefs.getBoolean("isRunning" , false);
         if (!isRunning) {
@@ -104,6 +118,33 @@ public class StopWatch extends AppWidgetProvider {
         }
         updateAllWidgets(context);
     }
+
+    private void sendWalkingDataToServer(WalkingData data, Context context) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://idog.store/api/walking/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    Log.d("WalkingData ", "data : " + data);
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<Void> call = apiService.sendWalkingData(data);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("API RESPOHNSE : ", "defalut : " + response);
+                if (response.isSuccessful()) {
+                    Log.d("API Response", "Success");
+                } else {
+                    Log.e("API Response", "Error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("API Error", t.getMessage());
+            }
+        });
+    }
+
 
     static void updateAllWidgets(Context context) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
