@@ -1,9 +1,11 @@
-import {useState} from "react"
+import {useState,useEffect} from "react"
 import {View, Text, ScrollView, Image, TextInput, TouchableOpacity} from "react-native"
 import CommonLayout from "../components/CommonLayout";
 import WhiteHeader from "../components/WhiteHeader";
 import SubMain from "../components/SubMain";
 import Footer from "../components/Footer";
+
+import axios from "../utils/axios";
 
 import AdoptionMainImg from "../../assets/images/adoption-main-img.png"
 import MyPetThumbnail1 from "../../assets/images/my-pet-thumbnail1.png"
@@ -13,14 +15,7 @@ import AdoptionLayout from "../styles/adptionLayout";
 
 const Adoption = ({navigation}: any) => {
     const [myPetPressState, setMyPetPressState] = useState({});
-    const myPetList = [
-        {
-            url: MyPetThumbnail1,
-        },
-        {
-            url: MyPetThumnail2,
-        }
-    ]
+    const [myPetList, setMyPetList] = useState<any>();
 
     const toggleBorder = (index:number) => {
         setMyPetPressState((prevState: any) => ({
@@ -28,6 +23,22 @@ const Adoption = ({navigation}: any) => {
             [index]: !prevState[index] || false,
         }));
     }
+
+    const submitAdoption = () => {
+        axios.post("/dog/nft",{
+            "dogNo": "",
+        }).then((data) => {
+
+        })
+    }
+
+    useEffect(() => {
+        axios.get("/dog/list").then((data) => {
+            if(data.data.message === "사용자의 모든 강아지 목록 조회 완료"){
+                setMyPetList(data.data.data);
+            }
+        })
+    }, [])
     return(
         <>
             <CommonLayout>
@@ -39,13 +50,16 @@ const Adoption = ({navigation}: any) => {
                     <Text style={AdoptionLayout.adoptionMainTitle}>입양절차</Text>
                 </View>
 
+                <Image source={"data:text/html;base64,PGltZyBzcmM9Imh0dHBzOi8vcHBvYmJpLnMzLmFwLW5vcnRoZWFzdC0yLmFtYXpvbmF3cy5jb20vMTZjOTMyNzYtNjZlZi00YTFiLTgyMzItMTZiNzE3YjkyMmJmLmpwZWciIC8+"}/>
+
                 <ScrollView horizontal={true} style={AdoptionLayout.myPetList}>
                     {
-                        myPetList.map((value, index) : any => {
+                        myPetList?.map((value: any, index: number) => {
+                            console.log(value);
                             return(
                                 <TouchableOpacity key={index} activeOpacity={0.9} onPress={() => toggleBorder(index)}>
                                     <Image
-                                        source={value.url}
+                                        source={value.dogImg}
                                         style={[
                                             myPetPressState[index] ? AdoptionLayout.myPetThumbnail : AdoptionLayout.myPetThumbnaulDisable,
                                         ]}
@@ -67,7 +81,7 @@ const Adoption = ({navigation}: any) => {
                 </View>
 
                 <View style={AdoptionLayout.adoptionButtonWrap}>
-                    <TouchableOpacity activeOpacity={0.7} style={AdoptionLayout.submitButton}>
+                    <TouchableOpacity activeOpacity={0.7} style={AdoptionLayout.submitButton} onPress={submitAdoption}>
                         <View >
                             <Text style={AdoptionLayout.submitButtonText}>작성완료</Text>
                         </View>
