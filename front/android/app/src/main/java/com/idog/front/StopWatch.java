@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Looper;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -62,7 +63,9 @@ public class StopWatch extends AppWidgetProvider {
                 Date date = new Date(now);
                 SimpleDateFormat currentDate = new SimpleDateFormat("yyyy-MM-dd");
                 String strCurrentDate = currentDate.format(date);
-                Log.d("strCurrentDate : ", "" + strCurrentDate);
+                Log.d("PLAY ACTION Date : ", "" + strCurrentDate);
+                isRunning = prefs.getBoolean("isRunning" , false);
+                Log.d("isRunning play : ", "" + isRunning);
                 prefs.edit().putString("date", strCurrentDate).apply();
                 if (handler == null) {
                     handler = new MyHandler(context);
@@ -76,6 +79,8 @@ public class StopWatch extends AppWidgetProvider {
                 handler.removeMessages(0);
             }
             StopWatchModule.emitDeviceEvent("STOP_ACTION_EVENT", null);
+            isRunning = prefs.getBoolean("isRunning" , false);
+            Log.d("isRunning play : ", "" + isRunning);
         } else if ("RESET_ACTION".equals(intent.getAction())) {
             prefs.edit().putBoolean("isRunning", false).apply();
             if (handler != null) {
@@ -84,6 +89,18 @@ public class StopWatch extends AppWidgetProvider {
             prefs.edit().putInt("number", 0).apply();
             prefs.edit().remove("date").apply();
             StopWatchModule.emitDeviceEvent("RESET_ACTION_EVENT", null);
+        }
+        isRunning = prefs.getBoolean("isRunning" , false);
+        if (!isRunning) {
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
+            views.setViewVisibility(R.id.playButton, View.VISIBLE);
+            views.setViewVisibility(R.id.stopButton, View.GONE);
+            AppWidgetManager.getInstance(context).updateAppWidget(new ComponentName(context, StopWatch.class), views);
+        } else {
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
+            views.setViewVisibility(R.id.stopButton, View.VISIBLE);
+            views.setViewVisibility(R.id.playButton, View.GONE);
+            AppWidgetManager.getInstance(context).updateAppWidget(new ComponentName(context, StopWatch.class), views);
         }
         updateAllWidgets(context);
     }

@@ -68,19 +68,23 @@ const WidgetText = () => {
 		console.log("isRunning : ", isRunning);
 	};
 
-	const playTimer = () => {
+	const playTimer = async () => {
 		StopWatchModule.playTimer();
 		setIsPlaying(true);
 	};
 
-	const stopTimer = () => {
+	const stopTimer = async () => {
 		StopWatchModule.stopTimer();
+		const isRunning = await StopWatchModule.getIsRunning();
+		console.log("isRunning : ", isRunning);
 		setIsPlaying(false);
 	};
 
-	const resetTimer = () => {
+	const resetTimer = async () => {
 		console.log("widgetData : ", widgetData);
 		console.log("strCurrentDate : ", currentDate);
+		const isRunning = await StopWatchModule.getIsRunning();
+		console.log("isRunning : ", isRunning);
 		StopWatchModule.resetTimer();
 		setWidgetData("0:00:00");
 		setIsPlaying(false);
