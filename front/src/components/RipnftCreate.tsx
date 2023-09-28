@@ -10,11 +10,21 @@ import Animation from "../components/Animation";
 import exImg from "../../assets/images/photo-ex-img3.png";
 import axios from "../utils/axios";
 
-const RipnftCreate: React.FC = () => {
+interface RipnftCreateProps {
+	setDataList: (data: any) => void;
+}
+
+const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 	const fetchNftList = () => {
 		axios.get("/dog/alive").then((data) => {
 			if (data.data.message === "사용자의 생존한 강아지 조회 완료") {
 				setDogNftList(data.data.data);
+			}
+		});
+
+		axios.get("/grave").then((data) => {
+			if (data.data.message === "무덤 조회 성공") {
+				setDataList(data.data.data);
 			}
 		});
 	};

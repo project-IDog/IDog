@@ -14,11 +14,10 @@ import {
 	responsiveWidth,
 } from "react-native-responsive-dimensions";
 import LottieView from "lottie-react-native";
+import axios from "../utils/axios";
 
 const SubMain = ({ subTitle, mainTitle, bgImg, desc }: any) => {
-	const [flowers, setFlowers] = useState<
-		Array<{ x: number; y: number; animated: boolean }>
-	>([]);
+	const [flowers, setFlowers] = useState<Array<{ x: number; y: number }>>([]);
 
 	const [lastClick, setLastClick] = useState<number>(0);
 	const handlePress = (event: any) => {
@@ -31,39 +30,46 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc }: any) => {
 		setLastClick(currentTime);
 		if (flowers.length < 10) {
 			const { pageX, pageY } = event.nativeEvent;
-			setFlowers([...flowers, { x: pageX, y: pageY, animated: false }]);
+			setFlowers([...flowers, { x: pageX, y: pageY }]);
 		}
 	};
+
+	// useEffect(() => {
+	// 	// axios.get요청을 보내서 flowers 넘버 받아오기
+	// 	axios.get("/grave").then((data) => {
+	// 		if (data.data.message === "무덤 조회 성공") {
+	// 			setDataList(data.data.data);
+	// 		}
+	// 	});
+	// }, []);
 
 	return (
 		<>
 			<View style={styles.subMainWrap}>
 				<ImageBackground source={bgImg} style={styles.subMainBg}>
-					<TouchableOpacity onPress={handlePress}>
-						<View style={styles.garden}>
-							{flowers.map((flower, index) => {
-								return (
-									<>
-										<LottieView
-											key={`flower_${index}`}
-											style={[
-												styles.flower1,
-												{
-													position: "absolute",
-													left: -25 + index * responsiveWidth(4),
-													top: responsiveHeight(13),
-												},
-											]}
-											autoPlay={flower.animated === false}
-											loop={false}
-											source={flower1}
-											speed={0.7}
-										/>
-									</>
-								);
-							})}
-						</View>
-					</TouchableOpacity>
+					<View style={styles.garden}>
+						{flowers.map((flower, index) => {
+							return (
+								<>
+									<LottieView
+										key={`flower_${index}`}
+										style={[
+											styles.flower1,
+											{
+												position: "absolute",
+												left: -25 + index * responsiveWidth(4),
+												top: responsiveHeight(13),
+											},
+										]}
+										autoPlay={true}
+										loop={false}
+										source={flower1}
+										speed={0.7}
+									/>
+								</>
+							);
+						})}
+					</View>
 
 					<View style={styles.subMainInfoWrap}>
 						<Text style={styles.subMainSubTitle}>{subTitle}</Text>

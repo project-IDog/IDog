@@ -26,6 +26,7 @@ import RipnftCreate from "../components/RipnftCreate";
 import { GraveData } from "src/stores/Gravedata";
 import nftbgcloud from "../../assets/images/nftbg.png";
 import axios from "../utils/axios";
+import MarqueeLabel from "react-native-marquee-label";
 
 const Main = ({ navigation }: any) => {
 	const scrollViewRef = useRef<ScrollView>(null);
@@ -85,7 +86,9 @@ const Main = ({ navigation }: any) => {
 			// ripdatalist에 datalist[index]추가
 			// index ++ 해주기
 			if (ripIndex < dataList.length) {
-				setRipdataList([...RipdataList, dataList[ripIndex]]);
+				const newItem = dataList[ripIndex];
+				RipdataList.unshift(newItem);
+				setRipdataList([...RipdataList]);
 				setRipIndex(ripIndex + 1);
 			}
 
@@ -156,12 +159,17 @@ const Main = ({ navigation }: any) => {
 													<Text style={MemorialParkDesignLayout.nfttext}>
 														{data.dogName}
 													</Text>
-													<Text style={MemorialParkDesignLayout.nfttext}>
-														{data.dogBreed}
-													</Text>
+													<ScrollView
+														style={MemorialParkDesignLayout.scrollview}
+														horizontal={true}
+													>
+														<Text style={MemorialParkDesignLayout.nfttext}>
+															{data.dogBreed}
+														</Text>
+													</ScrollView>
 												</View>
 												<Text style={MemorialParkDesignLayout.nfttextdate}>
-													{data.dogBirthDate} ~ {data.dogDeathDate}
+													{data.dogBirthDate}~{data.dogDeathDate}
 												</Text>
 												<View style={MemorialParkDesignLayout.ripnftbwn}>
 													<Text style={MemorialParkDesignLayout.nfttext}>

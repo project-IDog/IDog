@@ -196,6 +196,8 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		flexDirection: "column",
 		justifyContent: "space-between",
 		paddingHorizontal: responsiveWidth(2),
+		width: responsiveWidth(40),
+		overflow: "scroll",
 	},
 	ripnftbwn: {
 		display: "flex",
@@ -203,7 +205,7 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		justifyContent: "space-between",
 	},
 	nfttextdate: {
-		fontSize: 14,
+		fontSize: 13,
 		color: "#ffffff",
 	},
 	modalcontainer: {
@@ -310,6 +312,11 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		color: "red",
 		fontWeight: "bold",
 		paddingHorizontal: responsiveWidth(10),
+	},
+	scrollview: {
+		marginLeft: responsiveWidth(2),
+		display: "flex",
+		flexDirection: "row",
 	},
 });
 
