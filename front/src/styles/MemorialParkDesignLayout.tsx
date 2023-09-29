@@ -196,6 +196,8 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		flexDirection: "column",
 		justifyContent: "space-between",
 		paddingHorizontal: responsiveWidth(2),
+		width: responsiveWidth(40),
+		overflow: "scroll",
 	},
 	ripnftbwn: {
 		display: "flex",
@@ -203,7 +205,7 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		justifyContent: "space-between",
 	},
 	nfttextdate: {
-		fontSize: 14,
+		fontSize: 13,
 		color: "#ffffff",
 	},
 	modalcontainer: {
@@ -297,10 +299,25 @@ const MemorialParkDesignLayout = StyleSheet.create({
 	ripregisterapplycontainer: {
 		flexDirection: "row",
 		justifyContent: "space-between",
-		paddingHorizontal: 50,
 	},
-	ripregisteryes: { fontSize: 16, color: "blue", fontWeight: "bold" },
-	ripregisterno: { fontSize: 16, color: "red", fontWeight: "bold" },
+	ripregisteryes: {
+		fontSize: 16,
+		color: "blue",
+		fontWeight: "bold",
+		paddingHorizontal: responsiveWidth(10),
+		// backgroundColor: "red",
+	},
+	ripregisterno: {
+		fontSize: 16,
+		color: "red",
+		fontWeight: "bold",
+		paddingHorizontal: responsiveWidth(10),
+	},
+	scrollview: {
+		marginLeft: responsiveWidth(2),
+		display: "flex",
+		flexDirection: "row",
+	},
 });
 
 export default MemorialParkDesignLayout;

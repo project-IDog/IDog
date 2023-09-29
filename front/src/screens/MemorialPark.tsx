@@ -26,6 +26,22 @@ import RipnftCreate from "../components/RipnftCreate";
 import { GraveData } from "src/stores/Gravedata";
 import nftbgcloud from "../../assets/images/nftbg.png";
 import axios from "../utils/axios";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+
+type DogData = {
+	dogImg: string;
+	dogNo: number;
+	dogName: string;
+	dogBreed: string;
+	dogBirthDate: string;
+	dogDeathDate: string;
+	dogSex: string;
+	// 필요한 경우 다른 속성 추가
+};
+
+type DogImage = {
+	photoUrl: string;
+};
 
 const Main = ({ navigation }: any) => {
 	const scrollViewRef = useRef<ScrollView>(null);
@@ -36,23 +52,16 @@ const Main = ({ navigation }: any) => {
 	}, []);
 	const { LoginStore } = IndexStore();
 
-	console.log(LoginStore);
-	const [dataList, setDataList] = useState<Object[]>([]);
-	const [dogNftList, setDogNftList] = useState<Object[]>([]);
+	const [dataList, setDataList] = useState<DogData[]>([]);
 	useEffect(() => {
 		axios.get("/grave").then((data) => {
 			if (data.data.message === "무덤 조회 성공") {
 				setDataList(data.data.data);
 			}
 		});
-		axios.get("/dog/list/8").then((data) => {
-			if (data.data.message === "사용자의 모든 강아지 목록 조회 완료") {
-				setDogNftList(data.data.data);
-			}
-		});
 	}, []);
 
-	const [RipdataList, setRipdataList] = useState<Object[]>([]);
+	const [RipdataList, setRipdataList] = useState<DogData[]>([]);
 	const [ripIndex, setRipIndex] = useState<number>(0);
 
 	const authHandling = (pageName: string) => {
@@ -92,13 +101,41 @@ const Main = ({ navigation }: any) => {
 			// ripdatalist에 datalist[index]추가
 			// index ++ 해주기
 			if (ripIndex < dataList.length) {
-				setRipdataList([...RipdataList, dataList[ripIndex]]);
+				const newItem = dataList[ripIndex];
+				RipdataList.unshift(newItem);
+				setRipdataList([...RipdataList]);
 				setRipIndex(ripIndex + 1);
 			}
 
 			console.log(RipdataList.length);
 		}
 	};
+	const [imgDataList, setImgDataList] = useState<Object[]>([]);
+
+	useEffect(() => {
+		// RipdataList의 변화에 따라 axios 요청을 실행하는 로직
+		const firstItem = RipdataList[0];
+
+		// 첫 번째 항목이 있고, dogNo가 유효하면 요청을 실행
+		if (firstItem && firstItem.dogNo) {
+			axios
+				.get(`/photo/dog/${firstItem.dogNo}`)
+				.then((data) => {
+					console.log("없니???????????", data.data.data);
+					if (data.data.message === "사진 조회 성공") {
+						setImgDataList([...imgDataList, ...data.data.data]);
+					}
+				})
+				.catch((err) => {
+					console.log(firstItem.dogNo);
+					console.log("없니???????????", err.response);
+				});
+		}
+	}, [RipdataList]);
+
+	if (imgDataList) {
+		console.log("이미지리스트다!!", imgDataList);
+	}
 
 	return (
 		<>
@@ -122,8 +159,9 @@ const Main = ({ navigation }: any) => {
 								? "rgb(0, 0, 0)"
 								: Colors[RipdataList.length - (index % Colors.length) - 1];
 
-						console.log(index, startColor, endColor);
-
+						const imageUrl: string | null = data?.dogImg
+							? `https://ipfs.io/ipfs/${data.dogImg.split("://")[1]}`
+							: null;
 						return (
 							<View
 								key={index}
@@ -154,7 +192,7 @@ const Main = ({ navigation }: any) => {
 										<View style={MemorialParkDesignLayout.nftinnercontainer}>
 											<View style={MemorialParkDesignLayout.ripnftrow1}>
 												<Image
-													source={mainprofileImg}
+													source={{ uri: imageUrl }}
 													style={MemorialParkDesignLayout.ripnftinnermainimg}
 												/>
 											</View>
@@ -163,12 +201,17 @@ const Main = ({ navigation }: any) => {
 													<Text style={MemorialParkDesignLayout.nfttext}>
 														{data.dogName}
 													</Text>
-													<Text style={MemorialParkDesignLayout.nfttext}>
-														{data.dogBreed}
-													</Text>
+													<ScrollView
+														style={MemorialParkDesignLayout.scrollview}
+														horizontal={true}
+													>
+														<Text style={MemorialParkDesignLayout.nfttext}>
+															{data.dogBreed}
+														</Text>
+													</ScrollView>
 												</View>
 												<Text style={MemorialParkDesignLayout.nfttextdate}>
-													{data.dogBirthDate} ~ {data.dogDeathDate}
+													{data.dogBirthDate}~{data.dogDeathDate}
 												</Text>
 												<View style={MemorialParkDesignLayout.ripnftbwn}>
 													<Text style={MemorialParkDesignLayout.nfttext}>
@@ -179,18 +222,17 @@ const Main = ({ navigation }: any) => {
 													</Text>
 												</View>
 												<View style={MemorialParkDesignLayout.ripnftbwn}>
-													<Image
-														source={mainprofileImg}
-														style={MemorialParkDesignLayout.ripnftinnersubimg}
-													/>
-													<Image
-														source={mainprofileImg}
-														style={MemorialParkDesignLayout.ripnftinnersubimg}
-													/>
-													<Image
-														source={mainprofileImg}
-														style={MemorialParkDesignLayout.ripnftinnersubimg}
-													/>
+													{imgDataList.slice(0, 3).map((imgData, idx) => {
+														return (
+															<Image
+																key={idx}
+																source={{ uri: imgData.photoUrl }}
+																style={
+																	MemorialParkDesignLayout.ripnftinnersubimg
+																}
+															/>
+														);
+													})}
 												</View>
 											</View>
 										</View>
@@ -222,7 +264,7 @@ const Main = ({ navigation }: any) => {
 					})}
 				</View>
 				<View>
-					<RipnftCreate dogNftList={dogNftList} />
+					<RipnftCreate setDataList={setDataList} />
 				</View>
 			</ScrollView>
 		</>

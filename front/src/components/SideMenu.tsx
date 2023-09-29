@@ -77,11 +77,6 @@ const SideMenu = (props: any) => {
 							imageIcon={TribeIcon}
 							movePage="Three"
 						></SideMenuIcon>
-						<SideMenuIcon
-							title="추모공원"
-							imageIcon={TribeIcon}
-							movePage="DogHeaven"
-						></SideMenuIcon>
 					</View>
 				</View>
 				<View style={SideMenuLayout.authButtonWrap}>

@@ -10,6 +10,9 @@ import axios from "axios";
 import IndexStore from "../stores/IndexStore";
 import SideMenuLayout from "../styles/sideMenuLayout";
 import { BASE_URL, CONTENT_TYPE, TIMEOUT } from "../constants/constants";
+import { logout } from "../utils/logout";
+import { observer } from "mobx-react";
+
 WebBrowser.maybeCompleteAuthSession();
 
 const Login = () => {
@@ -17,7 +20,6 @@ const Login = () => {
 	const [request, response, promptAsync] = Google.useAuthRequest({
 		"androidClientId": ANDROID_CLIENT_ID,
 	});
-	const [isLogged, setIsLogged] = useState<Boolean>(stores.LoginStore.isLogged);
 
 	const handleSignInWithGoogle = async () => {
 		console.log("response 변화 체크 : ", response?.type);
@@ -35,8 +37,7 @@ const Login = () => {
 			});
 			console.log(data.data.message);
 			if (data.data?.message === "로그인 완료") {
-				setIsLogged(true);
-				stores.LoginStore.isLogged = true;
+				stores.LoginStore.setLogged(true);
 				console.log("data.data.data.accessToken: ", data.data.data.accessToken);
 				console.log(
 					"data.data.data.refreshToken: ",
@@ -59,13 +60,7 @@ const Login = () => {
 	};
 
 	const handleLogout = async () => {
-		stores.LoginStore.isLogged = false;
-		setIsLogged(false);
-		await SecureStore.deleteItemAsync("accessToken");
-		await SecureStore.deleteItemAsync("refreshToken");
-		for (let key in stores) {
-			stores[key] = {};
-		}
+		await logout();
 	};
 
 	// Google 인증 응답이 바뀔때마다 실행
@@ -75,7 +70,7 @@ const Login = () => {
 
 	return (
 		<View>
-			{!isLogged ? (
+			{!stores.LoginStore.isLogged ? (
 				<TouchableOpacity
 					activeOpacity={0.7}
 					style={SideMenuLayout.googleAuthButton}
@@ -100,4 +95,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default observer(Login);
