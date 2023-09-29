@@ -233,19 +233,6 @@ const Main = ({ navigation }: any) => {
 															/>
 														);
 													})}
-
-													{/* <Image
-														source={{ uri: imgDataList[index].photoUrl }}
-														style={MemorialParkDesignLayout.ripnftinnersubimg}
-													/>
-													<Image
-														source={{ uri: dogImages[1]?.photoUrl }}
-														style={MemorialParkDesignLayout.ripnftinnersubimg}
-													/>
-													<Image
-														source={{ uri: dogImages[2]?.photoUrl }}
-														style={MemorialParkDesignLayout.ripnftinnersubimg}
-													/> */}
 												</View>
 											</View>
 										</View>

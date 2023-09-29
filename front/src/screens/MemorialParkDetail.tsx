@@ -118,6 +118,10 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 		});
 	};
 
+	const imageUrl: string | null = data?.dogImg
+		? `https://ipfs.io/ipfs/${data.dogImg.split("://")[1]}`
+		: null;
+
 	return (
 		<>
 			<ScrollView scrollEnabled={scrollenable}>
@@ -136,7 +140,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 					mainTitle={`반려견에게 영원한 평화와 \n행복을 기원합니다.`}
 					bgImg={MpImage}
 					desc="추모하기"
-					graveNo={data.graveNo}
+					data={data}
 				/>
 				<View style={MemorialParkLayout.MpTitleWrap}>
 					<Text style={MemorialParkLayout.MpDesc}>Memorial Park</Text>
@@ -150,7 +154,10 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 					<View style={[MemorialParkLayout.mpMarginwrap]}>
 						<Text style={[MemorialParkLayout.mpTitle]}>RIP 반려견 프로필</Text>
 						<View style={[MemorialParkLayout.mpBtw]}>
-							<Image source={MpImage} style={[MemorialParkLayout.tabImage]} />
+							<Image
+								source={{ uri: imageUrl }}
+								style={[MemorialParkLayout.tabImage]}
+							/>
 							<View style={[MemorialParkLayout.mpCol]}>
 								<View style={[MemorialParkLayout.mpBtw]}>
 									<Text style={[MemorialParkLayout.mpTitle]}>
@@ -179,18 +186,15 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 									</Text>
 								</View>
 								<View style={[MemorialParkLayout.mpBtw2]}>
-									<Image
-										source={MpImage}
-										style={[MemorialParkLayout.tabImage2]}
-									/>
-									<Image
-										source={MpImage}
-										style={[MemorialParkLayout.tabImage2]}
-									/>
-									<Image
-										source={MpImage}
-										style={[MemorialParkLayout.tabImage2]}
-									/>
+									{feedList.slice(0, 3).map((value: any, index: number) => {
+										return (
+											<Image
+												key={index}
+												source={{ uri: value.photoUrl }}
+												style={[MemorialParkLayout.tabImage2]}
+											/>
+										);
+									})}
 								</View>
 							</View>
 						</View>

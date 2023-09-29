@@ -16,13 +16,11 @@ import {
 import LottieView from "lottie-react-native";
 import axios from "../utils/axios";
 
-const SubMain = ({ subTitle, mainTitle, bgImg, desc, graveNo }: any) => {
+const SubMain = ({ subTitle, mainTitle, bgImg, desc, data }: any) => {
 	const [flowersCnt, setFlowersCnt] = useState<number>(0);
-
 	const [lastClick, setLastClick] = useState<number>(0);
 	const handlePress = (event: any) => {
 		const currentTime = new Date().getTime();
-
 		if (currentTime - lastClick < 1000) {
 			return;
 		}
@@ -31,7 +29,7 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc, graveNo }: any) => {
 			// flowersCnt가 10 미만인지 확인
 			axios
 				.post("/flower", {
-					graveNo: graveNo,
+					graveNo: data.graveNo,
 				})
 				.then((data) => {
 					if (data.data.message === "헌화 등록 성공") {
@@ -42,20 +40,23 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc, graveNo }: any) => {
 	};
 
 	useEffect(() => {
-		axios.get(`/flower/${graveNo + 3}`).then((data) => {
+		axios.get(`/flower/${data.graveNo}`).then((data) => {
 			if (data.data.message === "헌화 등록 성공") {
 				setFlowersCnt(data.data.data.count);
 			}
 		});
 	}, []);
 
+	const imageUrl: string | null = data?.dogImg
+		? `https://ipfs.io/ipfs/${data.dogImg.split("://")[1]}`
+		: null;
+
 	return (
 		<>
 			<View style={styles.subMainWrap}>
-				<ImageBackground source={bgImg} style={styles.subMainBg}>
+				<ImageBackground source={{ uri: imageUrl }} style={styles.subMainBg}>
 					<View style={styles.garden}>
 						{Array.from({ length: flowersCnt }).map((_, index) => {
-							console.log("플라어 콘ㅅ로!:", flowersCnt, graveNo);
 							return (
 								<>
 									<LottieView
