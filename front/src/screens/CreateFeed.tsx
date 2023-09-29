@@ -93,7 +93,7 @@ const CreateFeed = ({navigation, route}: any) => {
         uploadImage(imageUri);
 
 		axios.post('/photo', {
-			dogNo:13,
+			dogNo:selectedId,
 			photoUrl:imageUri,
 			photoComment:comment,
 			photoIsGoat:false,
