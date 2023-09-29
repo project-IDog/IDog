@@ -14,6 +14,7 @@ public class ChallengeRequestDto {
         private String challengeTypeName;
         private String challengeName;
         private String challengeDesc;
+        private Integer challengeCompleteCnt;
         private String challengeImageUrl;
         private String challengeTriggerName;
     }

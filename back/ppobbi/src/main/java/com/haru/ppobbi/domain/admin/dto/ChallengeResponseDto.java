@@ -11,7 +11,7 @@ public class ChallengeResponseDto {
     @Builder
     public static class ChallengeInfoDto{
         private Integer challengeNo;
-        private Integer challengeTypeName;
+        private String challengeTypeName;
         private String challengeName;
         private String challengeDesc;
         private Integer challengeCompleteCnt;
