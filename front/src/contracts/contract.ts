@@ -1,7 +1,7 @@
 import {ethers} from "ethers"
 import {RPC_URL, MINT_DOG_TOKEN_ADDRESS, ADMIN_WALLET_PRIVATE_KEY} from "@env"
 
-export const mintDogTokenAbi = [
+export const mintIDogTokenAbi = [
     {
         "inputs": [],
         "stateMutability": "nonpayable",
@@ -447,7 +447,7 @@ export const mintDogTokenAbi = [
     }
 ]
 
-export const mintDogTokenAddress = process.env.MINT_DOG_TOKEN_ADDRESS;
+export const mintIDogTokenAddress = process.env.MINT_DOG_TOKEN_ADDRESS;
 
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 let signer;
@@ -456,7 +456,7 @@ if(process.env.ADMIN_WALLET_PRIVATE_KEY){
 }
 
 export const mintDogTokenContract = new ethers.Contract(
-    mintDogTokenAddress,
-	mintDogTokenAbi,
+    mintIDogTokenAddress,
+	mintIDogTokenAbi,
 	signer
 );
