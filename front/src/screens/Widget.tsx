@@ -5,7 +5,7 @@ import WalkLayout from "../styles/walkLayout";
 import TimerImg from "../../assets/images/timer.png";
 const { StopWatchModule } = NativeModules;
 
-const WidgetText = () => {
+const Widget = () => {
 	const [widgetData, setWidgetData] = useState("0:00:00");
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentDate, setCurrentDate] = useState("");
@@ -123,4 +123,4 @@ const WidgetText = () => {
 	);
 };
 
-export default WidgetText;
+export default Widget;

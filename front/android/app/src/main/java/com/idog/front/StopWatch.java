@@ -32,6 +32,16 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import android.os.HandlerThread;
+import android.graphics.Bitmap;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import android.graphics.BitmapFactory;
+import android.os.HandlerThread;
+
 import com.google.gson.Gson;
 
 /**
@@ -39,6 +49,9 @@ import com.google.gson.Gson;
  */
 public class StopWatch extends AppWidgetProvider {
     private static MyHandler handler;
+    private HandlerThread handlerThread;
+    private Handler backgroundHandler;
+
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -61,6 +74,12 @@ public class StopWatch extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+
+        if (handlerThread == null) {
+            handlerThread = new HandlerThread("NetworkThread");
+            handlerThread.start();
+            backgroundHandler = new Handler(handlerThread.getLooper());
+        }
 
         SharedPreferences prefs = context.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
         boolean isRunning = prefs.getBoolean("isRunning" , false);
@@ -101,11 +120,23 @@ public class StopWatch extends AppWidgetProvider {
             prefs.edit().remove("date").apply();
             prefs.edit().putInt("number", 0).apply();
             StopWatchModule.emitDeviceEvent("RESET_ACTION_EVENT", null);
-
-            int dogNo = 31; // 임시값
+            int dogNo = prefs.getInt("dogNo", 0);
             WalkingData walkingData = new WalkingData(dogNo, walkingTime, walkingStartDate);
             sendWalkingDataToServer(walkingData, context);
         }
+        int dogNo = prefs.getInt("dogNo", 0);
+        String dogImg = prefs.getString("dogImg", "");
+        backgroundHandler.post(() -> {
+            Bitmap bitmap = getBitmapFromURL(dogImg);
+            if (bitmap != null) {
+                RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
+                views.setImageViewBitmap(R.id.profile, bitmap);
+                ComponentName componentName = new ComponentName(context, StopWatch.class);
+                AppWidgetManager.getInstance(context).updateAppWidget(componentName, views);
+            }
+        });
+        Log.d("DOG_____NOEQWEWQEQ", "DOGNO" + dogNo);
+        Log.d("DOG_____IMGIMGIMG", "DOGIMG" + dogImg);
         isRunning = prefs.getBoolean("isRunning" , false);
         if (!isRunning) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
@@ -119,6 +150,20 @@ public class StopWatch extends AppWidgetProvider {
             AppWidgetManager.getInstance(context).updateAppWidget(new ComponentName(context, StopWatch.class), views);
         }
         updateAllWidgets(context);
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void sendWalkingDataToServer(WalkingData data, Context context) {

@@ -13,14 +13,77 @@ import TimerImg from "../../assets/images/timer.png";
 import BottomArrowIcon from "../../assets/images/bottom-arrow-icon.png";
 
 import WalkLayout from "../styles/walkLayout";
-import WidgetText from "./WidgetText";
+import Widget from "./Widget";
+
+import axios from "../utils/axios";
 
 const Walk = ({ navigation }: any) => {
 	const [now, setNow] = useState<any>(dayjs());
-	const [todayDate, setTodayDaye] = useState<number>(now.format("DD"));
+	const [todayDate, setTodayDate] = useState<number>(now.format("DD"));
 	const [todayDay, setTodayDay] = useState<number>(now.get("day"));
 
 	const [weekList, setWeekList] = useState<Object[]>([]);
+
+	const [userName, setUserName] = useState<string>("");
+	const [userDogs, setUserDogs] = useState<Object[]>([]);
+	const [selectedDogNo, setSelectedDogNo] = useState<number>();
+	const [selectedDogImg, setSelectedDogImg] = useState<string>();
+	const [weekTotalTime, setWeekTotalTime] = useState<String>("");
+
+	const getUserInfo = async () => {
+		const response = await axios.get("/user");
+		const data = response.data.data;
+		setUserName(data.userName);
+	};
+
+	const getUserFullListDogs = async () => {
+		const response = await axios.get("/dog/list");
+		const data = response.data.data;
+		setUserDogs(data);
+		console.log("data : ", data);
+	};
+
+	const getWalkingWeek = async () => {
+		const response = await axios.get("/walking");
+		const data = response.data.data;
+		setWeekList(data);
+		console.log("data : ", data);
+	};
+
+	const getRecentWeekData = (data: any) => {
+		const oneWeekAgo = dayjs().subtract(7, "day");
+		return data.filter((item: any) =>
+			dayjs(item.walkingStartDate).isAfter(oneWeekAgo),
+		);
+	};
+
+	const convertToTimeWithString = (totalSeconds: number) => {
+		const hours = Math.floor(totalSeconds / 3600);
+		const minutes = Math.floor((totalSeconds % 3600) / 60);
+		const seconds = Math.floor((totalSeconds % 3600) % 60);
+		return { hours, minutes, seconds, totalSeconds };
+	};
+
+	const filteredWeekList = getRecentWeekData(weekList);
+
+	useEffect(() => {
+		getUserInfo();
+		getUserFullListDogs();
+		getWalkingWeek();
+	}, []);
+
+	useEffect(() => {
+		const time = convertToTimeWithString(totalSecondsSum);
+		const hours = time.hours;
+		const minutes = time.minutes < 10 ? `0${time.minutes}` : time.minutes;
+		const seconds = time.seconds < 10 ? `0${time.seconds}` : time.seconds;
+		setWeekTotalTime(`${hours}:${minutes}:${seconds}`);
+	}, [filteredWeekList]);
+
+	useEffect(() => {
+		console.log("selectedDogNo : ", selectedDogNo);
+		console.log("selectedDogImg : ", selectedDogImg);
+	}, [selectedDogNo, selectedDogImg]);
 
 	const minusDate = (offset: number) => {
 		return dayjs().subtract(offset, "day").get("date");
@@ -66,6 +129,22 @@ const Walk = ({ navigation }: any) => {
 		plusDate(2),
 		plusDate(3),
 	];
+
+	let totalSecondsSum = 0;
+	const weekItems = filteredWeekList.map((value, index) => {
+		const time = convertToTimeWithString(value.walkingTime);
+		totalSecondsSum += time.totalSeconds;
+		return (
+			<View key={index}>
+				<WeekTimeItem
+					day={dayjs(value.walkingStartDate).format("DD")}
+					totalHour={time.hours}
+					totalMinute={time.minutes}
+					totalSecond={time.seconds}
+				/>
+			</View>
+		);
+	});
 
 	return (
 		<>
@@ -171,8 +250,9 @@ const Walk = ({ navigation }: any) => {
 				</View>
 				<View style={WalkLayout.choiceWrap}>
 					<View style={WalkLayout.titleFlexWrap}>
+						{/* 여기는 유저정보 불러오기 */}
 						<View>
-							<Text style={WalkLayout.nameTitle}>김싸피님,</Text>
+							<Text style={WalkLayout.nameTitle}>{userName}님,</Text>
 							<Text style={WalkLayout.mainTitle}>
 								함께 나갈 반려견을 선택해주세요
 							</Text>
@@ -185,7 +265,12 @@ const Walk = ({ navigation }: any) => {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<MyPetScrollView />
+				{/* 여기가 내 강아지 목록 */}
+				<MyPetScrollView
+					userDogs={userDogs}
+					setSelectedDogNo={setSelectedDogNo}
+					setSelectedDogImg={setSelectedDogImg}
+				/>
 				<View style={WalkLayout.timerWrap}>
 					<View style={WalkLayout.timerTitleWrap}>
 						<Text style={WalkLayout.timerMainTitle}>함께 걷는 시간</Text>
@@ -194,27 +279,17 @@ const Walk = ({ navigation }: any) => {
 						</Text>
 					</View>
 					<View style={WalkLayout.contentFlexWrap}>
-						<WidgetText />
+						<Widget />
 						<View style={WalkLayout.listWrap}>
 							<Text style={WalkLayout.weekListTitle}>
 								이번주 내 반려견 산책
 							</Text>
-							<View>
-								{weekList.map((value, index) => {
-									return (
-										<View key={index}>
-											<WeekTimeItem
-												day={value.day}
-												totalMinute={value.itemMinute}
-												totalSecond={value.itemSecond}
-											/>
-										</View>
-									);
-								})}
-							</View>
+							<View>{weekItems}</View>
 							<Text style={WalkLayout.totalTimeText}>
 								이번 주 총 함께한 시간{" "}
-								<Text style={WalkLayout.boldTotalTimeText}>1:46:19</Text>
+								<Text style={WalkLayout.boldTotalTimeText}>
+									{weekTotalTime}
+								</Text>
 							</Text>
 						</View>
 					</View>
