@@ -26,6 +26,7 @@ public class GraveResponseDto {
         private LocalDate dogDeathDate;
         private Character dogSex;
         private Integer dogNft;
+        private String dogImg;
 
         public GraveInfoDto(Grave grave){
             this.graveNo = grave.getGraveNo();
@@ -42,6 +43,7 @@ public class GraveResponseDto {
             this.dogDeathDate = dog.getDogDeathDate();
             this.dogSex = dog.getDogSex();
             this.dogNft = dog.getDogNft();
+            this.dogImg = dog.getDogImg();
         }
     }
 }
