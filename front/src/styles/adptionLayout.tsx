@@ -22,11 +22,17 @@ const AdoptionLayout = StyleSheet.create({
         marginTop:22,
     },
     myPetThumbnail:{
+        width:100,
+        height:132,
+        borderRadius:15,
         marginHorizontal:responsiveWidth(1),
         borderWidth:6,
         borderColor:"#EE8A72",
     },
     myPetThumbnaulDisable:{
+        width:100,
+        height:132,
+        borderRadius:15,
         marginHorizontal:responsiveWidth(1),
     },
 
@@ -45,6 +51,7 @@ const AdoptionLayout = StyleSheet.create({
         borderWidth:1,
         borderColor:"#9D9D9D",
         marginTop:7,
+        padding:10,
     },
 
     adoptionButtonWrap:{

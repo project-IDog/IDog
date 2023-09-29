@@ -7,7 +7,7 @@ const NftProfile = ({dogName, createdTitle, createdAt, species, bgImg} : any) =>
     return(
         <>
             <View style={NftProfileLayout.nftProfileWrap}>
-                <ImageBackground source={bgImg} style={NftProfileLayout.puppyThumbnail} imageStyle={{borderRadius:10}}>
+                <ImageBackground source={{uri:bgImg}} style={NftProfileLayout.puppyThumbnail} imageStyle={{borderRadius:10}}>
                     <View style={NftProfileLayout.darkLayout}></View>
                     <View style={NftProfileLayout.onNftInfo}>
                         <Text style={NftProfileLayout.myDogName}><Text style={NftProfileLayout.boldMyDogName}>{dogName}</Text></Text>

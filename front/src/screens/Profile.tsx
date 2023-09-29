@@ -27,7 +27,7 @@ const Profile = ({navigation}:any) => {
     const renderFront = () => {
         return(
             <View>
-                <NftProfile dogName="내 반려견 해피" createdTitle="등록한 날짜" createdAt="2023. 09. 02." species="시베리안허스키" bgImg={PuppyThumbnail1}/>
+                <NftProfile dogName="내 반려견 해피" createdTitle="등록한 날짜" createdAt="2023. 09. 02." species="시베리안허스키" bgImg="../../assets/images/puppy-thumbnail1.png"/>
             </View>
         )
     }
@@ -35,7 +35,7 @@ const Profile = ({navigation}:any) => {
     const renderBack = () => {
         return(
             <View>
-                <NftProfile createdTitle="좌우로 회전해보세요" bgImg={PuppyThumbnail1}/>
+                <NftProfile createdTitle="좌우로 회전해보세요" bgImg="../../assets/images/puppy-thumbnail1.png"/>
             </View>
         )
     }
@@ -90,11 +90,7 @@ const Profile = ({navigation}:any) => {
                                 console.log(dogItem.dogImg);
                                 return(
                                     <View key={index} style={{marginLeft:10}}>
-                                        <NftProfile dogName={`내 반려견 ${dogItem.dogName}`} createdTitle="등록한 날짜" createdAt="2023. 09. 02." species={dogItem.dogBreed} bgImg={MyPetThumbnail1}/>
-                                        <Image 
-                                            source={{uri:String(dogItem.dogImg)}}
-                                            style={{width:100, height:132}}
-                                        />
+                                        <NftProfile dogName={`내 반려견 ${dogItem.dogName}`} createdTitle="등록한 날짜" createdAt="2023. 09. 02." species={dogItem.dogBreed} bgImg={dogItem.dogImg}/>
                                     </View>
                                 );
                             })
