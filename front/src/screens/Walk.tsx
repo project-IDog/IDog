@@ -15,12 +15,43 @@ import BottomArrowIcon from "../../assets/images/bottom-arrow-icon.png";
 import WalkLayout from "../styles/walkLayout";
 import WidgetText from "./WidgetText";
 
+import axios from "../utils/axios";
+
 const Walk = ({ navigation }: any) => {
 	const [now, setNow] = useState<any>(dayjs());
 	const [todayDate, setTodayDaye] = useState<number>(now.format("DD"));
 	const [todayDay, setTodayDay] = useState<number>(now.get("day"));
 
 	const [weekList, setWeekList] = useState<Object[]>([]);
+
+	const [userName, setUserName] = useState<string>("");
+	const [userDogs, setUserDogs] = useState<Object[]>([]);
+	const [selectedDogNo, setSelectedDogNo] = useState<number>();
+	const [selectedDogImg, setSelectedDogImg] = useState<string>();
+
+	const getUserInfo = async () => {
+		const response = await axios.get("/user");
+		const data = response.data.data;
+		setUserName(data.userName);
+	};
+
+	const getUserFullListDogs = async () => {
+		const response = await axios.get("/dog/list");
+		const data = response.data.data;
+		setUserDogs(data);
+		console.log("data : ", data);
+	};
+
+	console.log("userDogs : ㅇㅇㅇㅇ", userDogs);
+	useEffect(() => {
+		getUserInfo();
+		getUserFullListDogs();
+	}, []);
+
+	useEffect(() => {
+		console.log("selectedDogNo : ", selectedDogNo);
+		console.log("selectedDogImg : ", selectedDogImg);
+	}, [selectedDogNo, selectedDogImg]);
 
 	const minusDate = (offset: number) => {
 		return dayjs().subtract(offset, "day").get("date");
@@ -171,8 +202,9 @@ const Walk = ({ navigation }: any) => {
 				</View>
 				<View style={WalkLayout.choiceWrap}>
 					<View style={WalkLayout.titleFlexWrap}>
+						{/* 여기는 유저정보 불러오기 */}
 						<View>
-							<Text style={WalkLayout.nameTitle}>김싸피님,</Text>
+							<Text style={WalkLayout.nameTitle}>{userName}님,</Text>
 							<Text style={WalkLayout.mainTitle}>
 								함께 나갈 반려견을 선택해주세요
 							</Text>
@@ -185,7 +217,12 @@ const Walk = ({ navigation }: any) => {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<MyPetScrollView />
+				{/* 여기가 내 강아지 목록 */}
+				<MyPetScrollView
+					userDogs={userDogs}
+					setSelectedDogNo={setSelectedDogNo}
+					setSelectedDogImg={setSelectedDogImg}
+				/>
 				<View style={WalkLayout.timerWrap}>
 					<View style={WalkLayout.timerTitleWrap}>
 						<Text style={WalkLayout.timerMainTitle}>함께 걷는 시간</Text>
@@ -200,7 +237,7 @@ const Walk = ({ navigation }: any) => {
 								이번주 내 반려견 산책
 							</Text>
 							<View>
-								{weekList.map((value, index) => {
+								{/* {weekList.map((value, index) => {
 									return (
 										<View key={index}>
 											<WeekTimeItem
@@ -210,7 +247,7 @@ const Walk = ({ navigation }: any) => {
 											/>
 										</View>
 									);
-								})}
+								})} */}
 							</View>
 							<Text style={WalkLayout.totalTimeText}>
 								이번 주 총 함께한 시간{" "}
