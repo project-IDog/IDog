@@ -8,7 +8,6 @@ import * as SecureStore from 'expo-secure-store';
 import {ethers} from "ethers"
 import {mintDogTokenContract} from "../contracts/contract";
 import * as ImagePicker from "expo-image-picker";
-import {NFT_STORAGE_KEY} from "@env"
 import axiosApi from "../utils/axios"
 import axios from "axios"
 import { Picker } from '@react-native-picker/picker';
@@ -18,8 +17,10 @@ import {
 	AWS_SECRET_ACCESS_KEY,
 	AWS_REGION,
 	AWS_BUCKET,
+    NFT_STORAGE_KEY,
     POLYGON_API_KEY,
 } from "@env";
+
 import WalletLoading from "../components/WalletLoading"
 
 import DatePickerIcon from "../../assets/images/date-picker-icon.png"
@@ -42,6 +43,7 @@ const CreateProfile = ({navigation} : any) => {
     const [hashId, setHashId] = useState<any>();
     const [isLoading, setIsLoading] = useState<Boolean>(false);
     const [tokenId, setTokenId] = useState<number|undefined>();
+    const [selectedImage, setSelectedImage] = useState(null);
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -60,10 +62,6 @@ const CreateProfile = ({navigation} : any) => {
         hideDatePicker();
     };
 
-    const getImage = async () => {
-        return await imageUri;
-    };
-
     // s3 클라이언트 초기화
 	const s3 = new S3({
 		accessKeyId: AWS_ACCESS_KEY,
@@ -71,8 +69,7 @@ const CreateProfile = ({navigation} : any) => {
 		region: AWS_REGION,
 	});
 
-    // 이미지 업로드
-	const uploadImage = async (uri: any) => {
+    const uploadImage = async (uri: any) => {
 		const response = await fetch(uri);
 		const blob = await response.blob();
 		const filename = await uri.split("/").pop();
@@ -87,36 +84,37 @@ const CreateProfile = ({navigation} : any) => {
 			if (err) {
 				console.log("err", err);
 			} else {
-                console.log("s3data", data);
-                const reader = await new FileReader();
-                const blob = await new Blob([data.Location], {type:"image/**"});
-                await reader.readAsDataURL(blob);
+                const s3data = await fetch(data.Location);
+                console.log("s3data",s3data);
+                // const blob = await new Blob([s3data], {type:"image/jpeg"});
+                const reader = new FileReader();
                 reader.onload = async () => {
-                    const base64data = await reader.result;
+                    const base64data = reader.result;
                     console.log("base64data", base64data);
-                    await setImageCid(base64data);
+
+                    const nft_storage_url = "https://api.nft.storage/upload";
+                    await axios.post(nft_storage_url, base64data, {
+                        headers: {
+                            'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
+                            'Content-Type': 'application/octet-stream'
+                        }
+                    }).then((res) => {
+                        setImageCid(res.data.value.cid);
+                        console.log("ImageCid", res.data.value.cid);
+                    }).catch((err) => {
+                        console.error(err);
+                    });
                 }
+                reader.readAsDataURL(blob);
 			}
 		});
+
 	};
 
     const uploadIpfs = async () => {
         await setIsLoading(true);
         await uploadImage(imageUri);
-
-        const nft_storage_url = "https://api.nft.storage/upload";
-        const blobImg = await getImage();
-        await axios.post(nft_storage_url, blobImg , {
-            headers: {
-                'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
-                'Content-Type': 'application/octet-stream'
-            }
-        }).then((res) => {
-            console.log("ImageCid", res.data);
-        }).catch((err) => {
-            console.error(err);
-        });
-
+        
         await uploadMetaJSON();
 
         await createProfile();
@@ -129,31 +127,40 @@ const CreateProfile = ({navigation} : any) => {
     }
 
     const enrollProfile = async () => {
-        await axios.get(`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=0x0d695204afafc42acdf39dbf4bb58deea79895fb&address=0xddc622a21b9accae645cdef23f07de884b2ec3d4&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${process.env.POLYGON_API_KEY}`).then((data) => {
+        await axios.get(`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=0x0d695204afafc42acdf39dbf4bb58deea79895fb&address=0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${process.env.POLYGON_API_KEY}`).then((data) => {
             if(data.status === 200){
                 setTokenId(data.data.result[data.data.result.length-1].tokenID);
             }
         })
-        axiosApi.post('/dog',{
-            "dogName": petName,
-            "dogBreed": petSpecies,
-            "dogBirthDate": "2023-09-27",
-            "dogSex": petGender,
-            "dogNft": tokenId, 
-            "dogImg": imageCid,
-        }).then((data) => {
-            console.log(data);
-        })
+        console.log("petName", petName);
+        console.log("petSpecies", petSpecies);
+        console.log("petGender", petGender);
+        console.log("tokenId", tokenId);
+        console.log("imageCid", imageCid);
+        // axiosApi.post('/dog',{
+        //     "dogName": petName,
+        //     "dogBreed": petSpecies,
+        //     "dogBirthDate": "2023-09-27",
+        //     "dogSex": petGender,
+        //     "dogNft": tokenId, 
+        //     "dogImg": imageCid,
+        // }).then((data) => {
+        //     console.log(data);
+        // })
     }
 
     const uploadMetaJSON = async () => {
         const nft_storage_url = "https://api.nft.storage/upload";
         const metaData = {
-            "dogName" : petName,
-            "dogBirthDate" : petBirth,
-            "dogBreed" : petSpecies,
-            "dogSex" : petGender,
-            "imageCID" : imageCid,
+            "name" : petName,
+            "description" : "",
+            "image": `ipfs://${imageCid}`,
+            "attributes" : [
+                {"trait_type":"dogName", "value":petName},
+                {"trait_type":"dogBreed", "value":petSpecies},
+                {"trait_type":"dogbirth", "value":petBirth},
+                {"trait_type":"dogSex", "value":petGender}
+            ],
         }
 
         console.log("metadata", metaData);
@@ -197,11 +204,12 @@ const CreateProfile = ({navigation} : any) => {
 			// 0 ~ 1 사이의 숫자로 품질 나타냄
 			quality: 1,
 		});
+
 		console.log("result", result);
-		if (!result.canceled) {
+		if(!result.canceled) {
             console.log("img", result.assets[0].uri);
 			setImageUri(result.assets[0].uri);
-		}
+        }
 	};
 
 
@@ -223,41 +231,6 @@ const CreateProfile = ({navigation} : any) => {
 
     }
 
-    const temp = async () => {
-        const nft_storage_url = await "https://api.nft.storage/upload";
-        const metaData = {
-            "name" : "윤둥이",
-            "description" : "일단 여기는 몰라요",
-            "image": "ipfs://bafkreibinrdope5mx7zb6my5mge5i3c6z7ybq3bgufssv7x5q5ifnh4qka",
-            "attributes" : [
-                {"trait_type":"dogName", "value":"윤둥이"},
-                {"trait_type":"dogBreed", "value":"폼피츠"},
-                {"trait_type":"dogbirth", "value":"2015-12-01"},
-                {"trait_type":"dogSex", "value":"M"}
-            ],
-        }
-
-        console.log("metadata", metaData);
-        await axios.post(nft_storage_url, metaData , {
-            headers: {
-                'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
-                'Content-Type': 'application/json'
-            }
-        }).then(async (res) => {
-            console.log("nftCid", res.data.value.cid);
-            setNftCid(res.data.value.cid);
-        }).catch((err) => {
-            console.log(err);
-        });
-        const provider = await new ethers.JsonRpcProvider(process.env.RPC_URL);
-
-        const privateKey = await process.env.ADMIN_WALLET_PRIVATE_KEY;
-        const gasPriceGwei = "0.0001";
-        const priceWei = await ethers.parseUnits(gasPriceGwei, 'gwei');
-        const response = await mintDogTokenContract.mintDogProfile('0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4', `ipfs://${nftCid}`);
-        await console.log("response", response);
-        return;
-    }
 
     useEffect(() => {
         const getWalletInfoFromStore = async () => {
@@ -272,9 +245,6 @@ const CreateProfile = ({navigation} : any) => {
         }
 
         const getPetSpecies = async () => {
-            axiosApi.get('/dog/breed').then((data) => {
-                
-            })
         }
 
         getWalletInfoFromStore();
