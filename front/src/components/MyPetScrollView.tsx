@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { View, TouchableOpacity, Image, ScrollView } from "react-native";
+import { NativeModules } from "react-native";
 
 import MyPetScrollViewLayout from "../styles/myPetScrollViewLayout";
+const { StopWatchModule } = NativeModules;
 
 const MyPetScrollView = (props: any) => {
 	const [selectedImages, setSelectedImages] = useState<number>(0);
@@ -15,7 +17,14 @@ const MyPetScrollView = (props: any) => {
 			setSelectedImages(dogNo);
 			props.setSelectedDogImg(dogImg);
 			props.setSelectedDogNo(dogNo);
+			submitDogImgAndDogNo(dogNo, dogImg);
 		}
+	};
+
+	const submitDogImgAndDogNo = async (dogNo: number, dogImg: String) => {
+		console.log("dogNo : ", dogNo);
+		console.log("dogImg : ", dogImg);
+		const update = await StopWatchModule.updateDogImgAndDogNo(dogImg, dogNo);
 	};
 
 	return (
