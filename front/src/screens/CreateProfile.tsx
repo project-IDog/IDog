@@ -33,7 +33,7 @@ const CreateProfile = ({navigation} : any) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [walletAddress, setWalletAddress] = useState<string>();
     const [walletPrivateKey, setWalletPrivateKey] = useState<string>();
-    const [imageCid, setImageCid] = useState<any>();
+    const [imageCid, setImageCid] = useState<string>();
     const [petName, setPetName] = useState<string|null>();
     const [petSpecies, setPetSpecies] = useState<string|null>();
     const [petGender, setPetGender] = useState<string|null>('M');
@@ -42,8 +42,7 @@ const CreateProfile = ({navigation} : any) => {
     const [speciesList, setSpeciesList] = useState<any>();
     const [hashId, setHashId] = useState<any>();
     const [isLoading, setIsLoading] = useState<Boolean>(false);
-    const [tokenId, setTokenId] = useState<number|undefined>();
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [tokenId, setTokenId] = useState<number>();
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -113,18 +112,21 @@ const CreateProfile = ({navigation} : any) => {
 
     const uploadIpfs = async () => {
         await setIsLoading(true);
+
         await uploadImage(imageUri);
-        
-        await uploadMetaJSON();
+        await uploadMetaJSON()
 
         await createProfile();
-
+    
         await enrollProfile();
-
+    
         await setIsLoading(false);
         await alert("프로필 생성이 완료되었습니다.");
+        
+       
         // await navigation.navigate('Profile');
     }
+    
 
     const enrollProfile = async () => {
         await axios.get(`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=0x0d695204afafc42acdf39dbf4bb58deea79895fb&address=0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${process.env.POLYGON_API_KEY}`).then((data) => {
@@ -132,29 +134,24 @@ const CreateProfile = ({navigation} : any) => {
                 setTokenId(data.data.result[data.data.result.length-1].tokenID);
             }
         })
-        console.log("petName", petName);
-        console.log("petSpecies", petSpecies);
-        console.log("petGender", petGender);
-        console.log("tokenId", tokenId);
-        console.log("imageCid", imageCid);
-        // axiosApi.post('/dog',{
-        //     "dogName": petName,
-        //     "dogBreed": petSpecies,
-        //     "dogBirthDate": "2023-09-27",
-        //     "dogSex": petGender,
-        //     "dogNft": tokenId, 
-        //     "dogImg": imageCid,
-        // }).then((data) => {
-        //     console.log(data);
-        // })
+        await axiosApi.post('/dog',{
+            "dogName": petName,
+            "dogBreed": petSpecies,
+            "dogBirthDate": "2023-09-27",
+            "dogSex": petGender,
+            "dogNft": tokenId, 
+            "dogImg": imageCid,
+        }).then((data) => {
+            console.log(data);
+        })
     }
 
     const uploadMetaJSON = async () => {
         const nft_storage_url = "https://api.nft.storage/upload";
-        const metaData = {
+        const metaData = await {
             "name" : petName,
             "description" : "",
-            "image": `ipfs://${imageCid}`,
+            "image": 'ipfs://' + imageCid,
             "attributes" : [
                 {"trait_type":"dogName", "value":petName},
                 {"trait_type":"dogBreed", "value":petSpecies},
@@ -162,7 +159,6 @@ const CreateProfile = ({navigation} : any) => {
                 {"trait_type":"dogSex", "value":petGender}
             ],
         }
-
         console.log("metadata", metaData);
         await axios.post(nft_storage_url, metaData , {
             headers: {
@@ -249,7 +245,7 @@ const CreateProfile = ({navigation} : any) => {
 
         getWalletInfoFromStore();
         getPetSpecies();
-    }, [])
+    }, [imageCid])
 
     return(
         <>
@@ -319,7 +315,7 @@ const CreateProfile = ({navigation} : any) => {
                 </View>
 
                 <View style={CreateProfileLayout.formButtonWrap}>
-                    <TouchableOpacity activeOpacity={0.7} onPress={uploadIpfs}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => {uploadIpfs();}}>
                         <View style={CreateProfileLayout.submitButton}>
                             <Text style={CreateProfileLayout.submitButtonText}>
                                 앨범 등록하기
