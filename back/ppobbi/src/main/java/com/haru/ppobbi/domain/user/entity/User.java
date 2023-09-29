@@ -1,8 +1,6 @@
 package com.haru.ppobbi.domain.user.entity;
 
 import com.haru.ppobbi.domain.user.constant.UserRole;
-import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserInfoRequestDto;
-import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserRefreshTokenDto;
 import com.haru.ppobbi.global.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,8 +32,6 @@ public class User extends BaseEntity {
 
     private String userName;
 
-    private String userWallet;
-
     private String userMessage;
 
     private String userProfileImg;
@@ -43,20 +39,15 @@ public class User extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
 
-    private String userPrivateKey;
-
 
     @Builder
     public User(Integer userNo, String userId, String userName,
-        String userWallet,
-        String userMessage, String userProfileImg, String userPrivateKey, UserRole userRole) {
+        String userMessage, String userProfileImg, UserRole userRole) {
         this.userNo = userNo;
         this.userId = userId;
         this.userName = userName;
-        this.userWallet = userWallet;
         this.userMessage = userMessage;
         this.userProfileImg = userProfileImg;
-        this.userPrivateKey = userPrivateKey;
         this.userRole = userRole;
     }
 
