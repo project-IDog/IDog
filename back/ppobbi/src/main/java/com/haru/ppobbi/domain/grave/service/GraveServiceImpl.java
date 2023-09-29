@@ -75,6 +75,7 @@ public class GraveServiceImpl implements GraveService{
                 .dogBreed(dog.getDogBreed())
                 .dogSex(dog.getDogSex())
                 .dogNft(dog.getDogNft())
+                .dogImg(dog.getDogImg())
                 .build();
     }
 
