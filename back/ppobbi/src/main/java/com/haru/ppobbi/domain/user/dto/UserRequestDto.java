@@ -52,16 +52,6 @@ public class UserRequestDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class UpdateUserWalletInfoRequestDto {
-
-        private String userWallet;
-        private String userPrivateKey;
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class UpdateUserMessageRequestDto {
 
         private String userMessage;
