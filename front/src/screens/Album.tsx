@@ -62,7 +62,7 @@ const Album = ({ navigation }: any) => {
 	};
 
 	useEffect(() => {
-		axios.get("/photo/user/8").then((data) => {
+		axios.get("/photo/user").then((data) => {
 			if (data.data.message === "사진 조회 성공") {
 				setFeedList(data.data.data);
 			}

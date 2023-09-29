@@ -22,6 +22,7 @@ const Login = () => {
 	});
 
 	const handleSignInWithGoogle = async () => {
+		console.log("response 변화 체크 : ", response?.type);
 		if (response?.type !== "success") return;
 
 		const idToken = response.authentication?.idToken;
