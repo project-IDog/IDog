@@ -18,7 +18,7 @@ WebBrowser.maybeCompleteAuthSession();
 const Login = () => {
 	const stores = IndexStore();
 	const [request, response, promptAsync] = Google.useAuthRequest({
-		androidClientId: ANDROID_CLIENT_ID,
+		"androidClientId": ANDROID_CLIENT_ID,
 	});
 
 	const handleSignInWithGoogle = async () => {
