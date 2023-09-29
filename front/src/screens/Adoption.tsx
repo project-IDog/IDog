@@ -4,6 +4,7 @@ import CommonLayout from "../components/CommonLayout";
 import WhiteHeader from "../components/WhiteHeader";
 import SubMain from "../components/SubMain";
 import Footer from "../components/Footer";
+import {mintDogTokenContract} from "../contracts/contract"
 
 import axios from "../utils/axios";
 
@@ -24,12 +25,16 @@ const Adoption = ({navigation}: any) => {
         }));
     }
 
-    const submitAdoption = () => {
-        axios.post("/dog/nft",{
-            "dogNo": "",
-        }).then((data) => {
+    const submitAdoption = async () => {
+        const approvalTx = await mintDogTokenContract.setApprovalForAll('0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4', true);
+        console.log("Approval Transaction hash:", approvalTx);
+        const approved = await mintDogTokenContract.getApproved(103);
+        console.log("approved",approved);
+        await approvalTx.wait();
 
-        })
+        const transferTx = await mintDogTokenContract.safeTransferFrom('0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4','0x587DA3fA6997d47ca4a4815011f2d400dB065745',103);
+        console.log("transferTx", transferTx);
+        await transferTx.wait();
     }
 
     useEffect(() => {
@@ -50,7 +55,6 @@ const Adoption = ({navigation}: any) => {
                     <Text style={AdoptionLayout.adoptionMainTitle}>입양절차</Text>
                 </View>
 
-                <Image source={"data:text/html;base64,PGltZyBzcmM9Imh0dHBzOi8vcHBvYmJpLnMzLmFwLW5vcnRoZWFzdC0yLmFtYXpvbmF3cy5jb20vMTZjOTMyNzYtNjZlZi00YTFiLTgyMzItMTZiNzE3YjkyMmJmLmpwZWciIC8+"}/>
 
                 <ScrollView horizontal={true} style={AdoptionLayout.myPetList}>
                     {
@@ -59,7 +63,7 @@ const Adoption = ({navigation}: any) => {
                             return(
                                 <TouchableOpacity key={index} activeOpacity={0.9} onPress={() => toggleBorder(index)}>
                                     <Image
-                                        source={value.dogImg}
+                                        source={MyPetThumbnail1}
                                         style={[
                                             myPetPressState[index] ? AdoptionLayout.myPetThumbnail : AdoptionLayout.myPetThumbnaulDisable,
                                         ]}

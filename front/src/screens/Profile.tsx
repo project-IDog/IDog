@@ -19,6 +19,7 @@ import CertificateIcon from "../../assets/images/certificate-icon.png"
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
 import PuppyThumbnail1 from "../../assets/images/puppy-thumbnail1.png"
 
+import MyPetThumbnail1 from "../../assets/images/my-pet-thumbnail1.png"
 
 const Profile = ({navigation}:any) => {
     const flipView = useRef<any>();
@@ -89,7 +90,7 @@ const Profile = ({navigation}:any) => {
                                 console.log(dogItem);
                                 return(
                                     <View key={index} style={{marginLeft:10}}>
-                                        <NftProfile dogName={`내 반려견 ${dogItem.dogName}`} createdTitle="등록한 날짜" createdAt="2023. 09. 02." species={dogItem.dogBreed} bgImg={dogItem.dogImg}/>
+                                        <NftProfile dogName={`내 반려견 ${dogItem.dogName}`} createdTitle="등록한 날짜" createdAt="2023. 09. 02." species={dogItem.dogBreed} bgImg={MyPetThumbnail1}/>
                                     </View>
                                 );
                             })
