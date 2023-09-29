@@ -67,10 +67,8 @@ public class UserServiceImpl implements UserService {
             return UserInfoResponseDto.builder()
                 .userId(userInfo.getUserId())
                 .userName(userInfo.getUserName())
-                .userWallet(userInfo.getUserWallet())
                 .userMessage(userInfo.getUserMessage())
                 .userProfileImg(userInfo.getUserProfileImg())
-                .userPrivateKey(userInfo.getUserPrivateKey())
                 .build();
         } catch (NotFoundException e) {
             // 없으면 DB 검색
@@ -84,10 +82,8 @@ public class UserServiceImpl implements UserService {
             return UserInfoResponseDto.builder()
                 .userId(user.getUserId())
                 .userName(user.getUserName())
-                .userWallet(user.getUserWallet())
                 .userMessage(user.getUserMessage())
                 .userProfileImg(user.getUserProfileImg())
-                .userPrivateKey(user.getUserPrivateKey())
                 .build();
         }
     }
