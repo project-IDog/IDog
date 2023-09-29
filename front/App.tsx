@@ -23,7 +23,7 @@ import AgreeWallet from "./src/screens/AgreeWallet";
 import CreateWalletPassword from "./src/screens/CreateWalletPassword";
 import ProtectWallet from "./src/screens/ProtectWallet";
 import Ipfs from "./src/screens/Ipfs";
-import WidgetText from "./src/screens/WidgetText";
+import Widget from "./src/screens/Widget";
 import DogHeaven from "./src/screens/DogHeaven";
 import CurrentAppState from "./src/components/CurrentAppState";
 import ChoiceDog from "./src/screens/ChoiceDog";
@@ -69,7 +69,7 @@ const App = () => {
 						component={MemorialParkDetail}
 					/>
 					<Stack.Screen name="Ipfs" component={Ipfs} />
-					<Stack.Screen name="WidgetText" component={WidgetText} />
+					<Stack.Screen name="Widget" component={Widget} />
 					<Stack.Screen name="ChoiceDog" component={ChoiceDog} />
 				</Stack.Navigator>
 			</NavigationContainer>

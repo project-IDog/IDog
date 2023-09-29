@@ -1,5 +1,5 @@
-import {ethers} from "ethers"
-import {RPC_URL, MINT_DOG_TOKEN_ADDRESS, ADMIN_WALLET_PRIVATE_KEY} from "@env"
+// import {ethers} from "ethers"
+// import {RPC_URL, MINT_DOG_TOKEN_ADDRESS, ADMIN_WALLET_PRIVATE_KEY} from "@env"
 
 export const mintIDogTokenAbi = [
     {
@@ -449,11 +449,11 @@ export const mintIDogTokenAbi = [
 
 export const mintIDogTokenAddress = process.env.MINT_DOG_TOKEN_ADDRESS;
 
-const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
-let signer;
-if(process.env.ADMIN_WALLET_PRIVATE_KEY){
-    signer = new ethers.Wallet(String(process.env.ADMIN_WALLET_PRIVATE_KEY), provider);
-}
+// const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+// let signer;
+// if(process.env.ADMIN_WALLET_PRIVATE_KEY){
+//     signer = new ethers.Wallet(String(process.env.ADMIN_WALLET_PRIVATE_KEY), provider);
+// }
 
 export const mintDogTokenContract = new ethers.Contract(
     mintIDogTokenAddress,
