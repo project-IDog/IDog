@@ -87,10 +87,14 @@ const Profile = ({navigation}:any) => {
                         </GestureFlipView>
                         {
                             dogList.map((dogItem:any, index:any) => {
-                                console.log(dogItem);
+                                console.log(dogItem.dogImg);
                                 return(
                                     <View key={index} style={{marginLeft:10}}>
                                         <NftProfile dogName={`내 반려견 ${dogItem.dogName}`} createdTitle="등록한 날짜" createdAt="2023. 09. 02." species={dogItem.dogBreed} bgImg={MyPetThumbnail1}/>
+                                        <Image 
+                                            source={{uri:String(dogItem.dogImg)}}
+                                            style={{width:100, height:132}}
+                                        />
                                     </View>
                                 );
                             })

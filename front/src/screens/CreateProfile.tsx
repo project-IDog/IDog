@@ -43,6 +43,7 @@ const CreateProfile = ({ navigation }: any) => {
     const [hashId, setHashId] = useState<any>();
     const [isLoading, setIsLoading] = useState<Boolean>(false);
     const [tokenId, setTokenId] = useState<number>();
+    const [imageOrigin, setImageOrigin] = useState<string>();
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -84,6 +85,7 @@ const CreateProfile = ({ navigation }: any) => {
 				console.log("err", err);
 			} else {
                 const s3data = await fetch(data.Location);
+                setImageOrigin(data.Location);
                 console.log("s3data",s3data);
                 // const blob = await new Blob([s3data], {type:"image/jpeg"});
                 const reader = new FileReader();
@@ -140,7 +142,7 @@ const CreateProfile = ({ navigation }: any) => {
             "dogBirthDate": "2023-09-27",
             "dogSex": petGender,
             "dogNft": tokenId, 
-            "dogImg": imageCid,
+            "dogImg": imageOrigin,
         }).then((data) => {
             console.log(data);
         })
@@ -327,7 +329,7 @@ const CreateProfile = ({ navigation }: any) => {
 		};
 
                 <View style={CreateProfileLayout.formButtonWrap}>
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => {uploadIpfs();}}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => {uploadIpfs()}}>
                         <View style={CreateProfileLayout.submitButton}>
                             <Text style={CreateProfileLayout.submitButtonText}>
                                 앨범 등록하기
