@@ -57,10 +57,10 @@ const Walk = ({ navigation }: any) => {
 		);
 	};
 
-	const convertToMinuteAndSecond = (totalSeconds: number) => {
-		const minutes = Math.floor(totalSeconds / 60);
-		const seconds = totalSeconds % 60;
-		const hours = Math.floor(minutes / 60);
+	const convertToTimeWithString = (totalSeconds: number) => {
+		const hours = Math.floor(totalSeconds / 3600);
+		const minutes = Math.floor((totalSeconds % 3600) / 60);
+		const seconds = Math.floor((totalSeconds % 3600) % 60);
 		return { hours, minutes, seconds, totalSeconds };
 	};
 
@@ -73,7 +73,7 @@ const Walk = ({ navigation }: any) => {
 	}, []);
 
 	useEffect(() => {
-		const time = convertToMinuteAndSecond(totalSecondsSum);
+		const time = convertToTimeWithString(totalSecondsSum);
 		const hours = time.hours;
 		const minutes = time.minutes < 10 ? `0${time.minutes}` : time.minutes;
 		const seconds = time.seconds < 10 ? `0${time.seconds}` : time.seconds;
@@ -132,12 +132,13 @@ const Walk = ({ navigation }: any) => {
 
 	let totalSecondsSum = 0;
 	const weekItems = filteredWeekList.map((value, index) => {
-		const time = convertToMinuteAndSecond(value.walkingTime);
+		const time = convertToTimeWithString(value.walkingTime);
 		totalSecondsSum += time.totalSeconds;
 		return (
 			<View key={index}>
 				<WeekTimeItem
 					day={dayjs(value.walkingStartDate).format("DD")}
+					totalHour={time.hours}
 					totalMinute={time.minutes}
 					totalSecond={time.seconds}
 				/>
