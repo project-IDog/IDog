@@ -20,10 +20,6 @@ const Walk = ({ navigation }: any) => {
 	const [todayDate, setTodayDaye] = useState<number>(now.format("DD"));
 	const [todayDay, setTodayDay] = useState<number>(now.get("day"));
 
-	const [hour, setHour] = useState<number>(0);
-	const [minute, setMinute] = useState<number>(0);
-	const [second, setSecond] = useState<number>(0);
-	const timerId = useRef<any>(null);
 	const [weekList, setWeekList] = useState<Object[]>([]);
 
 	const minusDate = (offset: number) => {
@@ -52,28 +48,6 @@ const Walk = ({ navigation }: any) => {
 		}
 	};
 
-	const startTimer = () => {
-		timerId.current = setInterval(() => {
-			setSecond((prevSecond) => prevSecond + 1);
-		}, 1000);
-	};
-
-	const finishTimer = () => {
-		clearInterval(timerId.current);
-		for (let i = 0; i < weekList.length; i++) {
-			if (dayjs().get("date") === parseInt(weekList[i].day)) {
-				weekList[i].itemMinute = minute;
-				weekList[i].itemSecond = second;
-				setWeekList([...weekList]);
-				return;
-			}
-		}
-		setWeekList([
-			...weekList,
-			{ day: todayDate, itemMinute: minute, itemSecond: second },
-		]);
-	};
-
 	const days = [
 		minusDay(3),
 		minusDay(2),
@@ -92,16 +66,7 @@ const Walk = ({ navigation }: any) => {
 		plusDate(2),
 		plusDate(3),
 	];
-	useEffect(() => {
-		if (second > 59) {
-			setMinute((prevMinute) => prevMinute + 1);
-			setSecond(0);
-		}
-		if (minute > 59) {
-			setHour((prevHour) => prevHour + 1);
-			setMinute(0);
-		}
-	}, [timerId, second]);
+
 	return (
 		<>
 			<CommonLayout>

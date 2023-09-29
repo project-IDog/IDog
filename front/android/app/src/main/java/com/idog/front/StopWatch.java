@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Looper;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -22,6 +23,16 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import com.google.gson.Gson;
 
 /**
  * Implementation of App Widget functionality.
@@ -62,28 +73,85 @@ public class StopWatch extends AppWidgetProvider {
                 Date date = new Date(now);
                 SimpleDateFormat currentDate = new SimpleDateFormat("yyyy-MM-dd");
                 String strCurrentDate = currentDate.format(date);
-                Log.d("strCurrentDate : ", "" + strCurrentDate);
+                Log.d("PLAY ACTION Date : ", "" + strCurrentDate);
+                isRunning = prefs.getBoolean("isRunning" , false);
+                Log.d("isRunning play : ", "" + isRunning);
                 prefs.edit().putString("date", strCurrentDate).apply();
                 if (handler == null) {
                     handler = new MyHandler(context);
                 }
                 handler.sendMessage(handler.obtainMessage(0));
+                StopWatchModule.emitDeviceEvent("PLAY_ACTION_EVENT", null);
             }
         } else if ("STOP_ACTION".equals(intent.getAction())) {
             prefs.edit().putBoolean("isRunning", false).apply();
             if (handler != null) {
                 handler.removeMessages(0);
             }
+            StopWatchModule.emitDeviceEvent("STOP_ACTION_EVENT", null);
+            isRunning = prefs.getBoolean("isRunning" , false);
+            Log.d("isRunning play : ", "" + isRunning);
         } else if ("RESET_ACTION".equals(intent.getAction())) {
             prefs.edit().putBoolean("isRunning", false).apply();
             if (handler != null) {
                 handler.removeMessages(0);
             }
-            prefs.edit().putInt("number", 0).apply();
+            int walkingTime = prefs.getInt("number", 0);
+            String walkingStartDate = prefs.getString("date", "");
             prefs.edit().remove("date").apply();
+            prefs.edit().putInt("number", 0).apply();
+            StopWatchModule.emitDeviceEvent("RESET_ACTION_EVENT", null);
+
+            int dogNo = 31; // 임시값
+            WalkingData walkingData = new WalkingData(dogNo, walkingTime, walkingStartDate);
+            sendWalkingDataToServer(walkingData, context);
+        }
+        isRunning = prefs.getBoolean("isRunning" , false);
+        if (!isRunning) {
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
+            views.setViewVisibility(R.id.playButton, View.VISIBLE);
+            views.setViewVisibility(R.id.stopButton, View.GONE);
+            AppWidgetManager.getInstance(context).updateAppWidget(new ComponentName(context, StopWatch.class), views);
+        } else {
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
+            views.setViewVisibility(R.id.stopButton, View.VISIBLE);
+            views.setViewVisibility(R.id.playButton, View.GONE);
+            AppWidgetManager.getInstance(context).updateAppWidget(new ComponentName(context, StopWatch.class), views);
         }
         updateAllWidgets(context);
     }
+
+    private void sendWalkingDataToServer(WalkingData data, Context context) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://idog.store/api/walking/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        Gson gson = new Gson();
+        String json = gson.toJson(data);
+        Log.d("API RESPONSE : ", "json : " + json);
+
+        RequestBody requestBody = RequestBody.Companion.create(json, MediaType.parse("application/json; charset=utf-8"));
+
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<Void> call = apiService.sendWalkingData(requestBody);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("API RESPONSE : ", "default : " + response);
+                if (response.isSuccessful()) {
+                    Log.d("API Response", "Success");
+                } else {
+                    Log.e("API Response", "Error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("API Error", t.getMessage());
+            }
+        });
+    }
+
 
     static void updateAllWidgets(Context context) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -114,8 +182,13 @@ public class StopWatch extends AppWidgetProvider {
         PendingIntent resetPendingIntent = PendingIntent.getBroadcast(context, 2, resetIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.resetButton, resetPendingIntent);
 
+        Intent startAppIntent = new Intent(context, MainActivity.class);
+        PendingIntent startAppIntentPendingIntent = PendingIntent.getActivity(context, 3, startAppIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        views.setOnClickPendingIntent(R.id.widget_container, startAppIntentPendingIntent);
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
+
 
     private static String formatTime(int totalSecond) {
         int hours = totalSecond / 3600;

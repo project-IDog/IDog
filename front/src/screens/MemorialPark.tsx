@@ -206,7 +206,7 @@ const Main = ({ navigation }: any) => {
 														horizontal={true}
 													>
 														<Text style={MemorialParkDesignLayout.nfttext}>
-															{data.dogBreed} {data.dogNo}
+															{data.dogBreed}
 														</Text>
 													</ScrollView>
 												</View>
