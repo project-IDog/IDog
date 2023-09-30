@@ -8,6 +8,7 @@ import {
 	ScrollView,
 	TextInput,
 	Alert,
+	Modal,
 } from "react-native";
 import Footer from "../components/Footer";
 import MainHeader from "../components/MainHeader";
@@ -15,10 +16,8 @@ import MemorialParkLayout from "../styles/MemorialParkLayout";
 import MpImage from "../../assets/images/MpImg.jpg";
 import SubMainRip from "../components/SubMainRip";
 import MemorialParkLoading from "./MemorialParkLoading";
-import { set } from "mobx";
-import flower1 from "../../assets/flower1.json";
-import LottieView from "lottie-react-native";
 import axios from "../utils/axios";
+import MemorialParkDesignLayout from "../styles/MemorialParkDesignLayout";
 import { responsiveWidth } from "react-native-responsive-dimensions";
 
 const MemorialPark: React.FC<any> = ({ navigation, route }) => {
@@ -32,14 +31,22 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	const [comment, setComment] = useState("");
 	const [feedList, setFeedList] = useState<Object[]>([]);
 	const [showAllFeeds, setShowAllFeeds] = useState(false);
+	const [confirmationModalVisible, setConfirmationModalVisible] =
+		useState(false);
+
+	const [selectedCommentNo, setSelectedCommentNo] = useState<number | null>(
+		null,
+	);
 
 	const fetchComments = () => {
-		axios.get(`/comment/${data.graveNo + 2}`).then((response) => {
+		axios.get(`/comment/${data.graveNo}`).then((response) => {
 			if (response.data.message === "추모 댓글 조회 성공") {
 				setCommentList(response.data.data);
 			}
 		});
 	};
+
+	console.log("디테일로 넘길 데이터이다!!", data);
 
 	const commentSubmit = () => {
 		if (!comment.trim()) {
@@ -48,7 +55,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 		}
 		axios
 			.post("/comment", {
-				graveNo: data.graveNo + 2, // 이거 나중에 +2 제거해야 함
+				graveNo: data.graveNo, // 이거 나중에 +2 제거해야 함
 				commentContent: comment,
 			})
 			.then((data) => {
@@ -62,7 +69,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	};
 
 	useEffect(() => {
-		axios.get("/comment/3").then((data) => {
+		axios.get(`/comment/${data.graveNo}`).then((data) => {
 			if (data.data.message === "추모 댓글 조회 성공") {
 				setCommentList(data.data.data);
 			}
@@ -121,6 +128,37 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	const imageUrl: string | null = data?.dogImg
 		? `https://ipfs.io/ipfs/${data.dogImg.split("://")[1]}`
 		: null;
+
+	const handleConfirm = () => {
+		console.log("핸들컨펌이다!", selectedCommentNo);
+		axios
+			.delete(`/comment/${selectedCommentNo}`)
+			.then((data) => {
+				console.log("데이ㅓ받기!", data);
+				if (data.data.message === "추모 댓글 삭제 성공") {
+					setConfirmationModalVisible(false);
+					fetchComments();
+					Alert.alert(
+						"추모 공원",
+						"댓글을 삭제했습니다.",
+						[
+							{
+								text: "OK",
+								onPress: () => setConfirmationModalVisible(false),
+							},
+						],
+						{ cancelable: false },
+					);
+				}
+			})
+			.catch((error) => {
+				console.error("Error occurred during axios request:", error.response);
+			});
+	};
+
+	const handleCancel = () => {
+		setConfirmationModalVisible(false);
+	};
 
 	return (
 		<>
@@ -238,9 +276,33 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 										<Text style={[MemorialParkLayout.mpComent]}>
 											{comment?.commentContent}
 										</Text>
-										<Text style={[MemorialParkLayout.mpComentDate]}>
-											{comment?.userName}, {formattedTime}
-										</Text>
+										<View
+											style={{
+												display: "flex",
+												flexDirection: "row",
+												justifyContent: "space-between",
+												alignItems: "center",
+											}}
+										>
+											<Text style={[MemorialParkLayout.mpComentDate]}>
+												{comment?.userName}, {formattedTime}
+											</Text>
+											<TouchableOpacity
+												onPress={() => {
+													setSelectedCommentNo(comment.commentNo);
+													setConfirmationModalVisible(true);
+												}}
+											>
+												<Text
+													style={{
+														color: "black",
+														paddingRight: responsiveWidth(30),
+													}}
+												>
+													삭제하기
+												</Text>
+											</TouchableOpacity>
+										</View>
 									</View>
 								);
 							})}
@@ -298,6 +360,34 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 					)}
 				</View>
 				<Footer />
+				<Modal
+					animationType="fade"
+					transparent={true}
+					visible={confirmationModalVisible}
+					onRequestClose={() => {
+						setConfirmationModalVisible(false);
+					}}
+				>
+					<View style={MemorialParkDesignLayout.ripregistercontainer}>
+						<View style={MemorialParkDesignLayout.ripregistermodal}>
+							<Text style={MemorialParkDesignLayout.ripregistercontent}>
+								댓글을 정말로 삭제하시겠습니까?
+							</Text>
+							<View style={MemorialParkDesignLayout.ripregisterapplycontainer}>
+								<TouchableOpacity onPress={handleConfirm}>
+									<Text style={MemorialParkDesignLayout.ripregisteryes}>
+										예
+									</Text>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={handleCancel}>
+									<Text style={MemorialParkDesignLayout.ripregisterno}>
+										아니오
+									</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+					</View>
+				</Modal>
 			</ScrollView>
 		</>
 	);

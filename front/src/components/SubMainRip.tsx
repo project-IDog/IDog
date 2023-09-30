@@ -17,6 +17,9 @@ import LottieView from "lottie-react-native";
 import axios from "../utils/axios";
 
 const SubMain = ({ subTitle, mainTitle, bgImg, desc, data }: any) => {
+
+	console.log("이제 받아라!!", data);
+
 	const [flowersCnt, setFlowersCnt] = useState<number>(0);
 	const [lastClick, setLastClick] = useState<number>(0);
 	const handlePress = (event: any) => {
@@ -29,7 +32,7 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc, data }: any) => {
 			// flowersCnt가 10 미만인지 확인
 			axios
 				.post("/flower", {
-					graveNo: data.graveNo,
+					graveNo: data?.graveNo,
 				})
 				.then((data) => {
 					if (data.data.message === "헌화 등록 성공") {
@@ -40,11 +43,18 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc, data }: any) => {
 	};
 
 	useEffect(() => {
-		axios.get(`/flower/${data.graveNo}`).then((data) => {
-			if (data.data.message === "헌화 등록 성공") {
-				setFlowersCnt(data.data.data.count);
-			}
-		});
+		console.log("hello:", flowersCnt);
+		console.log("도그넘:", data?.graveNo);
+		axios
+			.get(`/flower/${data.graveNo}`)
+			.then((data) => {
+				if (data.data.message === "헌화 등록 성공") {
+					setFlowersCnt(data.data.data.count);
+				}
+			})
+			.catch((err) => {
+				console.log(err.rsponse);
+			});
 	}, []);
 
 	const imageUrl: string | null = data?.dogImg
