@@ -5,6 +5,7 @@ import com.haru.ppobbi.domain.grave.dto.FlowerResponseDto.FlowerInfoDto;
 import com.haru.ppobbi.domain.grave.entity.Flower;
 import com.haru.ppobbi.domain.grave.repo.FlowerRedisRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FlowerRedisServiceImpl implements FlowerRedisService {
     @Value("${spring.redis.ttls.flower}")
     private Long FLOWER_TTL;
@@ -55,11 +57,16 @@ public class FlowerRedisServiceImpl implements FlowerRedisService {
 
     private List<LocalDateTime> arrangeFlowers(Flower flower, boolean isUpdated){
         List<LocalDateTime> flowers = flower.getFlowers();
-        // 시든 꽃 쳐내기
-        List<LocalDateTime> fresh = flowers.stream()
-                .filter(f -> !f.isBefore(LocalDateTime.now().minusHours(1)))
-                .collect(Collectors.toList());
-        
+        List<LocalDateTime> fresh;
+        if(flowers == null){
+            fresh = new ArrayList<>();
+        }else{
+            // 시든 꽃 쳐내기
+            fresh = flowers.stream()
+                    .filter(f -> !f.isBefore(LocalDateTime.now().minusHours(1)))
+                    .collect(Collectors.toList());
+        }
+
         // 현재 꽃 더한 후 반환
         if(isUpdated){
             fresh.add(LocalDateTime.now());
