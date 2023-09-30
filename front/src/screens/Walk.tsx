@@ -282,11 +282,11 @@ const Walk = ({ navigation }: any) => {
 						<Widget />
 						<View style={WalkLayout.listWrap}>
 							<Text style={WalkLayout.weekListTitle}>
-								이번주 내 반려견 산책
+								최근 7일 내 반려견 산책
 							</Text>
 							<View>{weekItems}</View>
 							<Text style={WalkLayout.totalTimeText}>
-								이번 주 총 함께한 시간{" "}
+								7일간 함께한 총 시간{" "}
 								<Text style={WalkLayout.boldTotalTimeText}>
 									{weekTotalTime}
 								</Text>

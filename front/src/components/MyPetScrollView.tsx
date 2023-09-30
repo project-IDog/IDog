@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Image, ScrollView } from "react-native";
 import { NativeModules } from "react-native";
 
 import MyPetScrollViewLayout from "../styles/myPetScrollViewLayout";
+import { responsiveWidth } from "react-native-responsive-dimensions";
 const { StopWatchModule } = NativeModules;
 
 const MyPetScrollView = (props: any) => {
@@ -45,6 +46,10 @@ const MyPetScrollView = (props: any) => {
 								<Image
 									source={{ uri: imageUrl }}
 									style={{
+										width: 100,
+										height: 132,
+										marginHorizontal: responsiveWidth(4),
+										borderRadius: 10,
 										borderWidth: 4,
 										borderColor:
 											selectedImages === myPetImage.dogNo
