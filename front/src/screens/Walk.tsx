@@ -279,7 +279,7 @@ const Walk = ({ navigation }: any) => {
 						</Text>
 					</View>
 					<View style={WalkLayout.contentFlexWrap}>
-						<Widget />
+						<Widget getWalkingWeek={getWalkingWeek} />
 						<View style={WalkLayout.listWrap}>
 							<Text style={WalkLayout.weekListTitle}>
 								최근 7일 내 반려견 산책

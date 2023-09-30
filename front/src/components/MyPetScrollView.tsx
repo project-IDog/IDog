@@ -35,7 +35,10 @@ const MyPetScrollView = (props: any) => {
 					const imageUrl = `https://ipfs.io/ipfs/${
 						myPetImage.dogImg.split("://")[1]
 					}`;
-
+					console.log(
+						"imageUrl : 아앙아아은마ㅣ윈뭉ㅁ니ㅓㅜㅇㅁ니ㅓ",
+						imageUrl,
+					);
 					return (
 						<TouchableOpacity
 							activeOpacity={0.7}
