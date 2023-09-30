@@ -18,10 +18,11 @@ WebBrowser.maybeCompleteAuthSession();
 const Login = () => {
 	const stores = IndexStore();
 	const [request, response, promptAsync] = Google.useAuthRequest({
-		androidClientId: ANDROID_CLIENT_ID,
+		"androidClientId": ANDROID_CLIENT_ID,
 	});
 
 	const handleSignInWithGoogle = async () => {
+		console.log("response 변화 체크 : ", response?.type);
 		if (response?.type !== "success") return;
 
 		const idToken = response.authentication?.idToken;

@@ -15,14 +15,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.idog.front"
+      "package": "com.idog.front",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,6 +38,9 @@
     },
     "plugins": [
       "sentry-expo"
-    ]
+    ],
+    "updates": {
+      "url": "https://u.expo.dev/9df3610c-0e1c-42aa-823d-c00ff92453f9"
+    }
   }
 }

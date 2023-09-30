@@ -52,6 +52,7 @@ const CreateProfileLayout = StyleSheet.create({
         borderColor:"#9D9D9D",
         borderRadius:2,
         marginTop:7,
+        padding:6,
     },
     dateFormWrap:{
         width:responsiveWidth(92),
