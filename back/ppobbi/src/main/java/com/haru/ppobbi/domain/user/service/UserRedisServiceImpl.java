@@ -31,9 +31,7 @@ public class UserRedisServiceImpl implements UserRedisService {
             .userId(user.getUserId())
             .userName(user.getUserName())
             .userMessage(user.getUserMessage())
-            .userPrivateKey(user.getUserPrivateKey())
             .userProfileImg(user.getUserProfileImg())
-            .userWallet(user.getUserWallet())
             .ttl(USER_INFO_TTL)
             .build()
         );
@@ -60,8 +58,6 @@ public class UserRedisServiceImpl implements UserRedisService {
                 .userName(user.getUserName())
                 .userMessage(user.getUserMessage())
                 .userProfileImg(user.getUserProfileImg())
-                .userPrivateKey(user.getUserPrivateKey())
-                .userWallet(user.getUserWallet())
                 .build()
             );
         }
@@ -86,8 +82,6 @@ public class UserRedisServiceImpl implements UserRedisService {
                 .userName(user.getUserName())
                 .userMessage(user.getUserMessage())
                 .userProfileImg(user.getUserProfileImg())
-                .userPrivateKey(user.getUserPrivateKey())
-                .userWallet(user.getUserWallet())
                 .build()
             );
         }
