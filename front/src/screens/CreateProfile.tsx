@@ -28,9 +28,9 @@ import DatePickerIcon from "../../assets/images/date-picker-icon.png"
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
 import PhotoImg from "../../assets/images/photo-ex-img4.png"
 
-import CreateProfileLayout from "../styles/createProfileLayout"
+import CreateProfileLayout from "../styles/createProfileLayout";
 
-const CreateProfile = ({navigation} : any) => {
+const CreateProfile = ({ navigation }: any) => {
 	const [imageUri, setImageUri] = useState<any>(null);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [walletAddress, setWalletAddress] = useState<string>();
@@ -50,9 +50,9 @@ const CreateProfile = ({navigation} : any) => {
         setDatePickerVisibility(true);
     };
 
-    const hideDatePicker = () => {
-        setDatePickerVisibility(false);
-    };
+	const hideDatePicker = () => {
+		setDatePickerVisibility(false);
+	};
 
     const handleConfirm = async (date:string) => {
         const dateAll = new Date(date);
@@ -196,7 +196,7 @@ const CreateProfile = ({navigation} : any) => {
 		}
 	};
 
-    // 이미지 선택
+	// 이미지 선택
 	const pickImage = async () => {
 		await getPermissionAsync(); // 권한 확인
 
@@ -219,13 +219,11 @@ const CreateProfile = ({navigation} : any) => {
         }
 	};
 
+	const createProfile = async () => {
+		// const walletAddress = await SecureStore.getItemAsync("walletAddress");
+		// const walletPrivateKey = await SecureStore.getItemAsync("walletPrivateKey");
 
-    const createProfile = async () => {
-
-        // const walletAddress = await SecureStore.getItemAsync("walletAddress");
-        // const walletPrivateKey = await SecureStore.getItemAsync("walletPrivateKey");
-        
-        const provider = await new ethers.JsonRpcProvider(process.env.RPC_URL);
+		const provider = await new ethers.JsonRpcProvider(process.env.RPC_URL);
 
         const privateKey = process.env.ADMIN_WALLET_PRIVATE_KEY;
         const gasPriceGwei = "100000";

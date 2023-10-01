@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Modal } from "react-native";
 import MemorialParkDesignLayout from "../styles/MemorialParkDesignLayout";
 import { Text, TouchableOpacity, Image, TextInput, Alert } from "react-native";
@@ -9,9 +9,31 @@ import {
 import Animation from "../components/Animation";
 import exImg from "../../assets/images/photo-ex-img3.png";
 import axios from "../utils/axios";
-import tokenStore from "../stores/tokenStore";
 
-const RipnftCreate: React.FC = ({ dogNftList }) => {
+interface RipnftCreateProps {
+	setDataList: (data: any) => void;
+}
+
+const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
+	const fetchNftList = () => {
+		axios.get("/dog/alive").then((data) => {
+			if (data.data.message === "사용자의 생존한 강아지 조회 완료") {
+				setDogNftList(data.data.data);
+			}
+		});
+
+		axios.get("/grave").then((data) => {
+			if (data.data.message === "무덤 조회 성공") {
+				setDataList(data.data.data);
+			}
+		});
+	};
+	const [dogNftList, setDogNftList] = useState<Object[]>([]);
+
+	useEffect(() => {
+		fetchNftList();
+	}, []);
+
 	const [modalVisible, setModalVisible] = useState(false);
 	const [confirmationModalVisible, setConfirmationModalVisible] =
 		useState(false);
@@ -26,48 +48,37 @@ const RipnftCreate: React.FC = ({ dogNftList }) => {
 		// 죽음의 날짜 입력 모달을 엽니다.
 		setDeathDateInputModalVisible(true);
 	};
-	const handleConfirm = async () => {
-			await axios
-				.post("/grave", {
-					dogNo: 8,
-					dogDeathDate: new Date("2023-09-24"),
-				})
-				.then((data) => {
-					console.log(data);
-					// if (data.data.message === "회원 상태 메시지 수정 완료") {
-					// 	alert("상태 메시지가 수정되었습니다.");
-					// 	updateActiveStatusModal(false);
-					// 	navigation.replace("Album");
-					// }
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+	const handleConfirm = () => {
+		axios
+			.post("/grave", {
+				dogNo: selectedData?.dogNo,
+				dogDeathDate: deathDate,
+			})
+			.then((data) => {
+				console.log(selectedData?.dogNo, deathDate);
+				console.log("데이ㅓ받기!", data);
+				if (data.data.message === "무덤 생성 완료") {
+					// setDogNftList([]);
+					Alert.alert(
+						"Memorial Sky",
+						"등록이 완료되었습니다.",
+						[
+							{
+								text: "OK",
+								onPress: () => setConfirmationModalVisible(false),
+							},
+						],
+						{ cancelable: false },
+					);
 
-		// axios
-		// 	.post("/grave", {
-		// 		dogNo: 4,
-		// 		dogDeathDate: 2020-02-02,
-		// 	})
-		// 	.then((data) => {
-		// 		console.log(selectedData?.dogNo, deathDate);
-		// 		console.log("데이ㅓ받기!", data);
-		// 		if (data.data.message === "무덤 생성 완료") {
-		// 			//요청
-		// 			Alert.alert(
-		// 				"Memorial Sky",
-		// 				"등록이 완료되었습니다.",
-		// 				[{ text: "OK", onPress: () => setConfirmationModalVisible(false) }],
-		// 				{ cancelable: false },
-		// 			);
-
-		// 			setConfirmationModalVisible(false);
-		// 			setDeathDateInputModalVisible(false);
-		// 		}
-		// 	})
-		// 	.catch((error) => {
-		// 		console.error("Error occurred during axios request:", error);
-		// 	});
+					setConfirmationModalVisible(false);
+					setDeathDateInputModalVisible(false);
+					fetchNftList();
+				}
+			})
+			.catch((error) => {
+				console.error("Error occurred during axios request:", error.response);
+			});
 	};
 
 	const handleCancel = () => {
@@ -103,6 +114,7 @@ const RipnftCreate: React.FC = ({ dogNftList }) => {
 						{dogNftList?.map((data: any) => {
 							return (
 								<TouchableOpacity
+									key={data.dogNo}
 									style={MemorialParkDesignLayout.modalcontentcontainer}
 									onPress={() => {
 										handleClick(data);
