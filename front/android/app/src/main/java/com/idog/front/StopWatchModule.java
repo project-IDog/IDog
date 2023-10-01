@@ -56,6 +56,27 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void updateDogImgAndDogNo(String dogImg, int dogNo, Promise promise) {
+        try {
+            SharedPreferences prefs = StopWatchModule.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);
+            Log.d("DOG NO : ", "DOG NO" + dogNo);
+            Log.d("DOG IMG : ", "DOG IMG" + dogImg);
+            prefs.edit().putInt("dogNo", dogNo).apply();
+            prefs.edit().putString("dogImg", dogImg).apply();
+            Intent intent = new Intent(reactContext, StopWatch.class);
+            intent.setAction("UPDATE_IMG_NO");
+            reactContext.sendBroadcast(intent);
+            int DOGNO = prefs.getInt("dogNo", 0);
+            String DOGIMG = prefs.getString("dogImg", "");
+            Log.d("DOG@@@NOEQWEWQEQ", "DOGNO" + DOGNO);
+            Log.d("DOG@@@IMGIMGIMG", "DOGIMG" + DOGIMG);
+            promise.resolve(true);
+        } catch (Exception e) {
+            promise.reject("DOG_NO_IMG_ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void getDate(Promise promise) {
         try {
             SharedPreferences prefs = StopWatchModule.reactContext.getSharedPreferences("MyWidget", Context.MODE_PRIVATE);

@@ -8,28 +8,25 @@ import IndexStore from "../stores/IndexStore";
 
 const SideMenuIcon = ({ title, imageIcon, movePage }: any) => {
 	const navigation = useNavigation();
-	const {LoginStore} = IndexStore();
+	const { LoginStore } = IndexStore();
 
 	const authHandling = () => {
 		// 추모공원은 로그인이 진행되지 않아도 랜딩 가능
-		if(movePage === "Three"){
+		if (movePage === "Three") {
 			navigation.navigate(movePage);
 			return;
 		}
 
 		// 추모공원 외 페이지는 로그인에 따른 핸들링 진행
-		if(LoginStore.isLogged){
+		if (LoginStore.isLogged) {
 			navigation.navigate(movePage);
-		}else{
-			alert('로그인 후 이용하실 수 있는 서비스입니다.');
+		} else {
+			alert("로그인 후 이용하실 수 있는 서비스입니다.");
 		}
-	}
+	};
 	return (
 		<>
-			<TouchableOpacity
-				activeOpacity={0.7}
-				onPress={authHandling}
-			>
+			<TouchableOpacity activeOpacity={0.7} onPress={authHandling}>
 				<View style={styles.iconWrap}>
 					<Image source={imageIcon} style={styles.sideMenuIcon} />
 					<Text style={styles.text}>{title}</Text>

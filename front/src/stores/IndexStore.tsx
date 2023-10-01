@@ -5,6 +5,7 @@ type StoresType = {
 	LoginStore: {
 		isLogged: boolean;
 		userInfo: {};
+		setLogged: (isLogged: boolean) => void;
 	};
 	[key: string]: any;
 };

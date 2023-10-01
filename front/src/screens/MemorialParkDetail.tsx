@@ -7,6 +7,7 @@ import {
 	Animated,
 	ScrollView,
 	TextInput,
+	Alert,
 } from "react-native";
 import Footer from "../components/Footer";
 import MainHeader from "../components/MainHeader";
@@ -18,11 +19,10 @@ import { set } from "mobx";
 import flower1 from "../../assets/flower1.json";
 import LottieView from "lottie-react-native";
 import axios from "../utils/axios";
+import { responsiveWidth } from "react-native-responsive-dimensions";
 
-const MemorialPark: React.FC = (props) => {
-	const { route } = props;
+const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	const { data } = route.params;
-	console.log(data);
 	const loadingOpacity = useRef(new Animated.Value(1)).current;
 	const [isSkipped, setIsSkipped] = useState(false);
 	const [isFullyTransparent, setIsFullyTransparent] = useState(false);
@@ -30,6 +30,36 @@ const MemorialPark: React.FC = (props) => {
 	const [commentList, setCommentList] = useState<Object[]>([]);
 	const [showAllComments, setShowAllComments] = useState(false);
 	const [comment, setComment] = useState("");
+	const [feedList, setFeedList] = useState<Object[]>([]);
+	const [showAllFeeds, setShowAllFeeds] = useState(false);
+
+	const fetchComments = () => {
+		axios.get(`/comment/${data.graveNo + 2}`).then((response) => {
+			if (response.data.message === "추모 댓글 조회 성공") {
+				setCommentList(response.data.data);
+			}
+		});
+	};
+
+	const commentSubmit = () => {
+		if (!comment.trim()) {
+			alert("댓글을 입력해주세요.");
+			return;
+		}
+		axios
+			.post("/comment", {
+				graveNo: data.graveNo + 2, // 이거 나중에 +2 제거해야 함
+				commentContent: comment,
+			})
+			.then((data) => {
+				if (data.data.message === "추모 댓글 등록 완료") {
+					Alert.alert("Memorial Park", "댓글 등록이 완료되었습니다.");
+
+					setComment("");
+					fetchComments();
+				}
+			});
+	};
 
 	useEffect(() => {
 		axios.get("/comment/3").then((data) => {
@@ -72,9 +102,25 @@ const MemorialPark: React.FC = (props) => {
 		};
 	}, []);
 
-	if (commentList.length !== 0) {
-		console.log("코멘트: ", commentList);
-	}
+	useEffect(() => {
+		axios.get("/photo/user").then((data) => {
+			if (data.data.message === "사진 조회 성공") {
+				setFeedList(data.data.data);
+			}
+		});
+	}, []);
+
+	const Pickpicture = (value: any) => () => {
+		navigation.push("DetailFeed", {
+			selectImg: { uri: value.photoUrl },
+			comment: value.photoComment,
+			photoNo: value.photoNo,
+		});
+	};
+
+	const imageUrl: string | null = data?.dogImg
+		? `https://ipfs.io/ipfs/${data.dogImg.split("://")[1]}`
+		: null;
 
 	return (
 		<>
@@ -87,7 +133,6 @@ const MemorialPark: React.FC = (props) => {
 						isSkipped={isSkipped}
 						setIsSkipped={setIsSkipped}
 					/>
-					{/* <View></View> */}
 				</Animated.View>
 				<MainHeader />
 				<SubMainRip
@@ -95,6 +140,7 @@ const MemorialPark: React.FC = (props) => {
 					mainTitle={`반려견에게 영원한 평화와 \n행복을 기원합니다.`}
 					bgImg={MpImage}
 					desc="추모하기"
+					data={data}
 				/>
 				<View style={MemorialParkLayout.MpTitleWrap}>
 					<Text style={MemorialParkLayout.MpDesc}>Memorial Park</Text>
@@ -108,7 +154,10 @@ const MemorialPark: React.FC = (props) => {
 					<View style={[MemorialParkLayout.mpMarginwrap]}>
 						<Text style={[MemorialParkLayout.mpTitle]}>RIP 반려견 프로필</Text>
 						<View style={[MemorialParkLayout.mpBtw]}>
-							<Image source={MpImage} style={[MemorialParkLayout.tabImage]} />
+							<Image
+								source={{ uri: imageUrl }}
+								style={[MemorialParkLayout.tabImage]}
+							/>
 							<View style={[MemorialParkLayout.mpCol]}>
 								<View style={[MemorialParkLayout.mpBtw]}>
 									<Text style={[MemorialParkLayout.mpTitle]}>
@@ -137,18 +186,15 @@ const MemorialPark: React.FC = (props) => {
 									</Text>
 								</View>
 								<View style={[MemorialParkLayout.mpBtw2]}>
-									<Image
-										source={MpImage}
-										style={[MemorialParkLayout.tabImage2]}
-									/>
-									<Image
-										source={MpImage}
-										style={[MemorialParkLayout.tabImage2]}
-									/>
-									<Image
-										source={MpImage}
-										style={[MemorialParkLayout.tabImage2]}
-									/>
+									{feedList.slice(0, 3).map((value: any, index: number) => {
+										return (
+											<Image
+												key={index}
+												source={{ uri: value.photoUrl }}
+												style={[MemorialParkLayout.tabImage2]}
+											/>
+										);
+									})}
 								</View>
 							</View>
 						</View>
@@ -170,7 +216,10 @@ const MemorialPark: React.FC = (props) => {
 								onChangeText={setComment}
 								placeholder="추모의 댓글을 작성할 수 있습니다."
 							/>
-							<TouchableOpacity style={MemorialParkLayout.commentsubmit}>
+							<TouchableOpacity
+								style={MemorialParkLayout.commentsubmit}
+								onPress={commentSubmit}
+							>
 								<Text style={MemorialParkLayout.commentsubmittext}>작성</Text>
 							</TouchableOpacity>
 						</View>
@@ -182,7 +231,10 @@ const MemorialPark: React.FC = (props) => {
 							.map((comment, index) => {
 								const formattedTime = comment.createTime.replace("T", " ");
 								return (
-									<View style={[MemorialParkLayout.mpComentWarp]} key={index}>
+									<View
+										style={[MemorialParkLayout.mpComentWarp]}
+										key={`comment_${index}`}
+									>
 										<Text style={[MemorialParkLayout.mpComent]}>
 											{comment?.commentContent}
 										</Text>
@@ -208,62 +260,42 @@ const MemorialPark: React.FC = (props) => {
 						추억이 담겨진 Memory를 {"\n"}확인해보세요
 					</Text>
 				</View>
-				<View style={[MemorialParkLayout.mpTitlewrap3]}>
-					<View style={[MemorialParkLayout.mpMarginwrap]}>
-						<Text style={[MemorialParkLayout.mpAlbumTitle]}>
-							뽀삐의 Memorial 앨범
-						</Text>
-						<View>
-							<View style={[MemorialParkLayout.mpAlbumwarp]}>
-								<Image
-									source={MpImage}
-									style={[MemorialParkLayout.tabImage3]}
-								/>
-								<Image
-									source={MpImage}
-									style={[MemorialParkLayout.tabImage3]}
-								/>
-								<Image
-									source={MpImage}
-									style={[MemorialParkLayout.tabImage3]}
-								/>
-							</View>
-							<View style={[MemorialParkLayout.mpAlbumwarp]}>
-								<Image
-									source={MpImage}
-									style={[MemorialParkLayout.tabImage3]}
-								/>
-								<Image
-									source={MpImage}
-									style={[MemorialParkLayout.tabImage3]}
-								/>
-								<Image
-									source={MpImage}
-									style={[MemorialParkLayout.tabImage3]}
-								/>
-							</View>
-							<View style={[MemorialParkLayout.mpAlbumwarp]}>
-								<Image
-									source={MpImage}
-									style={[MemorialParkLayout.tabImage3]}
-								/>
-								<Image
-									source={MpImage}
-									style={[MemorialParkLayout.tabImage3]}
-								/>
-								<Image
-									source={MpImage}
-									style={[MemorialParkLayout.tabImage3]}
-								/>
-							</View>
-						</View>
 
-						<View style={[MemorialParkLayout.mpcommentbutton]}>
-							<TouchableOpacity>
-								<Text style={[MemorialParkLayout.mpComent]}>앨범 더보기</Text>
+				<View style={[MemorialParkLayout.mpTitlewrap4]}>
+					<View style={[MemorialParkLayout.mpAlbumText]}>
+						<Text style={[MemorialParkLayout.mpAlbumTitle]}>
+							{data.dogName}의 Memorial 앨범
+						</Text>
+					</View>
+
+					<View style={MemorialParkLayout.mpAlbumcontainer}>
+						{feedList
+							.slice(0, showAllFeeds ? feedList.length : 9)
+							.map((value: any, index: number) => {
+								return (
+									<TouchableOpacity
+										key={`feed_${index}`}
+										activeOpacity={0.7}
+										onPress={Pickpicture(value)}
+									>
+										<Image
+											source={{ uri: value.photoUrl }}
+											style={[MemorialParkLayout.tabImage3]}
+										/>
+									</TouchableOpacity>
+								);
+							})}
+					</View>
+
+					{feedList.length > 9 && !showAllFeeds && (
+						<View style={{ alignItems: "center", marginTop: 10 }}>
+							<TouchableOpacity onPress={() => setShowAllFeeds(true)}>
+								<Text style={MemorialParkLayout.mpAlbumplusbtn}>
+									앨범 더보기
+								</Text>
 							</TouchableOpacity>
 						</View>
-					</View>
+					)}
 				</View>
 				<Footer />
 			</ScrollView>

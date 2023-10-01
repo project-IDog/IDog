@@ -5,7 +5,7 @@ import WalkLayout from "../styles/walkLayout";
 import TimerImg from "../../assets/images/timer.png";
 const { StopWatchModule } = NativeModules;
 
-const WidgetText = () => {
+const Widget = (props: any) => {
 	const [widgetData, setWidgetData] = useState("0:00:00");
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentDate, setCurrentDate] = useState("");
@@ -26,31 +26,70 @@ const WidgetText = () => {
 		};
 	}, []);
 
+	useEffect(() => {
+		const playListener = DeviceEventEmitter.addListener(
+			"PLAY_ACTION_EVENT",
+			() => {
+				setIsPlaying(true);
+			},
+		);
+
+		const stopListener = DeviceEventEmitter.addListener(
+			"STOP_ACTION_EVENT",
+			() => {
+				setIsPlaying(false);
+			},
+		);
+
+		const resetListener = DeviceEventEmitter.addListener(
+			"RESET_ACTION_EVENT",
+			() => {
+				setWidgetData("0:00:00");
+				setIsPlaying(false);
+				props.getWalkingWeek();
+			},
+		);
+
+		return () => {
+			playListener.remove();
+			stopListener.remove();
+			resetListener.remove();
+		};
+	}, []);
+
 	const getWidgetData = async () => {
 		const widgetData = await StopWatchModule.getNumber();
 		const strCurrentDate = await StopWatchModule.getDate();
+		const isRunning = await StopWatchModule.getIsRunning();
 		setWidgetData(widgetData);
 		setCurrentDate(strCurrentDate);
+		setIsPlaying(isRunning);
 		console.log("widgetData : ", widgetData);
 		console.log("strCurrentDate : ", strCurrentDate);
+		console.log("isRunning : ", isRunning);
 	};
 
-	const playTimer = () => {
+	const playTimer = async () => {
 		StopWatchModule.playTimer();
 		setIsPlaying(true);
 	};
 
-	const stopTimer = () => {
+	const stopTimer = async () => {
 		StopWatchModule.stopTimer();
+		const isRunning = await StopWatchModule.getIsRunning();
+		console.log("isRunning : ", isRunning);
 		setIsPlaying(false);
 	};
 
-	const resetTimer = () => {
+	const resetTimer = async () => {
 		console.log("widgetData : ", widgetData);
 		console.log("strCurrentDate : ", currentDate);
+		const isRunning = await StopWatchModule.getIsRunning();
+		console.log("isRunning : ", isRunning);
 		StopWatchModule.resetTimer();
 		setWidgetData("0:00:00");
 		setIsPlaying(false);
+		props.getWalkingWeek();
 	};
 
 	return (
@@ -86,4 +125,4 @@ const WidgetText = () => {
 	);
 };
 
-export default WidgetText;
+export default Widget;

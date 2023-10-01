@@ -456,7 +456,7 @@ if(process.env.ADMIN_WALLET_PRIVATE_KEY){
 }
 
 export const mintDogTokenContract = new ethers.Contract(
-    mintIDogTokenAddress,
+    String(mintIDogTokenAddress),
 	mintIDogTokenAbi,
 	signer
 );
