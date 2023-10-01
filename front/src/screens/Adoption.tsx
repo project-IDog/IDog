@@ -6,7 +6,7 @@ import SubMain from "../components/SubMain";
 import Footer from "../components/Footer";
 import {mintDogTokenContract, mintIDogTokenAddress,mintIDogTokenAbi} from "../contracts/contract"
 import {ethers} from "ethers"
-import {CLIENT_PRIVATE_KEY} from "@env"
+import {CLIENT_PRIVATE_KEY, MINT_DOG_TOKEN_ADDRESS} from "@env"
 
 import axios from "../utils/axios";
 
@@ -21,6 +21,7 @@ const Adoption = ({navigation}: any) => {
     const [myPetList, setMyPetList] = useState<any>();
     const [selectedDogNo, setSelectedDogNo] = useState<number>();
     const [toAddress, setToAddress] = useState<string>();
+    const [tokenId, setTokenId] = useState<number>(0);
 
     const toggleBorder = (index:number, selectedDogNo:number) => {
         setMyPetPressState((prevState: any) => ({
@@ -38,14 +39,25 @@ const Adoption = ({navigation}: any) => {
         const gasPriceWei = ethers.parseUnits(gasPriceGwei, 'gwei');
 
         const signerInstance = new ethers.Wallet(fromPrivateKey, provider); //(tokenId 즉 NFT 소유주의 개인키로 서명한 지갑 가져오기)
-        const contract = new ethers.Contract(mintIDogTokenAddress, mintIDogTokenAbi, signerInstance);
+        const contract = new ethers.Contract(String(mintIDogTokenAddress), mintIDogTokenAbi, signerInstance);
+
+        await axios.get(`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${String(MINT_DOG_TOKEN_ADDRESS)}&address=0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${CLIENT_PRIVATE_KEY}`).then((data) => {
+            console.log(data.data.result[data.data.result.length-1]);
+            setTokenId(() => {
+                return data.data.result[data.data.result.length-1]
+            });
+        })
+
+        console.log("tokenId", tokenId);
 
         try {
             const approvalTransaction = await contract.setApprovalForAll(mintIDogTokenAddress, true); //승인받기 
             console.log(approvalTransaction);
             console.log("Approval granted to the contract:", mintIDogTokenAddress);
+
+            console.log("tokenid", tokenId);
         
-            const transferTransaction = await contract.safeTransferFrom(signerInstance.address, toAddress, selectedDogNo); //from, to, tokenId
+            const transferTransaction = await contract.safeTransferFrom(signerInstance.address, toAddress, tokenId); //from, to, tokenId
             console.log(transferTransaction);
             console.log("NFT transferred to:", toAddress);
         } catch (error) {
@@ -56,13 +68,18 @@ const Adoption = ({navigation}: any) => {
     }
 
     useEffect(() => {
+        console.log("변화");
+    },[tokenId, submitAdoption]);
+
+    useEffect(() => {
         console.log("selectedDogNo", selectedDogNo);
         axios.get("/dog/list").then((data) => {
             if(data.data.message === "사용자의 모든 강아지 목록 조회 완료"){
                 setMyPetList(data.data.data);
             }
         })
-    }, [selectedDogNo, toAddress])
+    }, [tokenId, toAddress]);
+
     return(
         <>
             <CommonLayout>
