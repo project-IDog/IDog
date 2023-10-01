@@ -7,26 +7,20 @@ import {
 	NativeSyntheticEvent,
 	NativeScrollEvent,
 	Image,
-	Modal,
+	RefreshControl,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
-import IndexStore from "../stores/IndexStore";
 import MainHeader from "../components/MainHeader";
-import {
-	responsiveHeight,
-	responsiveWidth,
-} from "react-native-responsive-dimensions";
-import Animation from "../components/Animation";
-import BG1 from "../../assets/images/BG1.png";
 import MemorialParkDesignLayout from "../styles/MemorialParkDesignLayout";
 import Colors from "../stores/ColorStore";
 import { LinearGradient } from "react-native-linear-gradient";
-import mainprofileImg from "../../assets/images/adoption-main-img.png";
 import RipnftCreate from "../components/RipnftCreate";
-import { GraveData } from "src/stores/Gravedata";
-import nftbgcloud from "../../assets/images/nftbg.png";
+import nftbgcloud from "../../assets/images/skysky.png";
 import axios from "../utils/axios";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+
+type AlbumData = {
+	photoUrl: string;
+};
 
 type DogData = {
 	dogImg: string;
@@ -36,11 +30,7 @@ type DogData = {
 	dogBirthDate: string;
 	dogDeathDate: string;
 	dogSex: string;
-	// 필요한 경우 다른 속성 추가
-};
-
-type DogImage = {
-	photoUrl: string;
+	albumList: AlbumData[];
 };
 
 const Main = ({ navigation }: any) => {
@@ -50,7 +40,6 @@ const Main = ({ navigation }: any) => {
 			scrollViewRef.current?.scrollToEnd({ animated: false });
 		}, 50);
 	}, []);
-	const { LoginStore } = IndexStore();
 
 	const [dataList, setDataList] = useState<DogData[]>([]);
 	useEffect(() => {
@@ -63,20 +52,6 @@ const Main = ({ navigation }: any) => {
 
 	const [RipdataList, setRipdataList] = useState<DogData[]>([]);
 	const [ripIndex, setRipIndex] = useState<number>(0);
-
-	const authHandling = (pageName: string) => {
-		if (pageName === "Three") {
-			navigation.navigate(pageName);
-			return;
-		}
-
-		if (LoginStore.isLogged) {
-			navigation.navigate(pageName);
-		} else {
-			alert("해당 서비스는 로그인 후 이용가능합니다.");
-		}
-	};
-
 	const [atTop, setAtTop] = React.useState(false);
 
 	const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -112,31 +87,34 @@ const Main = ({ navigation }: any) => {
 	};
 	const [imgDataList, setImgDataList] = useState<Object[]>([]);
 
+	const getDogImage = (dogNo: number) => {
+		axios.get(`/photo/dog/${dogNo}`).then((data) => {
+			if (data.data.message === "사진 조회 성공") {
+				setImgDataList([...imgDataList, data.data.data]);
+			}
+		});
+	};
+
+	const [refreshing, setRefreshing] = useState(false);
+
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+
+		// 데이터를 새로고침하거나 새로운 rip 데이터를 불러오는 로직
+		// ...
+
+		setRefreshing(false);
+	}, []);
+
 	useEffect(() => {
 		// RipdataList의 변화에 따라 axios 요청을 실행하는 로직
 		const firstItem = RipdataList[0];
 
 		// 첫 번째 항목이 있고, dogNo가 유효하면 요청을 실행
 		if (firstItem && firstItem.dogNo) {
-			axios
-				.get(`/photo/dog/${firstItem.dogNo}`)
-				.then((data) => {
-					console.log("없니???????????", data.data.data);
-					if (data.data.message === "사진 조회 성공") {
-						setImgDataList([...imgDataList, ...data.data.data]);
-					}
-				})
-				.catch((err) => {
-					console.log(firstItem.dogNo);
-					console.log("없니???????????", err.response);
-				});
+			getDogImage(firstItem.dogNo);
 		}
 	}, [RipdataList]);
-
-	if (imgDataList) {
-		console.log("이미지리스트다!!", imgDataList);
-	}
-
 	return (
 		<>
 			<ScrollView
@@ -146,6 +124,13 @@ const Main = ({ navigation }: any) => {
 				contentOffset={{ x: 0, y: 12000 }}
 				// ref={scrollViewRef}
 				// pagingEnabled={true}
+				refreshControl={
+					<RefreshControl
+						refreshing={refreshing}
+						onRefresh={onRefresh}
+						// 여기서 다른 스타일이나 속성을 추가할 수 있습니다.
+					/>
+				}
 			>
 				<MainHeader></MainHeader>
 				<View style={MemorialParkDesignLayout.nftcontainer}>
@@ -161,7 +146,11 @@ const Main = ({ navigation }: any) => {
 
 						const imageUrl: string | null = data?.dogImg
 							? `https://ipfs.io/ipfs/${data.dogImg.split("://")[1]}`
-							: null;
+							: "../../../trace-main-img.png";
+
+						const imgIndexList = imgDataList[ripIndex];
+
+						console.log("imgIndexList:", imgIndexList);
 						return (
 							<View
 								key={index}

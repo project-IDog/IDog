@@ -46,8 +46,6 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 		});
 	};
 
-	console.log("디테일로 넘길 데이터이다!!", data);
-
 	const commentSubmit = () => {
 		if (!comment.trim()) {
 			alert("댓글을 입력해주세요.");
@@ -130,11 +128,9 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 		: null;
 
 	const handleConfirm = () => {
-		console.log("핸들컨펌이다!", selectedCommentNo);
 		axios
 			.delete(`/comment/${selectedCommentNo}`)
 			.then((data) => {
-				console.log("데이ㅓ받기!", data);
 				if (data.data.message === "추모 댓글 삭제 성공") {
 					setConfirmationModalVisible(false);
 					fetchComments();
@@ -225,6 +221,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 								</View>
 								<View style={[MemorialParkLayout.mpBtw2]}>
 									{feedList.slice(0, 3).map((value: any, index: number) => {
+										console.log(index, "피드리스트다!", feedList);
 										return (
 											<Image
 												key={index}

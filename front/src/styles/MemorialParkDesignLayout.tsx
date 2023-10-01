@@ -110,10 +110,12 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		justifyContent: "center",
 	},
 	lineralignbg: {
+		flex: 1,
 		position: "absolute",
-		opacity: 0.5,
-		resizeMode: "cover",
-		transform: [{ scale: 0.8 }],
+		opacity: 0.4,
+		height: responsiveHeight(80),
+		// resizeMode: "cover",
+		// transform: [{ scale: 1 }],
 	},
 	nftview: {
 		height: responsiveHeight(80),
