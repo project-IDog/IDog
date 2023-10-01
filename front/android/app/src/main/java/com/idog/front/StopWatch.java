@@ -51,6 +51,7 @@ public class StopWatch extends AppWidgetProvider {
     private static MyHandler handler;
     private HandlerThread handlerThread;
     private Handler backgroundHandler;
+    private static Bitmap cachedBitmap;  // 비트맵 캐싱을 위한 변수 추가
 
 
     @Override
@@ -127,8 +128,13 @@ public class StopWatch extends AppWidgetProvider {
         int dogNo = prefs.getInt("dogNo", 0);
         String dogImg = prefs.getString("dogImg", "");
         backgroundHandler.post(() -> {
-            Bitmap bitmap = getBitmapFromURL(dogImg);
+            if (cachedBitmap != null && !cachedBitmap.isRecycled()) {
+                cachedBitmap.recycle();
+                cachedBitmap = null;
+            }
+            Bitmap bitmap = getBitmapFromURL(dogImg, 300, 300);
             if (bitmap != null) {
+                cachedBitmap = bitmap;  // 비트맵 캐싱
                 RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
                 views.setImageViewBitmap(R.id.profile, bitmap);
                 ComponentName componentName = new ComponentName(context, StopWatch.class);
@@ -152,18 +158,51 @@ public class StopWatch extends AppWidgetProvider {
         updateAllWidgets(context);
     }
 
-    public static Bitmap getBitmapFromURL(String src) {
+    public static Bitmap getBitmapFromURL(String src, int reqWidth, int reqHeight) {
         try {
             URL url = new URL(src);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
+
+            // 이미지의 크기를 먼저 확인
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(input, null, options);
+
+            // 다운스케일링 요율 계산
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            options.inJustDecodeBounds = false;
+            input.close();
+
+            // 다운스케일링 된 이미지 가져오기
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input, null, options);
+
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
     }
 
     private void sendWalkingDataToServer(WalkingData data, Context context) {

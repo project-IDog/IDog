@@ -25,7 +25,7 @@ const MyPetScrollView = (props: any) => {
 	const submitDogImgAndDogNo = async (dogNo: number, dogImg: String) => {
 		console.log("dogNo : ", dogNo);
 		console.log("dogImg : ", dogImg);
-		const update = await StopWatchModule.updateDogImgAndDogNo(dogImg, dogNo);
+		await StopWatchModule.updateDogImgAndDogNo(dogImg, dogNo);
 	};
 
 	return (
@@ -40,28 +40,30 @@ const MyPetScrollView = (props: any) => {
 						imageUrl,
 					);
 					return (
-						<TouchableOpacity
-							activeOpacity={0.7}
-							onPress={() => toggleImageSelection(myPetImage.dogNo, imageUrl)}
-							key={index}
-						>
-							<View style={MyPetScrollViewLayout.myPetItem}>
-								<Image
-									source={{ uri: imageUrl }}
-									style={{
-										width: 100,
-										height: 132,
-										marginHorizontal: responsiveWidth(4),
-										borderRadius: 10,
-										borderWidth: 4,
-										borderColor:
-											selectedImages === myPetImage.dogNo
-												? "#EE8A72"
-												: "transparent",
-									}}
-								/>
-							</View>
-						</TouchableOpacity>
+						<>
+							<TouchableOpacity
+								activeOpacity={0.7}
+								onPress={() => toggleImageSelection(myPetImage.dogNo, imageUrl)}
+								key={index}
+							>
+								<View style={MyPetScrollViewLayout.myPetItem}>
+									<Image
+										source={{ uri: imageUrl }}
+										style={{
+											width: 100,
+											height: 132,
+											marginHorizontal: responsiveWidth(4),
+											borderRadius: 10,
+											borderWidth: 4,
+											borderColor:
+												selectedImages === myPetImage.dogNo
+													? "#EE8A72"
+													: "transparent",
+										}}
+									/>
+								</View>
+							</TouchableOpacity>
+						</>
 					);
 				})}
 			</ScrollView>
