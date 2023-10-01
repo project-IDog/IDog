@@ -46,7 +46,7 @@ public class GraveController {
     @GetMapping("/token")
     public ResponseEntity<TokenInfo> hi(){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(jwtTokenHandler.generateToken(8));
+                .body(jwtTokenHandler.generateToken(10));
     }
 
     @GetMapping("/log")

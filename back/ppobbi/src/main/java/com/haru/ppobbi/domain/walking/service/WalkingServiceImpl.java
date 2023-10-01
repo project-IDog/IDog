@@ -7,7 +7,7 @@ import com.haru.ppobbi.domain.dog.repo.DogRepository;
 import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.domain.user.repo.UserRepository;
 import com.haru.ppobbi.domain.walking.dto.WalkingRequestDto.RegistRequestDto;
-import com.haru.ppobbi.domain.walking.dto.WalkingResponseDto;
+import com.haru.ppobbi.domain.walking.dto.WalkingResponseDto.*;
 import com.haru.ppobbi.domain.walking.entity.Walking;
 import com.haru.ppobbi.domain.walking.repo.WalkingRepository;
 import com.haru.ppobbi.global.constant.BaseConstant;
@@ -52,20 +52,17 @@ public class WalkingServiceImpl implements WalkingService{
     }
 
     @Override
-    public List<WalkingResponseDto.WalkingInfoDto> selectWalkingsByUserNo(Integer userNo) {
-        User user = userRepository.findUserByUserNoAndCanceled(userNo, BaseConstant.NOTCANCELED)
-                .orElseThrow(() -> new NotFoundException(CREATE_FAIL_NO_USER.message()));
-        List<Walking> walkingList = walkingRepository.findAllByUserNoAndCanceled(user.getUserNo(), BaseConstant.NOTCANCELED);
-        return walkingList.stream()
-                .map(WalkingResponseDto.WalkingInfoDto::new)
+    public List<WalkingSummaryDto> selectWalkingsByUserNo(Integer userNo) {
+        return walkingRepository.findWalkingSummaryByUserNo(userNo).stream()
+                .map(WalkingSummaryDto::new)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<WalkingResponseDto.WalkingInfoDto> selectWalkingsByDogNo(Integer dogNo) {
+    public List<WalkingInfoDto> selectWalkingsByDogNo(Integer dogNo) {
         List<Walking> walkingList = walkingRepository.findAllByDogDogNoAndCanceled(dogNo, BaseConstant.NOTCANCELED);
         return walkingList.stream()
-                .map(WalkingResponseDto.WalkingInfoDto::new)
+                .map(WalkingInfoDto::new)
                 .collect(Collectors.toList());
     }
 }
