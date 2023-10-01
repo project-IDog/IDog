@@ -40,7 +40,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import android.graphics.BitmapFactory;
-import android.os.HandlerThread;
 
 import com.google.gson.Gson;
 
@@ -51,6 +50,7 @@ public class StopWatch extends AppWidgetProvider {
     private static MyHandler handler;
     private HandlerThread handlerThread;
     private Handler backgroundHandler;
+    private static Bitmap cachedBitmap;  // 비트맵 캐싱을 위한 변수 추가
 
 
     @Override
@@ -123,20 +123,28 @@ public class StopWatch extends AppWidgetProvider {
             int dogNo = prefs.getInt("dogNo", 0);
             WalkingData walkingData = new WalkingData(dogNo, walkingTime, walkingStartDate);
             sendWalkingDataToServer(walkingData, context);
+        } else if ("UPDATE_IMG_NO".equals(intent.getAction())) {
+            int dogNo = prefs.getInt("dogNo", 0);
+            String dogImg = prefs.getString("dogImg", "");
+            backgroundHandler.post(() -> {
+                if (cachedBitmap != null && !cachedBitmap.isRecycled()) {
+                    cachedBitmap.recycle();
+                    cachedBitmap = null;
+                }
+                Bitmap bitmap = getBitmapFromURL(dogImg, 300, 300);
+                Log.d("orientation : ", "bitmap" + bitmap);
+
+                if (bitmap != null) {
+                    cachedBitmap = bitmap;  // 비트맵 캐싱
+                    RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
+                    views.setImageViewBitmap(R.id.profile, bitmap);
+                    ComponentName componentName = new ComponentName(context, StopWatch.class);
+                    AppWidgetManager.getInstance(context).updateAppWidget(componentName, views);
+                }
+                Log.d("DOG_____NOEQWEWQEQ", "DOGNO" + dogNo);
+                Log.d("DOG_____IMGIMGIMG", "DOGIMG" + dogImg);
+            });
         }
-        int dogNo = prefs.getInt("dogNo", 0);
-        String dogImg = prefs.getString("dogImg", "");
-        backgroundHandler.post(() -> {
-            Bitmap bitmap = getBitmapFromURL(dogImg);
-            if (bitmap != null) {
-                RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
-                views.setImageViewBitmap(R.id.profile, bitmap);
-                ComponentName componentName = new ComponentName(context, StopWatch.class);
-                AppWidgetManager.getInstance(context).updateAppWidget(componentName, views);
-            }
-        });
-        Log.d("DOG_____NOEQWEWQEQ", "DOGNO" + dogNo);
-        Log.d("DOG_____IMGIMGIMG", "DOGIMG" + dogImg);
         isRunning = prefs.getBoolean("isRunning" , false);
         if (!isRunning) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stop_watch);
@@ -152,18 +160,48 @@ public class StopWatch extends AppWidgetProvider {
         updateAllWidgets(context);
     }
 
-    public static Bitmap getBitmapFromURL(String src) {
+    public static Bitmap getBitmapFromURL(String src, int reqWidth, int reqHeight) {
         try {
             URL url = new URL(src);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(input, null, options);
+
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            options.inJustDecodeBounds = false;
+            input.close();
+
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input, null, options);
+
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
     }
 
     private void sendWalkingDataToServer(WalkingData data, Context context) {
