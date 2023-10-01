@@ -45,7 +45,6 @@ const CreateProfile = ({navigation} : any) => {
     const [isLoading, setIsLoading] = useState<Boolean>(false);
     const [tokenId, setTokenId] = useState<number>();
     const [imageOrigin, setImageOrigin] = useState<string>();
-    let imageCid : any;
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -115,8 +114,31 @@ const CreateProfile = ({navigation} : any) => {
                         headers: {
                             'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
                         }
-                    }).then((res) => {
-                        imageCid = () => {return res.data.value.cid};
+                    }).then(async (res) => {
+                        const nft_storage_url = "https://api.nft.storage/upload";
+                        const metaData = await {
+                            "name" : petName,
+                            "description" : "",
+                            "image": 'ipfs://' + res.data.value.cid,
+                            "attributes" : [
+                                {"trait_type":"dogName", "value":petName},
+                                {"trait_type":"dogBreed", "value":petSpecies},
+                                {"trait_type":"dogbirth", "value":petBirth},
+                                {"trait_type":"dogSex", "value":petGender}
+                            ],
+                        }
+                        console.log("metadata", metaData);
+                        await axios.post(nft_storage_url, metaData , {
+                            headers: {
+                                'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
+                                'Content-Type': 'application/json'
+                            }
+                        }).then((res) => {
+                            console.log("nftCid", res.data.value.cid);
+                            setNftCid(res.data.value.cid);
+                        }).catch((err) => {
+                            console.log(err);
+                        });
                         console.log("ImageCid", res.data.value.cid);
                     }).catch((err) => {
                         console.error(err);
@@ -131,17 +153,16 @@ const CreateProfile = ({navigation} : any) => {
         await setIsLoading(true);
 
         await uploadImage(imageUri);
-        await uploadMetaJSON()
 
-        // await createProfile();
+        await createProfile();
     
-        // await enrollProfile();
+        await enrollProfile();
     
         await setIsLoading(false);
         await alert("프로필 생성이 완료되었습니다.");
         
        
-        // await navigation.navigate('Profile');
+        await navigation.navigate('Profile');
     }
     
 
@@ -161,33 +182,6 @@ const CreateProfile = ({navigation} : any) => {
         }).then((data) => {
             console.log(data);
         })
-    }
-
-    const uploadMetaJSON = async () => {
-        const nft_storage_url = "https://api.nft.storage/upload";
-        const metaData = await {
-            "name" : petName,
-            "description" : "",
-            "image": 'ipfs://' + imageCid,
-            "attributes" : [
-                {"trait_type":"dogName", "value":petName},
-                {"trait_type":"dogBreed", "value":petSpecies},
-                {"trait_type":"dogbirth", "value":petBirth},
-                {"trait_type":"dogSex", "value":petGender}
-            ],
-        }
-        console.log("metadata", metaData);
-        await axios.post(nft_storage_url, metaData , {
-            headers: {
-                'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
-                'Content-Type': 'application/json'
-            }
-        }).then((res) => {
-            console.log("nftCid", res.data.value.cid);
-            setNftCid(res.data.value.cid);
-        }).catch((err) => {
-            console.log(err);
-        });
     }
 
     // 권한 요청
@@ -264,7 +258,7 @@ const CreateProfile = ({navigation} : any) => {
 
         getWalletInfoFromStore();
         getPetSpecies();
-    }, [imageCid])
+    },[])
 
     return(
         <>
