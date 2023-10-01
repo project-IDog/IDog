@@ -40,7 +40,7 @@ const CreateProfile = ({navigation} : any) => {
     const [petGender, setPetGender] = useState<string|null>('M');
     const [petBirth, setPetBirth] = useState<string|null>(new Date().getFullYear() + "-" + Number(new Date().getMonth()+1) + "-" + new Date().getDate());
     const [nftCid, setNftCid] = useState<string|null>();
-    const [speciesList, setSpeciesList] = useState<any>();
+    const [speciesList, setSpeciesList] = useState<any[]>([]);
     const [hashId, setHashId] = useState<any>();
     const [isLoading, setIsLoading] = useState<Boolean>(false);
     const [tokenId, setTokenId] = useState<number>();
@@ -254,6 +254,13 @@ const CreateProfile = ({navigation} : any) => {
         }
 
         const getPetSpecies = async () => {
+            axiosApi.get("/dog/breed").then((data) => {
+                if(data.data.message === "견종 전체 목록 조회 완료"){
+                    setSpeciesList(() => {
+                        return data.data.data;
+                    });
+                }
+            })
         }
 
         getWalletInfoFromStore();
@@ -293,11 +300,22 @@ const CreateProfile = ({navigation} : any) => {
                         value={petName}
                     />
                     <Text style={CreateProfileLayout.formTitle}>반려견의 종을 입력해주세요.</Text>
-                    <TextInput
+                    <Picker
+                        selectedValue = {petSpecies}
+                        onValueChange = {(itemValue, itemIndex) => 
+                            setPetSpecies(itemValue)
+                        }
                         style={CreateProfileLayout.formInput}
-                        onChangeText={(text) => setPetSpecies(text)}
-                        value={petSpecies}
-                    />
+                        >
+                        {
+                            speciesList.map((species: any, index:number) => {
+                                console.log("breedName", species.breedName);
+                                return(
+                                    <Picker.Item label={species.breedName} value={species.breedName} key={index}/>
+                                );
+                            })
+                        }
+                    </Picker>
                     <Text style={CreateProfileLayout.formTitle}>반려견의 성별을 입력해주세요.</Text>
                     <Picker
                         selectedValue = {petGender}
