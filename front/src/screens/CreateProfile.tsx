@@ -20,11 +20,13 @@ import {
     NFT_STORAGE_KEY,
     POLYGON_API_KEY,
 } from "@env";
+import RNFS from "react-native-fs";
 
 import WalletLoading from "../components/WalletLoading"
 
 import DatePickerIcon from "../../assets/images/date-picker-icon.png"
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
+import PhotoImg from "../../assets/images/photo-ex-img4.png"
 
 import CreateProfileLayout from "../styles/createProfileLayout"
 
@@ -33,7 +35,6 @@ const CreateProfile = ({navigation} : any) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [walletAddress, setWalletAddress] = useState<string>();
     const [walletPrivateKey, setWalletPrivateKey] = useState<string>();
-    const [imageCid, setImageCid] = useState<string>();
     const [petName, setPetName] = useState<string|null>();
     const [petSpecies, setPetSpecies] = useState<string|null>();
     const [petGender, setPetGender] = useState<string|null>('M');
@@ -44,6 +45,7 @@ const CreateProfile = ({navigation} : any) => {
     const [isLoading, setIsLoading] = useState<Boolean>(false);
     const [tokenId, setTokenId] = useState<number>();
     const [imageOrigin, setImageOrigin] = useState<string>();
+    let imageCid : any;
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -71,6 +73,7 @@ const CreateProfile = ({navigation} : any) => {
 
     const uploadImage = async (uri: any) => {
 		const response = await fetch(uri);
+        // const imageBlob = new Blob([buffer], { type: "image/*" });
 		const blob = await response.blob();
 		const filename = await uri.split("/").pop();
 		const type = await blob.type;
@@ -85,28 +88,40 @@ const CreateProfile = ({navigation} : any) => {
 				console.log("err", err);
 			} else {
                 const s3data = await fetch(data.Location);
+                // const download = async () => {
+                //     await RNFS.downloadFile({
+                //         fromUrl: data.Location,
+                //         toFile: `${RNFS.DocumentDirectoryPath}/your-image.jpg`, // 로컬 경로 및 파일명
+                //     });
+                // }
+                // const downloadReponse = await download();
+                // console.log("download", downloadReponse);
+                // console.log("directorypath", RNFS.DocumentDirectoryPath);
+                // const buffer = await RNFS.readFile(RNFS.DocumentDirectoryPath + '/your-image.jpg');
+                // console.log("buffer", buffer);
                 setImageOrigin(data.Location);
+                
                 console.log("s3data",s3data);
-                // const blob = await new Blob([s3data], {type:"image/jpeg"});
+                const blobImg = await new Blob(['<img src="', data.Location, '" />'],
+                {type:'text/html', endings:'native'});
                 const reader = new FileReader();
+                reader.readAsDataURL(blob); 
                 reader.onload = async () => {
                     const base64data = reader.result;
-                    console.log("base64data", base64data);
+                    // console.log("base64data", base64data);
 
                     const nft_storage_url = "https://api.nft.storage/upload";
-                    await axios.post(nft_storage_url, base64data, {
+                    await axios.post(nft_storage_url, blob, {
                         headers: {
                             'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
-                            'Content-Type': 'application/octet-stream'
                         }
                     }).then((res) => {
-                        setImageCid(res.data.value.cid);
+                        imageCid = () => {return res.data.value.cid};
                         console.log("ImageCid", res.data.value.cid);
                     }).catch((err) => {
                         console.error(err);
                     });
                 }
-                reader.readAsDataURL(blob);
 			}
 		});
 
@@ -118,9 +133,9 @@ const CreateProfile = ({navigation} : any) => {
         await uploadImage(imageUri);
         await uploadMetaJSON()
 
-        await createProfile();
+        // await createProfile();
     
-        await enrollProfile();
+        // await enrollProfile();
     
         await setIsLoading(false);
         await alert("프로필 생성이 완료되었습니다.");
@@ -219,16 +234,18 @@ const CreateProfile = ({navigation} : any) => {
         const provider = await new ethers.JsonRpcProvider(process.env.RPC_URL);
 
         const privateKey = process.env.ADMIN_WALLET_PRIVATE_KEY;
-        const gasPriceGwei = "0.00001";
+        const gasPriceGwei = "100000";
         const priceWei = ethers.parseUnits(gasPriceGwei, 'gwei');
+        const overrides = {
+            gasPrice: ethers.parseUnits('8000', 'gwei')  // gasPrice 설정 (예: 100 gwei)
+        };
 
-        const response = await mintDogTokenContract.mintDogProfile('0x42CdD74ac4A3cf7B082F5BBd83fd628FdBC576AE', `ipfs://${nftCid}`);
-        
-        setHashId(response.hash);
-        console.log("response", response);
+        const tx = await mintDogTokenContract.mintDogProfile('0xfF59632D2680F7eD2D057228e14f6eDbf76f8Ccd', `ipfs://${nftCid}`,overrides);
+        const receipt = await tx.wait();
+        setHashId(receipt.hash);
+        console.log("receipt", receipt);
 
     }
-
 
     useEffect(() => {
         const getWalletInfoFromStore = async () => {
