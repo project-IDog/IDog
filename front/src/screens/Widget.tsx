@@ -5,7 +5,7 @@ import WalkLayout from "../styles/walkLayout";
 import TimerImg from "../../assets/images/timer.png";
 const { StopWatchModule } = NativeModules;
 
-const Widget = () => {
+const Widget = (props: any) => {
 	const [widgetData, setWidgetData] = useState("0:00:00");
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentDate, setCurrentDate] = useState("");
@@ -46,6 +46,7 @@ const Widget = () => {
 			() => {
 				setWidgetData("0:00:00");
 				setIsPlaying(false);
+				props.getWalkingWeek();
 			},
 		);
 
@@ -88,6 +89,7 @@ const Widget = () => {
 		StopWatchModule.resetTimer();
 		setWidgetData("0:00:00");
 		setIsPlaying(false);
+		props.getWalkingWeek();
 	};
 
 	return (

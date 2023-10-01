@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Image, ScrollView } from "react-native";
 import { NativeModules } from "react-native";
 
 import MyPetScrollViewLayout from "../styles/myPetScrollViewLayout";
+import { responsiveWidth } from "react-native-responsive-dimensions";
 const { StopWatchModule } = NativeModules;
 
 const MyPetScrollView = (props: any) => {
@@ -24,7 +25,7 @@ const MyPetScrollView = (props: any) => {
 	const submitDogImgAndDogNo = async (dogNo: number, dogImg: String) => {
 		console.log("dogNo : ", dogNo);
 		console.log("dogImg : ", dogImg);
-		const update = await StopWatchModule.updateDogImgAndDogNo(dogImg, dogNo);
+		await StopWatchModule.updateDogImgAndDogNo(dogImg, dogNo);
 	};
 
 	return (
@@ -34,26 +35,35 @@ const MyPetScrollView = (props: any) => {
 					const imageUrl = `https://ipfs.io/ipfs/${
 						myPetImage.dogImg.split("://")[1]
 					}`;
-
+					console.log(
+						"imageUrl : 아앙아아은마ㅣ윈뭉ㅁ니ㅓㅜㅇㅁ니ㅓ",
+						imageUrl,
+					);
 					return (
-						<TouchableOpacity
-							activeOpacity={0.7}
-							onPress={() => toggleImageSelection(myPetImage.dogNo, imageUrl)}
-							key={index}
-						>
-							<View style={MyPetScrollViewLayout.myPetItem}>
-								<Image
-									source={{ uri: imageUrl }}
-									style={{
-										borderWidth: 4,
-										borderColor:
-											selectedImages === myPetImage.dogNo
-												? "#EE8A72"
-												: "transparent",
-									}}
-								/>
-							</View>
-						</TouchableOpacity>
+						<>
+							<TouchableOpacity
+								activeOpacity={0.7}
+								onPress={() => toggleImageSelection(myPetImage.dogNo, imageUrl)}
+								key={index}
+							>
+								<View style={MyPetScrollViewLayout.myPetItem}>
+									<Image
+										source={{ uri: imageUrl }}
+										style={{
+											width: 100,
+											height: 132,
+											marginHorizontal: responsiveWidth(4),
+											borderRadius: 10,
+											borderWidth: 4,
+											borderColor:
+												selectedImages === myPetImage.dogNo
+													? "#EE8A72"
+													: "transparent",
+										}}
+									/>
+								</View>
+							</TouchableOpacity>
+						</>
 					);
 				})}
 			</ScrollView>
