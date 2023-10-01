@@ -45,7 +45,6 @@ const CreateProfile = ({ navigation }: any) => {
     const [isLoading, setIsLoading] = useState<Boolean>(false);
     const [tokenId, setTokenId] = useState<number>();
     const [imageOrigin, setImageOrigin] = useState<string>();
-    let imageCid : any;
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -115,8 +114,31 @@ const CreateProfile = ({ navigation }: any) => {
                         headers: {
                             'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
                         }
-                    }).then((res) => {
-                        imageCid = () => {return res.data.value.cid};
+                    }).then(async (res) => {
+                        const nft_storage_url = "https://api.nft.storage/upload";
+                        const metaData = await {
+                            "name" : petName,
+                            "description" : "",
+                            "image": 'ipfs://' + res.data.value.cid,
+                            "attributes" : [
+                                {"trait_type":"dogName", "value":petName},
+                                {"trait_type":"dogBreed", "value":petSpecies},
+                                {"trait_type":"dogbirth", "value":petBirth},
+                                {"trait_type":"dogSex", "value":petGender}
+                            ],
+                        }
+                        console.log("metadata", metaData);
+                        await axios.post(nft_storage_url, metaData , {
+                            headers: {
+                                'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
+                                'Content-Type': 'application/json'
+                            }
+                        }).then((res) => {
+                            console.log("nftCid", res.data.value.cid);
+                            setNftCid(res.data.value.cid);
+                        }).catch((err) => {
+                            console.log(err);
+                        });
                         console.log("ImageCid", res.data.value.cid);
                     }).catch((err) => {
                         console.error(err);
@@ -131,17 +153,16 @@ const CreateProfile = ({ navigation }: any) => {
         await setIsLoading(true);
 
         await uploadImage(imageUri);
-        await uploadMetaJSON()
 
-        // await createProfile();
+        await createProfile();
     
-        // await enrollProfile();
+        await enrollProfile();
     
         await setIsLoading(false);
         await alert("프로필 생성이 완료되었습니다.");
         
        
-        // await navigation.navigate('Profile');
+        await navigation.navigate('Profile');
     }
     
 
@@ -163,34 +184,7 @@ const CreateProfile = ({ navigation }: any) => {
         })
     }
 
-    const uploadMetaJSON = async () => {
-        const nft_storage_url = "https://api.nft.storage/upload";
-        const metaData = await {
-            "name" : petName,
-            "description" : "",
-            "image": 'ipfs://' + imageCid,
-            "attributes" : [
-                {"trait_type":"dogName", "value":petName},
-                {"trait_type":"dogBreed", "value":petSpecies},
-                {"trait_type":"dogbirth", "value":petBirth},
-                {"trait_type":"dogSex", "value":petGender}
-            ],
-        }
-        console.log("metadata", metaData);
-        await axios.post(nft_storage_url, metaData , {
-            headers: {
-                'Authorization': `Bearer ${process.env.NFT_STORAGE_KEY}`, 
-                'Content-Type': 'application/json'
-            }
-        }).then((res) => {
-            console.log("nftCid", res.data.value.cid);
-            setNftCid(res.data.value.cid);
-        }).catch((err) => {
-            console.log(err);
-        });
-    }
-
-	// 권한 요청
+    // 권한 요청
 	const getPermissionAsync = async () => {
 		if (Platform.OS !== "web") {
 			const { status } =
@@ -262,101 +256,101 @@ const CreateProfile = ({ navigation }: any) => {
 
         getWalletInfoFromStore();
         getPetSpecies();
-    }, [imageCid]);
+    },[])
 
-	return (
-		<>
-			<CommonLayout>
-				<ColorHeader title="프로필 작성" />
-				<View style={CreateProfileLayout.createProfileTitleWrap}>
-					<Text style={CreateProfileLayout.createProfileDesc}>반려견 NFT</Text>
-					<Text style={CreateProfileLayout.createProfileTitle}>
-						내 NFT에 저장하는,{"\n"}
-						나의 반려견
-					</Text>
-				</View>
-				<TouchableOpacity activeOpacity={0.7} onPress={pickImage}>
-					<View style={CreateProfileLayout.imageUploadWrap}>
-						<Image source={AddPlusIcon} />
-						<Text>사진 등록하기</Text>
-					</View>
-				</TouchableOpacity>
-				<View>
-					{imageUri && (
-						<Image
-							source={{ uri: imageUri }}
-							style={CreateProfileLayout.selectedImage}
-						/>
-					)}
-				</View>
-				<View style={CreateProfileLayout.formWrap}>
-					<Text style={CreateProfileLayout.formTitle}>
-						반려견의 이름을 입력해주세요.
-					</Text>
-					<TextInput
-						style={CreateProfileLayout.formInput}
-						onChangeText={(text) => setPetName(text)}
-						value={petName}
-					/>
-					<Text style={CreateProfileLayout.formTitle}>
-						반려견의 종을 입력해주세요.
-					</Text>
-					<TextInput
-						style={CreateProfileLayout.formInput}
-						onChangeText={(text) => setPetSpecies(text)}
-						value={petSpecies}
-					/>
-					<Text style={CreateProfileLayout.formTitle}>
-						반려견의 성별을 입력해주세요.
-					</Text>
-					<Picker
-						selectedValue={petGender}
-						onValueChange={(itemValue, itemIndex) => setPetGender(itemValue)}
-						style={CreateProfileLayout.formInput}
-					>
-						<Picker.Item label="M" value="M" />
-						<Picker.Item label="F" value="F" />
-					</Picker>
-					<Text style={CreateProfileLayout.formTitle}>
-						반려견의 생일을 입력해주세요.
-					</Text>
-					<TouchableOpacity activeOpacity={0.7} onPress={showDatePicker}>
-						<View style={CreateProfileLayout.dateFormWrap}>
-							<Image source={DatePickerIcon} />
-							<Text style={CreateProfileLayout.dateFormText}>
-								2023. 09. 04.
-							</Text>
-						</View>
-					</TouchableOpacity>
-					<DateTimePickerModal
-						isVisible={isDatePickerVisible}
-						mode="date"
-						onConfirm={handleConfirm}
-						onCancel={hideDatePicker}
-					/>
-				</View>
+    return(
+        <>
+            <CommonLayout>
+                <ColorHeader title="프로필 작성"/>
+                <View style={CreateProfileLayout.createProfileTitleWrap}>
+                    <Text style={CreateProfileLayout.createProfileDesc}>반려견 NFT</Text>
+                    <Text style={CreateProfileLayout.createProfileTitle}>
+                        내 NFT에 저장하는,{"\n"}
+                        나의 반려견
+                    </Text>
+                </View>
+                <TouchableOpacity activeOpacity={0.7} onPress={pickImage}>
+                    <View style={CreateProfileLayout.imageUploadWrap}>
+                        <Image
+                            source={AddPlusIcon}
+                        />
+                        <Text>사진 등록하기</Text>
+                    </View>
+                </TouchableOpacity>
+                <View>
+                    {imageUri && (
+                        <Image source={{ uri: imageUri }} style={CreateProfileLayout.selectedImage}/>
+                    )}
+                </View>
+                <View style={CreateProfileLayout.formWrap}>
 
-				<View style={CreateProfileLayout.formButtonWrap}>
-					<TouchableOpacity activeOpacity={0.7} onPress={uploadIpfs}>
-						<View style={CreateProfileLayout.submitButton}>
-							<Text style={CreateProfileLayout.submitButtonText}>
-								앨범 등록하기
-							</Text>
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity
-						activeOpacity={0.7}
-						onPress={() => navigation.navigate("Profile")}
-					>
-						<View style={CreateProfileLayout.cancelButton}>
-							<Text style={CreateProfileLayout.cancelButtonText}>취소하기</Text>
-						</View>
-					</TouchableOpacity>
-				</View>
-				<Footer />
-			</CommonLayout>
-		</>
-	);
-};
+                    <Text style={CreateProfileLayout.formTitle}>반려견의 이름을 입력해주세요.</Text>
+                    <TextInput 
+                        style={CreateProfileLayout.formInput}
+                        onChangeText={(text) => setPetName(text)}
+                        value={petName}
+                    />
+                    <Text style={CreateProfileLayout.formTitle}>반려견의 종을 입력해주세요.</Text>
+                    <TextInput
+                        style={CreateProfileLayout.formInput}
+                        onChangeText={(text) => setPetSpecies(text)}
+                        value={petSpecies}
+                    />
+                    <Text style={CreateProfileLayout.formTitle}>반려견의 성별을 입력해주세요.</Text>
+                    <Picker
+                        selectedValue = {petGender}
+                        onValueChange = {(itemValue, itemIndex) => 
+                            setPetGender(itemValue)
+                        }
+                        style={CreateProfileLayout.formInput}
+                        >
+                        <Picker.Item label = 'M' value = 'M' />
+                        <Picker.Item label = 'F' value = 'F' />
+                    </Picker>
+                    <Text style={CreateProfileLayout.formTitle}>반려견의 생일을 입력해주세요.</Text>
+                    <TouchableOpacity activeOpacity={0.7} onPress={showDatePicker}>
+                        <View style={CreateProfileLayout.dateFormWrap}>
+                            <Image
+                                source={DatePickerIcon}
+                            />
+                            <Text style={CreateProfileLayout.dateFormText}>2023-09-27</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="date"
+                        onConfirm={handleConfirm}
+                        onCancel={hideDatePicker}
+                    />
+
+                </View>
+
+                <View style={CreateProfileLayout.formButtonWrap}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => {uploadIpfs()}}>
+                        <View style={CreateProfileLayout.submitButton}>
+                            <Text style={CreateProfileLayout.submitButtonText}>
+                                앨범 등록하기
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Profile')}>
+                        <View style={CreateProfileLayout.cancelButton}>
+                            <Text style={CreateProfileLayout.cancelButtonText}>
+                                취소하기
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <Footer/> 
+            </CommonLayout>
+            {
+                isLoading?
+                <WalletLoading title="프로필 생성중.. 잠시만 기다려주세요."/>
+                :
+                <></>
+            }
+        </>
+    );
+}
 
 export default CreateProfile;
