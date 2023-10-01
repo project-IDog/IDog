@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_margin="8dp">
 
             <ImageView
                 android:id="@+id/playButton"
@@ -37,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="4dp"
-                android:layout_marginStart="8dp"
                 android:minHeight="48dp"
                 android:src="@drawable/possible_play"
                 android:clickable="true"
@@ -90,8 +89,7 @@
                 android:layout_gravity="center"
                 android:text="0:00:00"
                 android:textColor="@android:color/white"
-                android:textSize="30sp"
-                android:layout_margin="2dp" />
+                android:textSize="30sp"/>
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>
