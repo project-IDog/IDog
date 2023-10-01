@@ -3,7 +3,7 @@ package com.haru.ppobbi.domain.grave.controller;
 import static com.haru.ppobbi.domain.grave.constant.GraveResponseMessage.*;
 
 import com.haru.ppobbi.domain.grave.dto.GraveRequestDto.RegistRequestDto;
-import com.haru.ppobbi.domain.grave.dto.GraveResponseDto.GraveInfoDto;
+import com.haru.ppobbi.domain.grave.dto.GraveResponseDto.*;
 import com.haru.ppobbi.domain.grave.entity.Grave;
 import com.haru.ppobbi.domain.grave.service.GraveService;
 import com.haru.ppobbi.domain.user.dto.TokenInfo;
@@ -38,7 +38,7 @@ public class GraveController {
     }
 
     @GetMapping()
-    public ResponseEntity<ResponseDto<List<GraveInfoDto>>> getAllGraves(){
+    public ResponseEntity<ResponseDto<List<GraveListDto>>> getAllGraves(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(READ_SUCCESSS, graveService.selectGraves()));
     }

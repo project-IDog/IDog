@@ -4,9 +4,10 @@ import com.haru.ppobbi.domain.dog.entity.Dog;
 import com.haru.ppobbi.domain.dog.repo.DogRepository;
 import com.haru.ppobbi.domain.grave.constant.GraveResponseMessage;
 import com.haru.ppobbi.domain.grave.dto.GraveRequestDto.RegistRequestDto;
-import com.haru.ppobbi.domain.grave.dto.GraveResponseDto.GraveInfoDto;
+import com.haru.ppobbi.domain.grave.dto.GraveResponseDto.*;
 import com.haru.ppobbi.domain.grave.entity.Grave;
 import com.haru.ppobbi.domain.grave.repo.GraveRepository;
+import com.haru.ppobbi.domain.photo.repo.PhotoRepository;
 import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.domain.user.repo.UserRepository;
 import com.haru.ppobbi.global.constant.BaseConstant;
@@ -29,6 +30,7 @@ public class GraveServiceImpl implements GraveService{
     private final GraveRepository graveRepository;
     private final DogRepository dogRepository;
     private final UserRepository userRepository;
+    private final PhotoRepository photoRepository;
     @Override
     public Grave registGrave(Integer userNo, RegistRequestDto registRequestDto) {
         // 그 강아지의 주인 가져오기
@@ -80,11 +82,11 @@ public class GraveServiceImpl implements GraveService{
     }
 
     @Override
-    public List<GraveInfoDto> selectGraves() {
-        List<Grave> graveList = graveRepository.findAll();
-        return graveList.stream()
-                .map(GraveInfoDto::new)
-                .collect(Collectors.toList());
+    public List<GraveListDto> selectGraves() {
+        List<GraveListDto> graveListDtoList = graveRepository.findAll().stream()
+                .map(GraveListDto::new).collect(Collectors.toList());
+        graveListDtoList.forEach(e -> e.setTopAlbums(photoRepository.findTop3ByDogDogNoAndCanceledOrderByPhotoIsGoatDescCreateDateDesc(e.getDogNo(), BaseConstant.NOTCANCELED)));
+        return graveListDtoList;
     }
 
     @Override
