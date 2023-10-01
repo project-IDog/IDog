@@ -14,6 +14,7 @@ import BottomArrowIcon from "../../assets/images/bottom-arrow-icon.png";
 
 import WalkLayout from "../styles/walkLayout";
 import Widget from "./Widget";
+import WalkStatistics from "../components/WalkStatistics";
 
 import axios from "../utils/axios";
 
@@ -132,7 +133,10 @@ const Walk = ({ navigation }: any) => {
 
 	let totalSecondsSum = 0;
 	const weekItems = filteredWeekList.map((value, index) => {
-		const time = convertToTimeWithString(value.walkingTime);
+		console.log("value : ", value);
+
+		const time = convertToTimeWithString(value.timeSum);
+		console.log("time : ", time);
 		totalSecondsSum += time.totalSeconds;
 		return (
 			<View key={index}>
@@ -156,7 +160,15 @@ const Walk = ({ navigation }: any) => {
 					bgImg={WalkMainImg}
 					desc="산책 빈도 측정"
 				/>
-
+				<View style={WalkLayout.statistics}>
+					<View style={WalkLayout.timerTitleWrap}>
+						<Text style={WalkLayout.timerMainTitle}>함께 걸었던 시간</Text>
+						<Text style={WalkLayout.timerSubTitle}>
+							3개월간 함께 걸었던 횟수를 측정합니다.
+						</Text>
+					</View>
+					<WalkStatistics weekList={weekList} />
+				</View>
 				<View style={WalkLayout.calendarTitleWrap}>
 					<Text style={WalkLayout.calendarDesc}>반려견과 함께 걷는 오늘</Text>
 					<Text style={WalkLayout.calendarTitle}>

@@ -14,7 +14,7 @@ import Footer from "../components/Footer";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as SecureStore from "expo-secure-store";
 import { ethers, Transaction } from "ethers";
-import { mintDogTokenContract } from "../contracts/index";
+// import { mintDogTokenContract } from "../contracts/index";
 import * as ImagePicker from "expo-image-picker";
 import { NFT_STORAGE_KEY } from "@env";
 import axiosApi from "../utils/axios";

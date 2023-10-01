@@ -6,8 +6,10 @@ import {
 
 const WalkLayout = StyleSheet.create({
 	calendarTitleWrap: {
-		marginTop: -44,
 		paddingHorizontal: responsiveWidth(4),
+	},
+	statistics: {
+		marginTop: -80,
 	},
 	calendarDesc: {
 		fontSize: 12,
