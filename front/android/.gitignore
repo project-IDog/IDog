@@ -8,8 +8,12 @@ build/
 .idea
 .gradle
 local.properties
+gradle.properties
 *.iml
 *.hprof
 
 # Bundle artifacts
 *.jsbundle
+
+# keystore
+*.keystore

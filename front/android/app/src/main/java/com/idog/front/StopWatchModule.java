@@ -63,6 +63,9 @@ public class StopWatchModule extends ReactContextBaseJavaModule {
             Log.d("DOG IMG : ", "DOG IMG" + dogImg);
             prefs.edit().putInt("dogNo", dogNo).apply();
             prefs.edit().putString("dogImg", dogImg).apply();
+            Intent intent = new Intent(reactContext, StopWatch.class);
+            intent.setAction("UPDATE_IMG_NO");
+            reactContext.sendBroadcast(intent);
             int DOGNO = prefs.getInt("dogNo", 0);
             String DOGIMG = prefs.getString("dogImg", "");
             Log.d("DOG@@@NOEQWEWQEQ", "DOGNO" + DOGNO);

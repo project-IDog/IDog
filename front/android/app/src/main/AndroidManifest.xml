@@ -5,6 +5,8 @@
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-permission android:name="android.permission.VIBRATE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="com.google.android.gms.permission.AD_ID"/> <!--안드로이드 버전 13이상은 광고 ID 필요-->
+
   <queries>
     <intent>
       <action android:name="android.intent.action.VIEW"/>
