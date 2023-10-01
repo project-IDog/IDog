@@ -38,7 +38,7 @@ const CreateProfile = ({ navigation }: any) => {
     const [petName, setPetName] = useState<string|null>();
     const [petSpecies, setPetSpecies] = useState<string|null>();
     const [petGender, setPetGender] = useState<string|null>('M');
-    const [petBirth, setPetBirth] = useState<string|null>();
+    const [petBirth, setPetBirth] = useState<string|null>(new Date().getFullYear() + "-" + Number(new Date().getMonth()+1) + "-" + new Date().getDate());
     const [nftCid, setNftCid] = useState<string|null>();
     const [speciesList, setSpeciesList] = useState<any>();
     const [hashId, setHashId] = useState<any>();
@@ -54,14 +54,14 @@ const CreateProfile = ({ navigation }: any) => {
 		setDatePickerVisibility(false);
 	};
 
-	const handleConfirm = async (date: string) => {
-		const dateAll = new Date(date);
-		const year = dateAll.getFullYear();
-		const month = dateAll.getMonth();
-		const day = dateAll.getDate();
-		await setPetBirth(year + "-" + month + "-" + day);
-		hideDatePicker();
-	};
+    const handleConfirm = async (date:string) => {
+        const dateAll = new Date(date);
+        const year = dateAll.getFullYear();
+        let month = Number(dateAll.getMonth()+1);
+        const day = dateAll.getDate();
+        await setPetBirth(year+"-"+month+"-"+day);
+        hideDatePicker();
+    };
 
     // s3 클라이언트 초기화
 	const s3 = new S3({
@@ -154,15 +154,15 @@ const CreateProfile = ({ navigation }: any) => {
 
         await uploadImage(imageUri);
 
-        await createProfile();
+        // await createProfile();
     
-        await enrollProfile();
+        // await enrollProfile();
     
         await setIsLoading(false);
         await alert("프로필 생성이 완료되었습니다.");
         
        
-        await navigation.navigate('Profile');
+        // await navigation.navigate('Profile');
     }
     
 
@@ -313,7 +313,7 @@ const CreateProfile = ({ navigation }: any) => {
                             <Image
                                 source={DatePickerIcon}
                             />
-                            <Text style={CreateProfileLayout.dateFormText}>2023-09-27</Text>
+                            <Text style={CreateProfileLayout.dateFormText}>{petBirth}</Text>
                         </View>
                     </TouchableOpacity>
                     <DateTimePickerModal
