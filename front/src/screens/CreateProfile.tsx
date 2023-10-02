@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
 	View,
 	Text,
@@ -7,6 +7,9 @@ import {
 	TouchableOpacity,
 	Platform,
 	Alert,
+	TouchableWithoutFeedback,
+	ScrollView,
+	TouchableHighlight,
 } from "react-native";
 import ColorHeader from "../components/ColorHeader";
 import CommonLayout from "../components/CommonLayout";
@@ -37,6 +40,10 @@ import AddPlusIcon from "../../assets/images/add-plus-icon.png";
 import PhotoImg from "../../assets/images/photo-ex-img4.png";
 
 import CreateProfileLayout from "../styles/createProfileLayout";
+import {
+	responsiveHeight,
+	responsiveWidth,
+} from "react-native-responsive-dimensions";
 
 const CreateProfile = ({ navigation }: any) => {
 	const [imageUri, setImageUri] = useState<any>(null);
@@ -282,6 +289,7 @@ const CreateProfile = ({ navigation }: any) => {
 		const getPetSpecies = async () => {
 			axiosApi.get("/dog/breed").then((data) => {
 				if (data.data.message === "견종 전체 목록 조회 완료") {
+					console.log(data.data.data);
 					setSpeciesList(() => {
 						return data.data.data;
 					});
@@ -292,6 +300,15 @@ const CreateProfile = ({ navigation }: any) => {
 		getWalletInfoFromStore();
 		getPetSpecies();
 	}, []);
+
+	const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+
+	const filteredSpeciesList = speciesList.filter((species) => {
+		if (!species.breedName || !searchTerm) return false;
+		return species.breedName.toLowerCase().includes(searchTerm.toLowerCase());
+	});
+
+	const [dropdownVIsible, setDropdownVisible] = useState(false);
 
 	return (
 		<>
@@ -330,25 +347,42 @@ const CreateProfile = ({ navigation }: any) => {
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 종을 입력해주세요.
 					</Text>
-					<Picker
-						selectedValue={petSpecies}
-						onValueChange={(itemValue, itemIndex) => setPetSpecies(itemValue)}
+
+					<TextInput
 						style={CreateProfileLayout.formInput}
-					>
-						{speciesList.map((species: any, index: number) => {
-							console.log("breedName", species.breedName);
-							return (
+						value={petSpecies || ""} // petSpecies가 null일 경우 빈 문자열을 반환합니다.
+						onChangeText={(text) => {
+							setSearchTerm(text);
+							setPetSpecies(text);
+							setDropdownVisible(true);
+						}}
+						placeholder="종 검색하세요"
+						onBlur={() => setDropdownVisible(false)}
+					/>
+
+					{dropdownVIsible && (
+						<Picker
+							selectedValue={petSpecies}
+							onValueChange={(itemValue, itemIndex) => {
+								setPetSpecies(itemValue);
+								setSearchTerm(itemValue);
+							}}
+							style={CreateProfileLayout.formpicker}
+						>
+							{filteredSpeciesList.map((species, index) => (
 								<Picker.Item
+									key={index}
 									label={species.breedName}
 									value={species.breedName}
-									key={index}
 								/>
-							);
-						})}
-					</Picker>
+							))}
+						</Picker>
+					)}
+
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 성별을 입력해주세요.
 					</Text>
+
 					<Picker
 						selectedValue={petGender}
 						onValueChange={(itemValue, itemIndex) => setPetGender(itemValue)}
