@@ -108,7 +108,7 @@ const CreateProfile = ({ navigation }: any) => {
 				console.log("err", err);
 			} else {
 				axios
-					.post("http://10.0.2.2:3000/blockchain/uploadIpfs", {
+					.post("https://idog.store/blockchain/uploadIpfs", {
 						img: data.Location,
 						petName: petName,
 						petSpecies: petSpecies,
