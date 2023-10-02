@@ -17,9 +17,9 @@ const WalkStatistics = (props: any) => {
 				width={screenWidth}
 				height={220}
 				chartConfig={{
-					backgroundColor: "#F2F2F2",
-					backgroundGradientFrom: "#F2F2F2",
-					backgroundGradientTo: "#F2F2F2",
+					backgroundColor: "#FFF",
+					backgroundGradientFrom: "#FFF",
+					backgroundGradientTo: "#FFF",
 					decimalPlaces: 0,
 					color: (opacity = 1) => `rgba(238, 138, 114, ${opacity})`,
 					labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
@@ -27,6 +27,7 @@ const WalkStatistics = (props: any) => {
 				tooltipDataAttrs={{ "data-tip": "tooltip" }}
 				style={{
 					marginVertical: 8,
+					borderRadius: 30,
 				}}
 			/>
 		</View>
