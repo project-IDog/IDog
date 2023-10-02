@@ -307,7 +307,6 @@ const CreateProfile = ({ navigation }: any) => {
                         >
                         {
                             speciesList.map((species: any, index:number) => {
-                                console.log("breedName", species.breedName);
                                 return(
                                     <Picker.Item label={species.breedName} value={species.breedName} key={index}/>
                                 );
