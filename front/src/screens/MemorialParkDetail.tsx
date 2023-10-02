@@ -19,6 +19,8 @@ import MemorialParkLoading from "./MemorialParkLoading";
 import axios from "../utils/axios";
 import MemorialParkDesignLayout from "../styles/MemorialParkDesignLayout";
 import { responsiveWidth } from "react-native-responsive-dimensions";
+import LoginStore from "../stores/LoginStore";
+import Login from "./Login";
 
 const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	const { data } = route.params;
@@ -221,7 +223,6 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 								</View>
 								<View style={[MemorialParkLayout.mpBtw2]}>
 									{feedList.slice(0, 3).map((value: any, index: number) => {
-										console.log(index, "피드리스트다!", feedList);
 										return (
 											<Image
 												key={index}
@@ -242,76 +243,84 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 					</Text>
 				</View>
 				<View style={[MemorialParkLayout.mpTitlewrap3]}>
-					<View style={[MemorialParkLayout.mpMarginwrap]}>
-						<Text style={[MemorialParkLayout.mpTitle]}>댓글 작성하기</Text>
-						<View style={MemorialParkLayout.commentcontainer}>
-							<TextInput
-								style={[MemorialParkLayout.commentInput]}
-								value={comment}
-								onChangeText={setComment}
-								placeholder="추모의 댓글을 작성할 수 있습니다."
-							/>
-							<TouchableOpacity
-								style={MemorialParkLayout.commentsubmit}
-								onPress={commentSubmit}
-							>
-								<Text style={MemorialParkLayout.commentsubmittext}>작성</Text>
-							</TouchableOpacity>
-						</View>
-						<Text style={[MemorialParkLayout.mpTitle]}>
-							댓글 ({commentList.length})
-						</Text>
-						{commentList
-							.slice(0, showAllComments ? commentList.length : 3)
-							.map((comment, index) => {
-								const formattedTime = comment.createTime.replace("T", " ");
-								return (
-									<View
-										style={[MemorialParkLayout.mpComentWarp]}
-										key={`comment_${index}`}
-									>
-										<Text style={[MemorialParkLayout.mpComent]}>
-											{comment?.commentContent}
-										</Text>
-										<View
-											style={{
-												display: "flex",
-												flexDirection: "row",
-												justifyContent: "space-between",
-												alignItems: "center",
-											}}
-										>
-											<Text style={[MemorialParkLayout.mpComentDate]}>
-												{comment?.userName}, {formattedTime}
-											</Text>
-											<TouchableOpacity
-												onPress={() => {
-													setSelectedCommentNo(comment.commentNo);
-													setConfirmationModalVisible(true);
-												}}
-											>
-												<Text
-													style={{
-														color: "black",
-														paddingRight: responsiveWidth(30),
-													}}
-												>
-													삭제하기
-												</Text>
-											</TouchableOpacity>
-										</View>
-									</View>
-								);
-							})}
-
-						{commentList.length > 3 && !showAllComments && (
-							<View style={[MemorialParkLayout.mpcommentbutton]}>
-								<TouchableOpacity onPress={() => setShowAllComments(true)}>
-									<Text style={[MemorialParkLayout.mpComent]}>댓글 더보기</Text>
+					{LoginStore.isLogged ? (
+						<View style={[MemorialParkLayout.mpMarginwrap]}>
+							<Text style={[MemorialParkLayout.mpTitle]}>댓글 작성하기</Text>
+							<View style={MemorialParkLayout.commentcontainer}>
+								<TextInput
+									style={[MemorialParkLayout.commentInput]}
+									value={comment}
+									onChangeText={setComment}
+									placeholder="추모의 댓글을 작성할 수 있습니다."
+								/>
+								<TouchableOpacity
+									style={MemorialParkLayout.commentsubmit}
+									onPress={commentSubmit}
+								>
+									<Text style={MemorialParkLayout.commentsubmittext}>작성</Text>
 								</TouchableOpacity>
 							</View>
-						)}
-					</View>
+							<Text style={[MemorialParkLayout.mpTitle]}>
+								댓글 ({commentList.length})
+							</Text>
+							{commentList
+								.slice(0, showAllComments ? commentList.length : 3)
+								.map((comment, index) => {
+									const formattedTime = comment.createTime.replace("T", " ");
+									return (
+										<View
+											style={[MemorialParkLayout.mpComentWarp]}
+											key={`comment_${index}`}
+										>
+											<Text style={[MemorialParkLayout.mpComent]}>
+												{comment?.commentContent}
+											</Text>
+											<View
+												style={{
+													display: "flex",
+													flexDirection: "row",
+													justifyContent: "space-between",
+													alignItems: "center",
+												}}
+											>
+												<Text style={[MemorialParkLayout.mpComentDate]}>
+													{comment?.userName}, {formattedTime}
+												</Text>
+												<TouchableOpacity
+													onPress={() => {
+														setSelectedCommentNo(comment.commentNo);
+														setConfirmationModalVisible(true);
+													}}
+												>
+													<Text
+														style={{
+															color: "black",
+															paddingRight: responsiveWidth(30),
+														}}
+													>
+														삭제하기
+													</Text>
+												</TouchableOpacity>
+											</View>
+										</View>
+									);
+								})}
+
+							{commentList.length > 3 && !showAllComments && (
+								<View style={[MemorialParkLayout.mpcommentbutton]}>
+									<TouchableOpacity onPress={() => setShowAllComments(true)}>
+										<Text style={[MemorialParkLayout.mpComent]}>
+											댓글 더보기
+										</Text>
+									</TouchableOpacity>
+								</View>
+							)}
+						</View>
+					) : (
+						<View style={[MemorialParkLayout.mpMarginwrap]}>
+							<Text style={[MemorialParkLayout.mpTitle]}>로그인해주세요.</Text>
+						</View>
+					)}
 				</View>
 				<View style={[MemorialParkLayout.mpTitlewrap2]}>
 					<Text style={MemorialParkLayout.MpDesc}>Memorial 앨범</Text>
@@ -327,32 +336,40 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 						</Text>
 					</View>
 
-					<View style={MemorialParkLayout.mpAlbumcontainer}>
-						{feedList
-							.slice(0, showAllFeeds ? feedList.length : 9)
-							.map((value: any, index: number) => {
-								return (
-									<TouchableOpacity
-										key={`feed_${index}`}
-										activeOpacity={0.7}
-										onPress={Pickpicture(value)}
-									>
-										<Image
-											source={{ uri: value.photoUrl }}
-											style={[MemorialParkLayout.tabImage3]}
-										/>
-									</TouchableOpacity>
-								);
-							})}
-					</View>
+					{LoginStore.isLogged ? (
+						<>
+							<View style={MemorialParkLayout.mpAlbumcontainer}>
+								{feedList
+									.slice(0, showAllFeeds ? feedList.length : 9)
+									.map((value: any, index: number) => {
+										return (
+											<TouchableOpacity
+												key={`feed_${index}`}
+												activeOpacity={0.7}
+												onPress={Pickpicture(value)}
+											>
+												<Image
+													source={{ uri: value.photoUrl }}
+													style={[MemorialParkLayout.tabImage3]}
+												/>
+											</TouchableOpacity>
+										);
+									})}
+							</View>
 
-					{feedList.length > 9 && !showAllFeeds && (
-						<View style={{ alignItems: "center", marginTop: 10 }}>
-							<TouchableOpacity onPress={() => setShowAllFeeds(true)}>
-								<Text style={MemorialParkLayout.mpAlbumplusbtn}>
-									앨범 더보기
-								</Text>
-							</TouchableOpacity>
+							{feedList.length > 9 && !showAllFeeds && (
+								<View style={{ alignItems: "center", marginTop: 10 }}>
+									<TouchableOpacity onPress={() => setShowAllFeeds(true)}>
+										<Text style={MemorialParkLayout.mpAlbumplusbtn}>
+											앨범 더보기
+										</Text>
+									</TouchableOpacity>
+								</View>
+							)}
+						</>
+					) : (
+						<View style={[MemorialParkLayout.mpMarginwrap]}>
+							<Text style={[MemorialParkLayout.mpTitle]}>로그인해주세요.</Text>
 						</View>
 					)}
 				</View>

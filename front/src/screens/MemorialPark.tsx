@@ -17,6 +17,7 @@ import { LinearGradient } from "react-native-linear-gradient";
 import RipnftCreate from "../components/RipnftCreate";
 import nftbgcloud from "../../assets/images/skysky.png";
 import axios from "../utils/axios";
+import dog1 from "../../assets/images/adoption-main-img.png";
 
 type AlbumData = {
 	photoUrl: string;
@@ -34,16 +35,10 @@ type DogData = {
 };
 
 const Main = ({ navigation }: any) => {
-	const scrollViewRef = useRef<ScrollView>(null);
-	useEffect(() => {
-		setTimeout(() => {
-			scrollViewRef.current?.scrollToEnd({ animated: false });
-		}, 50);
-	}, []);
-
 	const [dataList, setDataList] = useState<DogData[]>([]);
 	useEffect(() => {
 		axios.get("/grave").then((data) => {
+			console.log("무덤 조회하기!!", data.data.data);
 			if (data.data.message === "무덤 조회 성공") {
 				setDataList(data.data.data);
 			}
@@ -52,84 +47,30 @@ const Main = ({ navigation }: any) => {
 
 	const [RipdataList, setRipdataList] = useState<DogData[]>([]);
 	const [ripIndex, setRipIndex] = useState<number>(0);
-	const [atTop, setAtTop] = React.useState(false);
-
-	const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-		const { contentOffset } = event.nativeEvent;
-
-		if (contentOffset.y <= 0) {
-			setAtTop(true);
-		} else {
-			setAtTop(false);
-		}
-	};
-
-	const handleScrollEndDrag = (
-		event: NativeSyntheticEvent<NativeScrollEvent>,
-	) => {
-		const { contentOffset } = event.nativeEvent;
-		console.log(contentOffset);
-
-		if (atTop && contentOffset.y <= 0) {
-			console.log("맨꼭데기여!!");
-			// 만약에 index가 datalist의 크기의 -1보다 작다면
-			// ripdatalist에 datalist[index]추가
-			// index ++ 해주기
-			if (ripIndex < dataList.length) {
-				const newItem = dataList[ripIndex];
-				RipdataList.unshift(newItem);
-				setRipdataList([...RipdataList]);
-				setRipIndex(ripIndex + 1);
-			}
-
-			console.log(RipdataList.length);
-		}
-	};
 	const [imgDataList, setImgDataList] = useState<Object[]>([]);
-
-	const getDogImage = (dogNo: number) => {
-		axios.get(`/photo/dog/${dogNo}`).then((data) => {
-			if (data.data.message === "사진 조회 성공") {
-				setImgDataList([...imgDataList, data.data.data]);
-			}
-		});
-	};
-
 	const [refreshing, setRefreshing] = useState(false);
-
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 
-		// 데이터를 새로고침하거나 새로운 rip 데이터를 불러오는 로직
-		// ...
+		if (ripIndex < dataList.length) {
+			const newItem = dataList[ripIndex];
+			RipdataList.unshift(newItem);
+			setRipdataList([...RipdataList]);
+			setRipIndex(ripIndex + 1);
+		}
 
 		setRefreshing(false);
-	}, []);
+	}, [ripIndex, dataList, RipdataList]);
 
-	useEffect(() => {
-		// RipdataList의 변화에 따라 axios 요청을 실행하는 로직
-		const firstItem = RipdataList[0];
-
-		// 첫 번째 항목이 있고, dogNo가 유효하면 요청을 실행
-		if (firstItem && firstItem.dogNo) {
-			getDogImage(firstItem.dogNo);
-		}
-	}, [RipdataList]);
 	return (
 		<>
 			<ScrollView
-				onScroll={handleScroll}
-				onScrollEndDrag={handleScrollEndDrag}
 				scrollEventThrottle={16}
 				contentOffset={{ x: 0, y: 12000 }}
 				// ref={scrollViewRef}
 				// pagingEnabled={true}
 				refreshControl={
-					<RefreshControl
-						refreshing={refreshing}
-						onRefresh={onRefresh}
-						// 여기서 다른 스타일이나 속성을 추가할 수 있습니다.
-					/>
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
 			>
 				<MainHeader></MainHeader>
@@ -146,26 +87,12 @@ const Main = ({ navigation }: any) => {
 
 						const imageUrl: string | null = data?.dogImg
 							? `https://ipfs.io/ipfs/${data.dogImg.split("://")[1]}`
-							: "../../../trace-main-img.png";
+							: "https://ppobbi.s3.ap-northeast-2.amazonaws.com/044f0812-8b86-4bf3-80aa-6a71cecd5ec4.jpeg";
 
-						const imgIndexList = imgDataList[ripIndex];
-
-						console.log("imgIndexList:", imgIndexList);
 						return (
-							<View
-								key={index}
-								style={[
-									MemorialParkDesignLayout.nftview,
-									// {
-									// 	backgroundColor:
-									// 		Colors[dataList.length - (index % Colors.length)],
-									// },
-								]}
-							>
+							<View key={index} style={[MemorialParkDesignLayout.nftview]}>
 								<LinearGradient
 									style={[MemorialParkDesignLayout.linearalign, { flex: 1 }]}
-									// start={{ x: 0, y: 0 }}
-									// end={{ x: 1, y: 1 }}
 									colors={[startColor, endColor]}
 								>
 									<Image
@@ -211,17 +138,28 @@ const Main = ({ navigation }: any) => {
 													</Text>
 												</View>
 												<View style={MemorialParkDesignLayout.ripnftbwn}>
-													{imgDataList.slice(0, 3).map((imgData, idx) => {
-														return (
-															<Image
-																key={idx}
-																source={{ uri: imgData.photoUrl }}
-																style={
-																	MemorialParkDesignLayout.ripnftinnersubimg
-																}
-															/>
-														);
-													})}
+													{(() => {
+														const dataLength = data?.topAlbums?.length || 0;
+														const dummyCount = 3 - dataLength;
+														const combinedData = [
+															...(data?.topAlbums || []),
+															...Array(dummyCount).fill(
+																"https://firebasestorage.googleapis.com/v0/b/asjdba-6e4b7.appspot.com/o/dog1.jpg?alt=media&token=68bb18c2-5b0f-4c4b-b816-7cfb8484a9ed",
+															),
+														];
+
+														return combinedData.map((imgData, idx) => {
+															return (
+																<Image
+																	key={idx}
+																	source={{ uri: imgData }}
+																	style={
+																		MemorialParkDesignLayout.ripnftinnersubimg
+																	}
+																/>
+															);
+														});
+													})()}
 												</View>
 											</View>
 										</View>

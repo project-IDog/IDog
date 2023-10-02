@@ -48,7 +48,7 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc, data }: any) => {
 		axios
 			.get(`/flower/${data.graveNo}`)
 			.then((data) => {
-				if (data.data.message === "헌화 등록 성공") {
+				if (data.data.message === "헌화 조회 성공") {
 					setFlowersCnt(data.data.data.count);
 				}
 			})
