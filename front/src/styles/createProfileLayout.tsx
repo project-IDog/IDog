@@ -60,7 +60,7 @@ const CreateProfileLayout = StyleSheet.create({
 	formpicker: {
 		backgroundColor: "#FFFFFF",
 		borderWidth: 1,
-		// borderColor: "#9D9D9D",
+		borderColor: "#9D9D9D",
 		borderRadius: 2,
 		marginTop: 7,
 	},

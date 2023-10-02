@@ -14,6 +14,7 @@ import BottomArrowIcon from "../../assets/images/bottom-arrow-icon.png";
 
 import WalkLayout from "../styles/walkLayout";
 import Widget from "./Widget";
+import WalkStatistics from "../components/WalkStatistics";
 
 import axios from "../utils/axios";
 
@@ -29,6 +30,7 @@ const Walk = ({ navigation }: any) => {
 	const [selectedDogNo, setSelectedDogNo] = useState<number>();
 	const [selectedDogImg, setSelectedDogImg] = useState<string>();
 	const [weekTotalTime, setWeekTotalTime] = useState<String>("");
+	const [walkingChartCheck, setWalkingChartCheck] = useState<boolean>(false);
 
 	const getUserInfo = async () => {
 		const response = await axios.get("/user");
@@ -62,6 +64,10 @@ const Walk = ({ navigation }: any) => {
 		const minutes = Math.floor((totalSeconds % 3600) / 60);
 		const seconds = Math.floor((totalSeconds % 3600) % 60);
 		return { hours, minutes, seconds, totalSeconds };
+	};
+
+	const convertChartAndWalking = () => {
+		setWalkingChartCheck(!walkingChartCheck);
 	};
 
 	const filteredWeekList = getRecentWeekData(weekList);
@@ -132,7 +138,10 @@ const Walk = ({ navigation }: any) => {
 
 	let totalSecondsSum = 0;
 	const weekItems = filteredWeekList.map((value, index) => {
-		const time = convertToTimeWithString(value.walkingTime);
+		console.log("value : ", value);
+
+		const time = convertToTimeWithString(value.timeSum);
+		console.log("time : ", time);
 		totalSecondsSum += time.totalSeconds;
 		return (
 			<View key={index}>
@@ -154,9 +163,17 @@ const Walk = ({ navigation }: any) => {
 					subTitle="산책루트"
 					mainTitle={`내 반려견과\n함께걷는 오늘,\n더 행복한 여정이 되도록.`}
 					bgImg={WalkMainImg}
-					desc="산책 빈도 측정"
+					desc="산책 통계 확인"
 				/>
-
+				{/* <View style={WalkLayout.statistics}>
+					<View style={WalkLayout.timerTitleWrap}>
+						<Text style={WalkLayout.timerMainTitle}>함께 걸었던 시간</Text>
+						<Text style={WalkLayout.timerSubTitle}>
+							3개월간 함께 걸었던 횟수를 측정합니다.
+						</Text>
+					</View>
+					<WalkStatistics weekList={weekList} />
+				</View> */}
 				<View style={WalkLayout.calendarTitleWrap}>
 					<Text style={WalkLayout.calendarDesc}>반려견과 함께 걷는 오늘</Text>
 					<Text style={WalkLayout.calendarTitle}>
@@ -257,43 +274,61 @@ const Walk = ({ navigation }: any) => {
 								함께 나갈 반려견을 선택해주세요
 							</Text>
 						</View>
-						<TouchableOpacity activeOpacity={0.7}>
+						<TouchableOpacity
+							activeOpacity={0.7}
+							onPress={() => convertChartAndWalking()}
+						>
 							<View style={WalkLayout.tabWrap}>
-								<Text style={WalkLayout.tabText}>산책 빈도 보기</Text>
-								<Image source={BottomArrowIcon} style={WalkLayout.tabImage} />
+								{walkingChartCheck ? (
+									<Text style={WalkLayout.tabText}>산책 통계 보기</Text>
+								) : (
+									<Text style={WalkLayout.tabText}>산책 빈도 보기</Text>
+								)}
 							</View>
 						</TouchableOpacity>
 					</View>
 				</View>
-				{/* 여기가 내 강아지 목록 */}
 				<MyPetScrollView
 					userDogs={userDogs}
 					setSelectedDogNo={setSelectedDogNo}
 					setSelectedDogImg={setSelectedDogImg}
 				/>
-				<View style={WalkLayout.timerWrap}>
-					<View style={WalkLayout.timerTitleWrap}>
-						<Text style={WalkLayout.timerMainTitle}>함께 걷는 시간</Text>
-						<Text style={WalkLayout.timerSubTitle}>
-							산책시간 버튼을 누르면 자동으로 오늘의 산책시간이 측정됩니다.
-						</Text>
-					</View>
-					<View style={WalkLayout.contentFlexWrap}>
-						<Widget getWalkingWeek={getWalkingWeek} />
-						<View style={WalkLayout.listWrap}>
-							<Text style={WalkLayout.weekListTitle}>
-								최근 7일 내 반려견 산책
-							</Text>
-							<View>{weekItems}</View>
-							<Text style={WalkLayout.totalTimeText}>
-								7일간 함께한 총 시간{" "}
-								<Text style={WalkLayout.boldTotalTimeText}>
-									{weekTotalTime}
-								</Text>
+				{/* 여기가 내 강아지 목록 */}
+				{!walkingChartCheck ? (
+					<View style={WalkLayout.timerWrap}>
+						<View style={WalkLayout.timerTitleWrap}>
+							<Text style={WalkLayout.timerMainTitle}>함께 걸었던 시간</Text>
+							<Text style={WalkLayout.timerSubTitle}>
+								3개월간 함께 걸었던 횟수를 측정합니다.
 							</Text>
 						</View>
+						<WalkStatistics weekList={weekList} />
 					</View>
-				</View>
+				) : (
+					<View style={WalkLayout.timerWrap}>
+						<View style={WalkLayout.timerTitleWrap}>
+							<Text style={WalkLayout.timerMainTitle}>함께 걷는 시간</Text>
+							<Text style={WalkLayout.timerSubTitle}>
+								산책시간 버튼을 누르면 자동으로 오늘의 산책시간이 측정됩니다.
+							</Text>
+						</View>
+						<View style={WalkLayout.contentFlexWrap}>
+							<Widget getWalkingWeek={getWalkingWeek} />
+							<View style={WalkLayout.listWrap}>
+								<Text style={WalkLayout.weekListTitle}>
+									최근 7일 내 반려견 산책
+								</Text>
+								<View>{weekItems}</View>
+								<Text style={WalkLayout.totalTimeText}>
+									7일간 함께한 총 시간{" "}
+									<Text style={WalkLayout.boldTotalTimeText}>
+										{weekTotalTime}
+									</Text>
+								</Text>
+							</View>
+						</View>
+					</View>
+				)}
 
 				<Footer />
 			</CommonLayout>

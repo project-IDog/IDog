@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
 	View,
 	Text,
@@ -7,9 +7,6 @@ import {
 	TouchableOpacity,
 	Platform,
 	Alert,
-	TouchableWithoutFeedback,
-	ScrollView,
-	TouchableHighlight,
 } from "react-native";
 import ColorHeader from "../components/ColorHeader";
 import CommonLayout from "../components/CommonLayout";
@@ -178,18 +175,21 @@ const CreateProfile = ({ navigation }: any) => {
 	};
 
 	const uploadIpfs = async () => {
-		await setIsLoading(true);
+		try {
+			await setIsLoading(true);
 
-		await uploadImage(imageUri);
+			await uploadImage(imageUri);
 
-		// await createProfile();
+			// await createProfile();
 
-		// await enrollProfile();
+			// await enrollProfile();
 
-		await setIsLoading(false);
-		await alert("프로필 생성이 완료되었습니다.");
-
-		// await navigation.navigate('Profile');
+			await alert("프로필 생성이 완료되었습니다.");
+			// await navigation.navigate('Profile');
+		} catch (err) {
+		} finally {
+			await setIsLoading(false);
+		}
 	};
 
 	const enrollProfile = async () => {
@@ -289,7 +289,6 @@ const CreateProfile = ({ navigation }: any) => {
 		const getPetSpecies = async () => {
 			axiosApi.get("/dog/breed").then((data) => {
 				if (data.data.message === "견종 전체 목록 조회 완료") {
-					console.log(data.data.data);
 					setSpeciesList(() => {
 						return data.data.data;
 					});
