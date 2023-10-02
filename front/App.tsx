@@ -28,7 +28,7 @@ import DogHeaven from "./src/screens/DogHeaven";
 import CurrentAppState from "./src/components/CurrentAppState";
 import ChoiceDog from "./src/screens/ChoiceDog";
 import MemorialParkDetail from "./src/screens/MemorialParkDetail";
-
+import WalkStatistics from "./src/components/WalkStatistics";
 const App = () => {
 	const Stack = createNativeStackNavigator();
 
@@ -71,6 +71,7 @@ const App = () => {
 					<Stack.Screen name="Ipfs" component={Ipfs} />
 					<Stack.Screen name="Widget" component={Widget} />
 					<Stack.Screen name="ChoiceDog" component={ChoiceDog} />
+					<Stack.Screen name="WalkStatistics" component={WalkStatistics} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</>

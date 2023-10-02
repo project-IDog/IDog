@@ -24,10 +24,6 @@ const Adoption = ({navigation}: any) => {
     const [tokenId, setTokenId] = useState<number>(0);
 
     const toggleBorder = (index:number, selectedDogNo:number) => {
-        setMyPetPressState((prevState: any) => ({
-            ...prevState,
-            [index]: !prevState[index] || false,
-        }));
         setSelectedDogNo(selectedDogNo);
     }
 
@@ -68,10 +64,6 @@ const Adoption = ({navigation}: any) => {
     }
 
     useEffect(() => {
-        console.log("변화");
-    },[tokenId, submitAdoption]);
-
-    useEffect(() => {
         console.log("selectedDogNo", selectedDogNo);
         axios.get("/dog/list").then((data) => {
             if(data.data.message === "사용자의 모든 강아지 목록 조회 완료"){
@@ -96,12 +88,24 @@ const Adoption = ({navigation}: any) => {
                     {
                         myPetList?.map((petItem: any, index: number) => {
                             console.log(petItem);
+                            if(petItem.dogNo === selectedDogNo){
+                                return(
+                                    <TouchableOpacity key={index} activeOpacity={0.9} onPress={() => toggleBorder(index, petItem.dogNo)}>
+                                        <Image
+                                            source={{uri: petItem.dogImg}}
+                                            style={[
+                                                AdoptionLayout.myPetThumbnail,
+                                            ]}
+                                        />
+                                    </TouchableOpacity>
+                                );
+                            }
                             return(
                                 <TouchableOpacity key={index} activeOpacity={0.9} onPress={() => toggleBorder(index, petItem.dogNo)}>
                                     <Image
                                         source={{uri: petItem.dogImg}}
                                         style={[
-                                            myPetPressState[index] ? AdoptionLayout.myPetThumbnail : AdoptionLayout.myPetThumbnaulDisable,
+                                            AdoptionLayout.myPetThumbnaulDisable,
                                         ]}
                                     />
                                 </TouchableOpacity>
