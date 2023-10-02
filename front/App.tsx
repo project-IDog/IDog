@@ -1,8 +1,9 @@
-import {AppRegistry} from "react-native";
+import { AppRegistry } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as Sentry from "@sentry/react-native";
 import { sentry_dsn } from "@env";
+import React, { useEffect } from "react";
 
 import Main from "./src/screens/Main";
 import Album from "./src/screens/Album";
@@ -28,6 +29,8 @@ import DogHeaven from "./src/screens/DogHeaven";
 import CurrentAppState from "./src/components/CurrentAppState";
 import ChoiceDog from "./src/screens/ChoiceDog";
 import MemorialParkDetail from "./src/screens/MemorialParkDetail";
+import WalkStatistics from "./src/components/WalkStatistics";
+import SplashScreen from "react-native-splash-screen";
 
 const App = () => {
 	const Stack = createNativeStackNavigator();
@@ -36,6 +39,9 @@ const App = () => {
 		dsn: sentry_dsn,
 		tracesSampleRate: 1.0,
 	});
+	useEffect(() => {
+		SplashScreen.hide();
+	}, []);
 
 	return (
 		<>
@@ -71,6 +77,7 @@ const App = () => {
 					<Stack.Screen name="Ipfs" component={Ipfs} />
 					<Stack.Screen name="Widget" component={Widget} />
 					<Stack.Screen name="ChoiceDog" component={ChoiceDog} />
+					<Stack.Screen name="WalkStatistics" component={WalkStatistics} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</>

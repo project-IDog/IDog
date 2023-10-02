@@ -8,6 +8,7 @@ import {
 import LottieView from "lottie-react-native";
 import cloud22 from "../../assets/images/cloud22.png";
 import cloud32 from "../../assets/images/cloud32.png";
+import { LinearGradient } from "react-native-linear-gradient";
 
 const Main = () => {
 	const grasses = [
@@ -47,6 +48,12 @@ const Main = () => {
 	return (
 		<>
 			<View style={MemorialParkDesignLayout.view1}>
+				<LinearGradient
+					style={MemorialParkDesignLayout.bgToRip}
+					colors={["#d4e3f7", "#ffffff"]}
+				>
+					<Text> </Text>
+				</LinearGradient>
 				<Image source={BG1} style={MemorialParkDesignLayout.bg1} />
 				<Animated.Image
 					source={cloud22}
@@ -69,7 +76,7 @@ const Main = () => {
 							source={require("../../assets/grass.json")}
 							style={[
 								grass,
-								// { top: responsiveHeight(103) }
+								// { top: responsiveHeight(57) }
 							]}
 							autoPlay
 							loop
@@ -87,6 +94,12 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
+	},
+	bgToRip: {
+		position: "absolute",
+		backgroundColor: "red",
+		height: responsiveHeight(20),
+		width: responsiveWidth(100),
 	},
 	view1: {
 		position: "relative",

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { TouchableOpacity, View, Text, Image } from "react-native";
 import IconButton from "../components/IconButton";
 import Footer from "../components/Footer";
