@@ -117,6 +117,7 @@ const CreateProfile = ({ navigation }: any) => {
 					})
 					.then(async (data) => {
 						console.log("nftCid", data.data);
+						setNftCid(data.data);
 
 						const walletAddress = "0xfF59632D2680F7eD2D057228e14f6eDbf76f8Ccd";
 						if (data.status === 200) {
@@ -149,9 +150,47 @@ const CreateProfile = ({ navigation }: any) => {
 									dogImg: imageOrigin,
 								})
 								.then(async (data) => {
-									console.log(data);
-									await alert("프로필 생성이 완료되었습니다.");
-									await navigation.navigate("Profile");
+									console.log("nftCid", data.data);
+									setNftCid(data.data);
+
+									const walletAddress =
+										"0xfF59632D2680F7eD2D057228e14f6eDbf76f8Ccd";
+									if (data.status === 200) {
+										const tx = await mintDogTokenContract.mintDogProfile(
+											walletAddress,
+											`ipfs://${nftCid}`,
+										);
+										const receipt = await tx.wait();
+										setHashId(receipt.hash);
+										console.log("receipt", receipt);
+
+										await axios
+											.get(
+												`https://api.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${process.env.MINT_DOG_TOKEN_ADDRESS}&address=${walletAddress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${process.env.POLYGON_API_KEY}`,
+											)
+											.then((data) => {
+												if (data.status === 200) {
+													setTokenId(
+														data.data.result[data.data.result.length - 1]
+															.tokenID,
+													);
+												}
+											});
+										await axiosApi
+											.post("/dog", {
+												dogName: petName,
+												dogBreed: petSpecies,
+												dogBirthDate: petBirth,
+												dogSex: petGender,
+												dogNft: tokenId,
+												dogImg: imageOrigin,
+											})
+											.then(async (data) => {
+												console.log(data);
+												await alert("프로필 생성이 완료되었습니다.");
+												await navigation.navigate("Profile");
+											});
+									}
 								});
 						}
 					});
