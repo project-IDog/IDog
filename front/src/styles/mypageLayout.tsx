@@ -116,6 +116,21 @@ const MyPageLayout = StyleSheet.create({
         color:"#97989A",
         marginTop:6,
     },
+    badgeWrap:{
+        paddingHorizontal:responsiveWidth(4),
+        marginBottom:48,
+    },
+    badgeTitle:{
+        fontSize:16,
+        fontWeight:"700",
+        color:"#4A4A4A",
+        marginBottom:16,
+    },
+    badge:{
+        width:128,
+        height:154,
+        marginHorizontal:8,
+    },
 })
 
 export default MyPageLayout;
