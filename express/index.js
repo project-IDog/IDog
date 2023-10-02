@@ -47,32 +47,32 @@ const getValueFor = async (key) => {
   }
 };
 
-app.post("/blockchain/imageToServer", async (req, res) => {
-  const url = req.body.url;
-  console.log("url", url);
-  const fileNameOrigin = url.split("/")[url.split("/").length - 1];
-  console.log("fileNameOrigin", fileNameOrigin);
+// app.post("/blockchain/imageToServer", async (req, res) => {
+//   const url = req.body.url;
+//   console.log("url", url);
+//   const fileNameOrigin = url.split("/")[url.split("/").length - 1];
+//   console.log("fileNameOrigin", fileNameOrigin);
 
-  const downloadFile = async (fileName) => {
-    const params = {
-      Bucket: BUCKET_NAME,
-      Key: fileNameOrigin,
-    };
+//   const downloadFile = async (fileName) => {
+//     const params = {
+//       Bucket: BUCKET_NAME,
+//       Key: fileNameOrigin,
+//     };
 
-    s3.getObject(params, (err, data) => {
-      if (err) {
-        throw err;
-      }
+//     s3.getObject(params, (err, data) => {
+//       if (err) {
+//         throw err;
+//       }
 
-      fs.writeFileSync(fileName, data.Body.toString());
-    });
-  };
+//       fs.writeFileSync(fileName, data.Body.toString());
+//     });
+//   };
 
-  await downloadFile(`./${fileNameOrigin}`);
-  setTimeout(async () => {
-    await res.send(fileNameOrigin);
-  }, 5000);
-});
+//   await downloadFile(`./${fileNameOrigin}`);
+//   setTimeout(async () => {
+//     await res.send(fileNameOrigin);
+//   }, 5000);
+// });
 
 app.post("/blockchain/uploadIpfs", async (req, response) => {
   const img = req.body.img;
@@ -83,7 +83,8 @@ app.post("/blockchain/uploadIpfs", async (req, response) => {
 
   const nft_storage_url = "https://api.nft.storage/upload";
   const getImage = async () => {
-    const buffer = await fs.readFileSync(__dirname + "/" + String(img));
+    const fetched = await fetch(img);
+    const buffer = await fetched.arrayBuffer();
     return new Blob([buffer], { type: "image/*" });
   };
   const blobImg = await getImage();
