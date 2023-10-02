@@ -31,28 +31,26 @@ const Adoption = ({navigation}: any) => {
         console.log(selectedDogNo);
         const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
         const fromPrivateKey = String(CLIENT_PRIVATE_KEY) //입양 보내는 사람의 개인키
-        const gasPriceGwei = "0.0001";
+        const polygonApiKey = process.env.POLYGON_API_KEY; 
+        const gasPriceGwei = "0.001";
         const gasPriceWei = ethers.parseUnits(gasPriceGwei, 'gwei');
 
         const signerInstance = new ethers.Wallet(fromPrivateKey, provider); //(tokenId 즉 NFT 소유주의 개인키로 서명한 지갑 가져오기)
+        const fromAdrress = String(signerInstance.address);
         const contract = new ethers.Contract(String(mintIDogTokenAddress), mintIDogTokenAbi, signerInstance);
 
-        await axios.get(`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${String(MINT_DOG_TOKEN_ADDRESS)}&address=0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${CLIENT_PRIVATE_KEY}`).then((data) => {
-            console.log(data.data.result[data.data.result.length-1]);
+        await axios.get(`https://api.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${String(MINT_DOG_TOKEN_ADDRESS)}&address=${fromAdrress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${polygonApiKey}`).then((data) => {
+            console.log("!!data", data.data.result[data.data.result.length-1].tokenID);
             setTokenId(() => {
-                return data.data.result[data.data.result.length-1];
+                return data.data.result[data.data.result.length-1].tokenID;
             });
         })
 
-        console.log("tokenId", tokenId);
-
         try {
-            const approvalTransaction = await contract.setApprovalForAll(mintIDogTokenAddress, true); //승인받기 
+            const approvalTransaction = await contract.setApprovalForAll(String(mintIDogTokenAddress), true); //승인받기 
             console.log(approvalTransaction);
-            console.log("Approval granted to the contract:", mintIDogTokenAddress);
+            console.log("Approval granted to the contract:", String(mintIDogTokenAddress));
 
-            console.log("tokenid", tokenId);
-        
             const transferTransaction = await contract.safeTransferFrom(signerInstance.address, toAddress, tokenId); //from, to, tokenId
             console.log(transferTransaction);
             console.log("NFT transferred to:", toAddress);
