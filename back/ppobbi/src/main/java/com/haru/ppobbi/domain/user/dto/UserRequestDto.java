@@ -66,4 +66,13 @@ public class UserRequestDto {
         private String userName;
     }
 
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserWalletPwRequestDto {
+
+        private String userWalletPw;
+    }
+
 }
