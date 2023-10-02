@@ -280,9 +280,9 @@ const Walk = ({ navigation }: any) => {
 						>
 							<View style={WalkLayout.tabWrap}>
 								{walkingChartCheck ? (
-									<Text style={WalkLayout.tabText}>산책 통계 보기</Text>
+									<Text style={WalkLayout.tabText}>산책 통계보기</Text>
 								) : (
-									<Text style={WalkLayout.tabText}>산책 빈도 보기</Text>
+									<Text style={WalkLayout.tabText}>산책 시작하기</Text>
 								)}
 							</View>
 						</TouchableOpacity>
@@ -299,7 +299,7 @@ const Walk = ({ navigation }: any) => {
 						<View style={WalkLayout.timerTitleWrap}>
 							<Text style={WalkLayout.timerMainTitle}>함께 걸었던 시간</Text>
 							<Text style={WalkLayout.timerSubTitle}>
-								3개월간 함께 걸었던 횟수를 측정합니다.
+								3개월간 함께 걸었던 횟수가 측정됩니다.
 							</Text>
 						</View>
 						<WalkStatistics weekList={weekList} />
