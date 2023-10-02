@@ -156,11 +156,15 @@ const CreateProfile = ({ navigation }: any) => {
 									if (data.status === 200) {
 										// tokenID -> 업데이트 느려서 이전 토큰 값 가져와서 +1
 										setTokenId(
-											data.data.result[data.data.result.length - 1].tokenID + 1,
+											Number(
+												data.data.result[data.data.result.length - 1].tokenID,
+											) + Number(1),
 										);
 
 										tokenIdConst =
-											data.data.result[data.data.result.length - 1].tokenID + 1;
+											Number(
+												data.data.result[data.data.result.length - 1].tokenID,
+											) + Number(1);
 									}
 								});
 
