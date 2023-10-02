@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
 	View,
 	Text,
@@ -7,6 +7,9 @@ import {
 	TouchableOpacity,
 	Platform,
 	Alert,
+	TouchableWithoutFeedback,
+	ScrollView,
+	TouchableHighlight,
 } from "react-native";
 import ColorHeader from "../components/ColorHeader";
 import CommonLayout from "../components/CommonLayout";
@@ -63,6 +66,7 @@ const CreateProfile = ({ navigation }: any) => {
 	const [isLoading, setIsLoading] = useState<Boolean>(false);
 	const [tokenId, setTokenId] = useState<number>();
 	const [imageOrigin, setImageOrigin] = useState<string>();
+	const [myWalletAddress, setMyWalletAddress] = useState<string>();
 
 	const showDatePicker = () => {
 		setDatePickerVisibility(true);
@@ -90,7 +94,6 @@ const CreateProfile = ({ navigation }: any) => {
 
 	const uploadImage = async (uri: any) => {
 		const response = await fetch(uri);
-		// const imageBlob = new Blob([buffer], { type: "image/*" });
 		const blob = await response.blob();
 		const filename = await uri.split("/").pop();
 		const type = await blob.type;
@@ -104,116 +107,75 @@ const CreateProfile = ({ navigation }: any) => {
 			if (err) {
 				console.log("err", err);
 			} else {
-				const s3data = await fetch(data.Location);
-				// const download = async () => {
-				//     await RNFS.downloadFile({
-				//         fromUrl: data.Location,
-				//         toFile: `${RNFS.DocumentDirectoryPath}/your-image.jpg`, // 로컬 경로 및 파일명
-				//     });
-				// }
-				// const downloadReponse = await download();
-				// console.log("download", downloadReponse);
-				// console.log("directorypath", RNFS.DocumentDirectoryPath);
-				// const buffer = await RNFS.readFile(RNFS.DocumentDirectoryPath + '/your-image.jpg');
-				// console.log("buffer", buffer);
-				setImageOrigin(data.Location);
-
-				console.log("s3data", s3data);
-				const blobImg = await new Blob(['<img src="', data.Location, '" />'], {
-					type: "text/html",
-					endings: "native",
-				});
-				const reader = new FileReader();
-				reader.readAsDataURL(blob);
-				reader.onload = async () => {
-					const base64data = reader.result;
-					// console.log("base64data", base64data);
-
-					const nft_storage_url = "https://api.nft.storage/upload";
-					await axios
-						.post(nft_storage_url, blob, {
-							headers: {
-								Authorization: `Bearer ${process.env.NFT_STORAGE_KEY}`,
-							},
-						})
-						.then(async (res) => {
-							const nft_storage_url = "https://api.nft.storage/upload";
-							const metaData = await {
-								name: petName,
-								description: "",
-								image: "ipfs://" + res.data.value.cid,
-								attributes: [
-									{ trait_type: "dogName", value: petName },
-									{ trait_type: "dogBreed", value: petSpecies },
-									{ trait_type: "dogbirth", value: petBirth },
-									{ trait_type: "dogSex", value: petGender },
-								],
-							};
-							console.log("metadata", metaData);
-							await axios
-								.post(nft_storage_url, metaData, {
-									headers: {
-										Authorization: `Bearer ${process.env.NFT_STORAGE_KEY}`,
-										"Content-Type": "application/json",
-									},
+				axios
+					.post("http://10.0.2.2:3000/imageToServer", {
+						url: data.Location,
+					})
+					.then((data) => {
+						if (data.status === 200) {
+							axios
+								.post("http://10.0.2.2:3000/uploadIpfs", {
+									img: data.data,
+									petName: petName,
+									petSpecies: petSpecies,
+									petBirth: petBirth,
+									petGender: petGender,
 								})
-								.then((res) => {
-									console.log("nftCid", res.data.value.cid);
-									setNftCid(res.data.value.cid);
-								})
-								.catch((err) => {
-									console.log(err);
+								.then(async (data) => {
+									console.log("nftCid", data.data);
+									if (data.status === 200) {
+										const tx = await mintDogTokenContract.mintDogProfile(
+											"0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4",
+											`ipfs://${nftCid}`,
+										);
+										const receipt = await tx.wait();
+										setHashId(receipt.hash);
+										console.log("receipt", receipt);
+
+										await axios
+											.get(
+												`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=0x0d695204afafc42acdf39dbf4bb58deea79895fb&address=${myWalletAddress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${process.env.POLYGON_API_KEY}`,
+											)
+											.then((data) => {
+												if (data.status === 200) {
+													setTokenId(
+														data.data.result[data.data.result.length - 1]
+															.tokenID,
+													);
+												}
+											});
+										await axiosApi
+											.post("/dog", {
+												dogName: petName,
+												dogBreed: petSpecies,
+												dogBirthDate: petBirth,
+												dogSex: petGender,
+												dogNft: tokenId,
+												dogImg: imageOrigin,
+											})
+											.then(async (data) => {
+												console.log(data);
+												await alert("프로필 생성이 완료되었습니다.");
+												await navigation.navigate("Profile");
+											});
+									}
 								});
-							console.log("ImageCid", res.data.value.cid);
-						})
-						.catch((err) => {
-							console.error(err);
-						});
-				};
+						}
+					});
 			}
 		});
 	};
 
 	const uploadIpfs = async () => {
 		try {
-			await setIsLoading(true);
+			setIsLoading(true);
 
 			await uploadImage(imageUri);
-
-			// await createProfile();
-
-			// await enrollProfile();
-
-			await alert("프로필 생성이 완료되었습니다.");
-			// await navigation.navigate('Profile');
 		} catch (err) {
+			console.error(err);
 		} finally {
 			await setIsLoading(false);
 		}
-	};
-
-	const enrollProfile = async () => {
-		await axios
-			.get(
-				`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=0x0d695204afafc42acdf39dbf4bb58deea79895fb&address=0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${process.env.POLYGON_API_KEY}`,
-			)
-			.then((data) => {
-				if (data.status === 200) {
-					setTokenId(data.data.result[data.data.result.length - 1].tokenID);
-				}
-			});
-		await axiosApi
-			.post("/dog", {
-				dogName: petName,
-				dogBreed: petSpecies,
-				dogBirthDate: "2023-09-27",
-				dogSex: petGender,
-				dogNft: tokenId,
-				dogImg: imageOrigin,
-			})
-			.then((data) => {
-				console.log(data);
-			});
 	};
 
 	// 권한 요청
@@ -251,28 +213,7 @@ const CreateProfile = ({ navigation }: any) => {
 		}
 	};
 
-	const createProfile = async () => {
-		// const walletAddress = await SecureStore.getItemAsync("walletAddress");
-		// const walletPrivateKey = await SecureStore.getItemAsync("walletPrivateKey");
-
-		const provider = await new ethers.JsonRpcProvider(process.env.RPC_URL);
-
-		const privateKey = process.env.ADMIN_WALLET_PRIVATE_KEY;
-		const gasPriceGwei = "100000";
-		const priceWei = ethers.parseUnits(gasPriceGwei, "gwei");
-		const overrides = {
-			gasPrice: ethers.parseUnits("8000", "gwei"), // gasPrice 설정 (예: 100 gwei)
-		};
-
-		const tx = await mintDogTokenContract.mintDogProfile(
-			"0xfF59632D2680F7eD2D057228e14f6eDbf76f8Ccd",
-			`ipfs://${nftCid}`,
-			overrides,
-		);
-		const receipt = await tx.wait();
-		setHashId(receipt.hash);
-		console.log("receipt", receipt);
-	};
+	const createProfile = async () => {};
 
 	useEffect(() => {
 		const getWalletInfoFromStore = async () => {
@@ -296,8 +237,14 @@ const CreateProfile = ({ navigation }: any) => {
 			});
 		};
 
+		const getWalletAddress = async () => {
+			const myWalletAddress = await SecureStore.getItemAsync("walletAddress");
+			setMyWalletAddress(String(myWalletAddress));
+		};
+
 		getWalletInfoFromStore();
 		getPetSpecies();
+		getWalletAddress();
 	}, []);
 
 	const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
@@ -346,7 +293,6 @@ const CreateProfile = ({ navigation }: any) => {
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 종을 입력해주세요.
 					</Text>
-
 					<TextInput
 						style={CreateProfileLayout.formInput}
 						value={petSpecies || ""} // petSpecies가 null일 경우 빈 문자열을 반환합니다.
@@ -381,7 +327,6 @@ const CreateProfile = ({ navigation }: any) => {
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 성별을 입력해주세요.
 					</Text>
-
 					<Picker
 						selectedValue={petGender}
 						onValueChange={(itemValue, itemIndex) => setPetGender(itemValue)}

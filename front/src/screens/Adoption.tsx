@@ -54,11 +54,12 @@ const Adoption = ({navigation}: any) => {
             const transferTransaction = await contract.safeTransferFrom(signerInstance.address, toAddress, tokenId); //from, to, tokenId
             console.log(transferTransaction);
             console.log("NFT transferred to:", toAddress);
+            await alert("나의 반려견의 입양신청이 완료되었습니다.");
         } catch (error) {
+            alert("입양신청이 실패하였습니다, 관리자에게 문의하세요.");
             console.error(error);
         }
 
-        await alert("나의 반려견의 입양신청이 완료되었습니다.");
     }
 
     useEffect(() => {
