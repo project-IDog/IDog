@@ -171,18 +171,21 @@ const CreateProfile = ({ navigation }: any) => {
 	};
 
 	const uploadIpfs = async () => {
-		await setIsLoading(true);
+		try {
+			await setIsLoading(true);
 
-		await uploadImage(imageUri);
+			await uploadImage(imageUri);
 
-		// await createProfile();
+			// await createProfile();
 
-		// await enrollProfile();
+			// await enrollProfile();
 
-		await setIsLoading(false);
-		await alert("프로필 생성이 완료되었습니다.");
-
-		// await navigation.navigate('Profile');
+			await alert("프로필 생성이 완료되었습니다.");
+			// await navigation.navigate('Profile');
+		} catch (err) {
+		} finally {
+			await setIsLoading(false);
+		}
 	};
 
 	const enrollProfile = async () => {
@@ -336,7 +339,6 @@ const CreateProfile = ({ navigation }: any) => {
 						style={CreateProfileLayout.formInput}
 					>
 						{speciesList.map((species: any, index: number) => {
-							console.log("breedName", species.breedName);
 							return (
 								<Picker.Item
 									label={species.breedName}

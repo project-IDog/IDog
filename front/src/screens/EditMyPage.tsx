@@ -1,14 +1,66 @@
+import {useState, useEffect} from "react"
 import {View, Text, TextInput, TouchableOpacity} from "react-native"
 import CommonLayout from "../components/CommonLayout"
 import WhiteHeader from "../components/WhiteHeader"
 import SubMain from "../components/SubMain"
 import Footer from "../components/Footer"
+import * as SecureStore from 'expo-secure-store';
+
+import axios from "../utils/axios"
 
 import MyPageMainImg from "../../assets/images/mypage-main-bg-img.png"
 
 import EditMypageLayout from "../styles/editMypageLayout"
 
 const EditMyPage = ({navigation}: any) => {
+    const [nickname, setNickname] = useState<string>();
+    const [walletAddress, setWalletAddress] = useState<string>();
+
+    const changeProfile = async () => {
+        if(nickname === undefined || walletAddress === undefined || nickname === null || walletAddress === undefined || nickname === "" || walletAddress === ""){
+            alert("닉네임 또는 지갑주소를 모두 입력해주세요.");
+            return;
+        }
+
+        try{
+            await axios.put('/user/name',{
+                "userName" : nickname,
+            }).then((data) => {
+                if(data.status === 200){
+                    try{
+                        SecureStore.setItemAsync("walletAddress", String(walletAddress));
+                    }catch(err){
+                        alert("시스템 에러, 관리자에게 문의하세요.");
+                        console.error(err);
+                    }
+                }
+            })
+            alert("회원수정이 완료되었습니다.");
+            await navigation.navigate('MyPage');
+        }catch(err){
+            alert("시스템 에러, 관리자에게 문의하세요.");
+            console.error(err);
+        }
+    }
+
+    useEffect(() => {
+        axios.get('/user').then((data) => {
+            if(data.status === 200){
+                setNickname(data.data.data.userName);
+                console.log("data", data.data.data);
+            }
+        })
+
+        const bindWalletAddress = async () => {
+            const walletAddress = await SecureStore.getItemAsync("walletAddress");
+            if(walletAddress != null){
+                setWalletAddress(walletAddress);
+            }
+        }
+
+        bindWalletAddress();
+
+    }, [])
     return(
         <>
             <CommonLayout>
@@ -24,15 +76,23 @@ const EditMyPage = ({navigation}: any) => {
 
                 <View style={EditMypageLayout.editMyPageFormWrap}>
                     <Text style={EditMypageLayout.editMyPageFormText}>변경하실 닉네임을 입력해주세요.</Text>
-                    <TextInput style={EditMypageLayout.editMyPageFormInput}></TextInput>
+                    <TextInput
+                        style={EditMypageLayout.editMyPageFormInput}
+                        value={nickname}
+                        onChangeText={(text) => setNickname(text)}
+                    />
 
                     <Text style={EditMypageLayout.editMyPageFormText}>변경하실 지갑주소를 입력해주세요.</Text>
-                    <TextInput style={EditMypageLayout.editMyPageFormInput}></TextInput>
+                    <TextInput
+                        style={EditMypageLayout.editMyPageFormInput}
+                        value={walletAddress}
+                        onChangeText={(text) => setWalletAddress(String(text))}
+                    />
 
                 </View>
 
                 <View style={EditMypageLayout.editMyPageButtonWrap}>
-                    <TouchableOpacity activeOpacity={0.7}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => changeProfile()}>
                         <View style={EditMypageLayout.editButton}>
                             <Text style={EditMypageLayout.editButtonText}>회원정보 수정하기</Text>
                         </View>
