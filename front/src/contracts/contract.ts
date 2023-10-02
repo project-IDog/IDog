@@ -451,7 +451,7 @@ export const mintIDogTokenAbi = [
 	},
 ];
 
-export const mintIDogTokenAddress = process.env.MINT_DOG_TOKEN_ADDRESS;
+export const mintIDogTokenAddress = String(process.env.MINT_DOG_TOKEN_ADDRESS);
 
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 let signer;
