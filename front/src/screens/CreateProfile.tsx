@@ -108,7 +108,7 @@ const CreateProfile = ({ navigation }: any) => {
 				console.log("err", err);
 			} else {
 				axios
-					.post("https://idog.store/blockchain/uploadIpfs", {
+					.post("http://10.0.2.2:3000/blockchain/uploadIpfs", {
 						img: data.Location,
 						petName: petName,
 						petSpecies: petSpecies,
@@ -118,12 +118,14 @@ const CreateProfile = ({ navigation }: any) => {
 					.then(async (data) => {
 						console.log("nftCid", data.data);
 						setNftCid(data.data);
+						const nftCidConst = data.data;
+						console.log(nftCidConst);
 
 						const walletAddress = "0xfF59632D2680F7eD2D057228e14f6eDbf76f8Ccd";
 						if (data.status === 200) {
 							const tx = await mintDogTokenContract.mintDogProfile(
 								walletAddress,
-								`ipfs://${nftCid}`,
+								`ipfs://${nftCidConst}`,
 							);
 							const receipt = await tx.wait();
 							setHashId(receipt.hash);
