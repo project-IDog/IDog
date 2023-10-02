@@ -14,4 +14,6 @@ public interface UserRedisService {
     void deleteUserInfoFromRedis(Integer userNo);
 
     void updateUserNameToRedis(User user);
+
+    void updateUserWalletPwAndSaltToRedis(User user);
 }
