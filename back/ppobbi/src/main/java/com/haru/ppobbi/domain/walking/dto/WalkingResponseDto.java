@@ -2,6 +2,7 @@ package com.haru.ppobbi.domain.walking.dto;
 
 import com.haru.ppobbi.domain.dog.entity.Dog;
 import com.haru.ppobbi.domain.walking.entity.Walking;
+import com.haru.ppobbi.domain.walking.entity.WalkingSummary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +29,21 @@ public class WalkingResponseDto {
             this.walkingStartDate = walking.getWalkingStartDate().toLocalDate();
             this.walkingCount = walking.getWalkingCount();
             this.walkingTime = walking.getWalkingTime();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class WalkingSummaryDto{
+        private LocalDate walkingStartDate;
+        private Integer countSum;
+        private Integer timeSum;
+
+        public WalkingSummaryDto(WalkingSummary walkingSummary){
+            this.walkingStartDate = walkingSummary.getWalkingStartDate().toLocalDate();
+            this.countSum = walkingSummary.getCountSum();
+            this.timeSum = walkingSummary.getTimeSum();
         }
     }
 }
