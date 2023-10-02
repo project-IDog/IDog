@@ -73,7 +73,7 @@ const CreateProfileLayout = StyleSheet.create({
 
     formButtonWrap:{
         paddingHorizontal:responsiveWidth(4),
-        marginTop:33,
+        marginTop:48,
         marginBottom:22,
     },
     submitButton:{

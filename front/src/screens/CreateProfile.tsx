@@ -150,19 +150,23 @@ const CreateProfile = ({ navigation }: any) => {
 	};
 
     const uploadIpfs = async () => {
-        await setIsLoading(true);
+        try{
 
-        await uploadImage(imageUri);
-
-        // await createProfile();
+            await setIsLoading(true);
     
-        // await enrollProfile();
+            await uploadImage(imageUri);
     
-        await setIsLoading(false);
-        await alert("프로필 생성이 완료되었습니다.");
+            // await createProfile();
         
-       
-        // await navigation.navigate('Profile');
+            // await enrollProfile();
+            
+            await alert("프로필 생성이 완료되었습니다.");
+            // await navigation.navigate('Profile');
+        }catch(err){
+
+        }finally{
+            await setIsLoading(false);
+        }
     }
     
 

@@ -75,15 +75,15 @@ const Profile = ({navigation}:any) => {
                         />
                     </View>
                     <ScrollView style={ProfileLayout.iconWrap} horizontal={true}>
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => createProfile('createProfile')}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => createProfile('CreateProfile')}>
                             <ProfileItem desc="평생 소장하는 내 반려견 NFT 프로필" title="프로필 만들기" thumbnail={NftCardIcon}/>
                         </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Adoption')}>
                             <ProfileItem desc="간편한 소유권 변경" title="입양절차" thumbnail={AdoptionIcon}/>
                         </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.7}>
+                        {/* <TouchableOpacity activeOpacity={0.7}>
                             <ProfileItem desc="내 반려견 NFT를 모아보여드려요" title="반려견 족보" thumbnail={CertificateIcon}/>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </ScrollView>
                 </View>
                 <View style={ProfileLayout.myNftWrap}>
