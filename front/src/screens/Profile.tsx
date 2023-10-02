@@ -1,4 +1,4 @@
-import {useEffect,useRef} from "react"
+import {useEffect,useRef,useState} from "react"
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native"
 import GestureFlipView from '../components/GestureFlipView';
 import CommonLayout from "../components/CommonLayout"
@@ -19,13 +19,15 @@ import CertificateIcon from "../../assets/images/certificate-icon.png"
 import AddPlusIcon from "../../assets/images/add-plus-icon.png"
 import PuppyThumbnail1 from "../../assets/images/puppy-thumbnail1.png"
 
+import MyPetThumbnail1 from "../../assets/images/my-pet-thumbnail1.png"
 
 const Profile = ({navigation}:any) => {
     const flipView = useRef<any>();
+    const [dogList, setDogList] = useState<any>([]);
     const renderFront = () => {
         return(
             <View>
-                <NftProfile dogName="내 반려견 해피" createdTitle="등록한 날짜" createdAt="2023. 09. 02." species="시베리안허스키" bgImg={PuppyThumbnail1}/>
+                <NftProfile dogName="내 반려견 해피" createdTitle="등록한 날짜" createdAt="2023. 09. 02." species="시베리안허스키" bgImg="../../assets/images/puppy-thumbnail1.png"/>
             </View>
         )
     }
@@ -33,13 +35,18 @@ const Profile = ({navigation}:any) => {
     const renderBack = () => {
         return(
             <View>
-                <NftProfile createdTitle="좌우로 회전해보세요" bgImg={PuppyThumbnail1}/>
+                <NftProfile createdTitle="좌우로 회전해보세요" bgImg="../../assets/images/puppy-thumbnail1.png"/>
             </View>
         )
     }
 
     useEffect(() => {
-
+        axios.get('/dog/list').then((data) => {
+            if(data.data.message === "사용자의 모든 강아지 목록 조회 완료"){
+                console.log("data", data.data.data);
+                setDogList(data.data.data);
+            }
+        })
     }, []);
     
     return(
@@ -78,6 +85,16 @@ const Profile = ({navigation}:any) => {
                             {renderBack()}
                             {renderFront()}
                         </GestureFlipView>
+                        {
+                            dogList.map((dogItem:any, index:any) => {
+                                console.log(dogItem.dogImg);
+                                return(
+                                    <View key={index} style={{marginLeft:10}}>
+                                        <NftProfile dogName={`내 반려견 ${dogItem.dogName}`} createdTitle="등록한 날짜" createdAt="2023. 09. 02." species={dogItem.dogBreed} bgImg={dogItem.dogImg}/>
+                                    </View>
+                                );
+                            })
+                        }
                         <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CreateProfile')}>
                             <View style={ProfileLayout.addNewNftWrap}>
                                 <Image

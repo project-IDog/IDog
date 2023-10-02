@@ -1,9 +1,10 @@
-import {useState} from "react"
+import {useState,useEffect} from "react"
 import {View, Text, ScrollView, TouchableOpacity, Image} from "react-native"
 
 import CommonLayout from "../components/CommonLayout";
 import ColorHeader from "../components/ColorHeader";
 import Footer from "../components/Footer";
+import axios from "../utils/axios";
 
 import MyPetThumbnail1 from "../../assets/images/my-pet-thumbnail1.png"
 import MyPetThumbnail2 from "../../assets/images/my-pet-thumbnail2.png"
@@ -13,20 +14,21 @@ import ChoiceDogLayout from "../styles/choiceDogLayout";
 const ChoiceDog = ({navigation} : any) => {
     const [myPetList, setMyPetList] = useState<Object[]>(
         [
-            {
-                id:1,
-                url:MyPetThumbnail1
-            },
-            {
-                id:2,
-                url:MyPetThumbnail2
-            }
+            
         ]
     );
 
     const createAlbum = (petId: number) => {
         navigation.navigate("CreateFeed",{selectedId: petId});
     }
+
+    useEffect(() => {
+        axios.get('/dog/list').then((data) => {
+            if(data.data.message === "사용자의 모든 강아지 목록 조회 완료"){
+                setMyPetList(data.data.data);
+            }
+        })
+    },[])
 
     return(
         <>
@@ -43,12 +45,13 @@ const ChoiceDog = ({navigation} : any) => {
 
                 <ScrollView horizontal={true} style={ChoiceDogLayout.myPetContent}>
                 {
-                    myPetList.map((myPetImage: Object, index: number) => {
+                    myPetList.map((myPetItem: Object, index: number) => {
                         return(     
-                            <TouchableOpacity activeOpacity={0.7} onPress={() => createAlbum(myPetImage.id)}>
+                            <TouchableOpacity activeOpacity={0.7} onPress={() => createAlbum(myPetItem.dogNo)}>
                                 <View style={ChoiceDogLayout.myPetItem}>
                                     <Image
-                                        source={myPetImage.url}
+                                        source={{uri:myPetItem.dogImg}}
+                                        style={{width:100, height:132}}
                                     />
                                 </View>
                             </TouchableOpacity>

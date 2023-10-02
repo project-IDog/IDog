@@ -1,7 +1,7 @@
 import { observable, action } from "mobx";
 
 const LoginStore = observable({
-	isLogged: true,
+	isLogged: false,
 	userInfo: {},
 	setLogged: action(function (status: boolean) {
 		this.isLogged = status;

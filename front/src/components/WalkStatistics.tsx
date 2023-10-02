@@ -1,4 +1,4 @@
-import { View, Dimensions, Alert } from "react-native";
+import { View, Dimensions, Alert, Text } from "react-native";
 import { ContributionGraph } from "react-native-chart-kit";
 
 const screenWidth = Dimensions.get("window").width;
@@ -8,7 +8,6 @@ const WalkStatistics = (props: any) => {
 		date: item.walkingStartDate,
 		count: item.countSum,
 	}));
-
 	return (
 		<View>
 			<ContributionGraph

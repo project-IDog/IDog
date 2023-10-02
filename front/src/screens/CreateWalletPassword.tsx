@@ -41,8 +41,7 @@ const CreateWalletPassword = ({navigation}: any) => {
         }
 
         try {
-            const rpcUrl = RPC_URL;
-            const provider = new ethers.JsonRpcProvider(rpcUrl);
+            const provider = new ethers.JsonRpcProvider(RPC_URL);
             const newWallet = ethers.Wallet.createRandom(provider);
             const newMnemonic = await newWallet.mnemonic;
         
@@ -145,7 +144,7 @@ const CreateWalletPassword = ({navigation}: any) => {
             </CommonLayout>
             {
                 isLoading ?
-                <WalletLoading/>
+                <WalletLoading title="지갑 생성 중.. 잠시만 기다려주세요"/>
                 :
                 <></>
             }

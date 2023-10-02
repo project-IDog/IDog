@@ -2,7 +2,7 @@ import {View, Text, Image} from "react-native"
 
 import WalletLoadingLayout from "../styles/walletLoadingLayout";
 
-const WalletLoading = () => {
+const WalletLoading = ({title}: any) => {
     return(
         <>
             <View style={WalletLoadingLayout.modalBack}></View>
@@ -11,7 +11,7 @@ const WalletLoading = () => {
                     source={require('../../assets/images/pet-animation.gif')}
                     style={WalletLoadingLayout.petAnimation}
                 />
-                <Text style={WalletLoadingLayout.loadingText}>지갑 생성 중.. 잠시만 기다려주세요</Text>
+                <Text style={WalletLoadingLayout.loadingText}>{title}</Text>
             </View>
         </>
     );
