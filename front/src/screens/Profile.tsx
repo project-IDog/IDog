@@ -5,6 +5,7 @@ import CommonLayout from "../components/CommonLayout"
 import ProfileItem from "../components/ProfileItem"
 import NftProfile from "../components/NftProfile"
 import Footer from "../components/Footer"
+import * as SecureStore from 'expo-secure-store';
 
 import axios from "../utils/axios"
 
@@ -40,10 +41,20 @@ const Profile = ({navigation}:any) => {
         )
     }
 
+    const createProfile = async (moveUri:string) => {
+        const walletAddress = await SecureStore.getItemAsync("walletAddress");
+        if(walletAddress === null){
+            alert("생성된 지갑이 없습니다. 지갑 생성을 먼저 진행해 주세요.");
+            navigation.navigate('CreateWalletMain');
+            return;
+        }else{
+            navigation.navigate(moveUri);
+        }
+    } 
+
     useEffect(() => {
         axios.get('/dog/list').then((data) => {
             if(data.data.message === "사용자의 모든 강아지 목록 조회 완료"){
-                console.log("data", data.data.data);
                 setDogList(data.data.data);
             }
         })
@@ -64,7 +75,7 @@ const Profile = ({navigation}:any) => {
                         />
                     </View>
                     <ScrollView style={ProfileLayout.iconWrap} horizontal={true}>
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('CreateProfile')}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => createProfile('createProfile')}>
                             <ProfileItem desc="평생 소장하는 내 반려견 NFT 프로필" title="프로필 만들기" thumbnail={NftCardIcon}/>
                         </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Adoption')}>
@@ -87,7 +98,6 @@ const Profile = ({navigation}:any) => {
                         </GestureFlipView>
                         {
                             dogList.map((dogItem:any, index:any) => {
-                                console.log(dogItem.dogImg);
                                 return(
                                     <View key={index} style={{marginLeft:10}}>
                                         <NftProfile dogName={`내 반려견 ${dogItem.dogName}`} createdTitle="등록한 날짜" createdAt="2023. 09. 02." species={dogItem.dogBreed} bgImg={dogItem.dogImg}/>
@@ -95,7 +105,7 @@ const Profile = ({navigation}:any) => {
                                 );
                             })
                         }
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CreateProfile')}>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => createProfile('createProfile')}>
                             <View style={ProfileLayout.addNewNftWrap}>
                                 <Image
                                     source={AddPlusIcon}
