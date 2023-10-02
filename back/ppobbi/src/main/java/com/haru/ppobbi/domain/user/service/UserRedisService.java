@@ -1,6 +1,5 @@
 package com.haru.ppobbi.domain.user.service;
 
-import com.haru.ppobbi.domain.user.dto.UserResponseDto.UserInfoResponseDto;
 import com.haru.ppobbi.domain.user.entity.User;
 import com.haru.ppobbi.domain.user.entity.UserInfo;
 
@@ -10,7 +9,9 @@ public interface UserRedisService {
 
     UserInfo readUserInfoFromRedis(Integer userNo);
 
-    void updateUserInfoToRedis(User user);
+    void updateUserMessageToRedis(User user);
 
     void deleteUserInfoFromRedis(Integer userNo);
+
+    void updateUserNameToRedis(User user);
 }

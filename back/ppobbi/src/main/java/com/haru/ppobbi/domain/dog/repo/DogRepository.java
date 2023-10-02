@@ -12,5 +12,7 @@ public interface DogRepository extends JpaRepository<Dog, Integer> {
 
     Optional<Dog> findDogByDogNoAndCanceled(Integer dogNo, Integer isCanceled);
 
+    List<Dog> findAllByUserNoAndDogIsDeadAndCanceled(Integer userNo, Integer isDead, Integer isCanceled);
+
 
 }

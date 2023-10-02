@@ -5,8 +5,10 @@ import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.GET_USER_
 import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.REISSUE_ACCESS_TOKEN__SUCCESS;
 import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.SIGN_IN_SUCCESS;
 import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.UPDATE_USER_MESSAGE_SUCCESS;
+import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.UPDATE_USER_NAME_SUCCESS;
 
 import com.haru.ppobbi.domain.user.dto.TokenInfo;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserInfoRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserInfoRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserResponseDto.AccessTokenResponseDto;
@@ -71,7 +73,7 @@ public class UserController {
         );
     }
 
-    @GetMapping("/token")
+    @PostMapping("/token")
     public ResponseEntity<ResponseDto<AccessTokenResponseDto>> reissueAccessToken(
         @RequestAttribute("userNo") Integer userNo) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -79,4 +81,14 @@ public class UserController {
                 userService.reissueAccessToken(userNo))
         );
     }
+
+    @PutMapping("/name")
+    public ResponseEntity<ResponseDto<String>> updateUserName(
+        @RequestAttribute("userNo") Integer userNo, @RequestBody UpdateUserInfoRequestDto updateUserInfoRequestDto) {
+        userService.updateUserName(userNo, updateUserInfoRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ResponseDto.create(UPDATE_USER_NAME_SUCCESS)
+        );
+    }
+
 }

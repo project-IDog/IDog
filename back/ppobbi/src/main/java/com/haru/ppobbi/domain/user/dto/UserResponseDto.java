@@ -21,9 +21,7 @@ public class UserResponseDto {
 
         private String userId;
         private String userName;
-        private String userWallet;
         private String userMessage;
         private String userProfileImg;
-        private String userPrivateKey;
     }
 }

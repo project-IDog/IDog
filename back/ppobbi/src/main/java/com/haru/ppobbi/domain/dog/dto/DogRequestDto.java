@@ -11,7 +11,6 @@ public class DogRequestDto {
     @NoArgsConstructor
     @Builder
     public static class DogSaveRequestDto {
-        private Integer userNo;
         private String dogName;
         private String dogBreed;
         private LocalDate dogBirthDate;

@@ -6,6 +6,7 @@ import static com.haru.ppobbi.global.constant.BaseConstant.CANCELED;
 import static com.haru.ppobbi.global.constant.BaseConstant.NOTCANCELED;
 
 import com.haru.ppobbi.domain.user.dto.TokenInfo;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserInfoRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserInfoRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserResponseDto.AccessTokenResponseDto;
@@ -52,10 +53,6 @@ public class UserServiceImpl implements UserService {
             NOTCANCELED);
         if (optionalUser.isEmpty()) {
             userRepository.save(user);
-        } else {
-            User foundUser = optionalUser.get();
-            foundUser.updateUserInfo(user.getUserName(), user.getUserProfileImg());
-            userRepository.save(foundUser);
         }
         return userRepository.findUserByUserIdAndCanceled(user.getUserId(),
             NOTCANCELED).get();
@@ -70,10 +67,8 @@ public class UserServiceImpl implements UserService {
             return UserInfoResponseDto.builder()
                 .userId(userInfo.getUserId())
                 .userName(userInfo.getUserName())
-                .userWallet(userInfo.getUserWallet())
                 .userMessage(userInfo.getUserMessage())
                 .userProfileImg(userInfo.getUserProfileImg())
-                .userPrivateKey(userInfo.getUserPrivateKey())
                 .build();
         } catch (NotFoundException e) {
             // 없으면 DB 검색
@@ -87,10 +82,8 @@ public class UserServiceImpl implements UserService {
             return UserInfoResponseDto.builder()
                 .userId(user.getUserId())
                 .userName(user.getUserName())
-                .userWallet(user.getUserWallet())
                 .userMessage(user.getUserMessage())
                 .userProfileImg(user.getUserProfileImg())
-                .userPrivateKey(user.getUserPrivateKey())
                 .build();
         }
     }
@@ -116,11 +109,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
 
-        String message = updateUserMessageRequestDto.getUserMessage();
-        user.updateUserMessage(message);
+        user.updateUserMessage(updateUserMessageRequestDto.getUserMessage());
+        userRepository.save(user);
 
         // redis 에 적용
-        userRedisService.updateUserInfoToRedis(user);
+        userRedisService.updateUserMessageToRedis(user);
     }
 
     @Override
@@ -130,5 +123,20 @@ public class UserServiceImpl implements UserService {
         return AccessTokenResponseDto.builder()
             .accessToken(accessToken)
             .build();
+    }
+
+    @Override
+    @Transactional
+    public void updateUserName(Integer userNo, UpdateUserInfoRequestDto updateUserInfoRequestDto) {
+        User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
+            .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
+        log.debug("[userService/updateUserName] update user name : {}",
+            updateUserInfoRequestDto.getUserName());
+
+        user.updateUserName(updateUserInfoRequestDto.getUserName());
+        userRepository.save(user);
+
+        // redis 에 적용
+        userRedisService.updateUserNameToRedis(user);
     }
 }
