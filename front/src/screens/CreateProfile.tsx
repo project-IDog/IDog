@@ -108,60 +108,50 @@ const CreateProfile = ({ navigation }: any) => {
 				console.log("err", err);
 			} else {
 				axios
-					.post("https://idog.store/blockchain/imageToServer", {
-						url: data.Location,
+					.post("https://idog.store/blockchain/uploadIpfs", {
+						img: data.Location,
+						petName: petName,
+						petSpecies: petSpecies,
+						petBirth: petBirth,
+						petGender: petGender,
 					})
-					.then((data) => {
+					.then(async (data) => {
+						console.log("nftCid", data.data);
+
+						const walletAddress = "0xfF59632D2680F7eD2D057228e14f6eDbf76f8Ccd";
 						if (data.status === 200) {
-							axios
-								.post("https://idog.store/blockchain/uploadIpfs", {
-									img: data.data,
-									petName: petName,
-									petSpecies: petSpecies,
-									petBirth: petBirth,
-									petGender: petGender,
+							const tx = await mintDogTokenContract.mintDogProfile(
+								walletAddress,
+								`ipfs://${nftCid}`,
+							);
+							const receipt = await tx.wait();
+							setHashId(receipt.hash);
+							console.log("receipt", receipt);
+
+							await axios
+								.get(
+									`https://api.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${process.env.MINT_DOG_TOKEN_ADDRESS}&address=${walletAddress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${process.env.POLYGON_API_KEY}`,
+								)
+								.then((data) => {
+									if (data.status === 200) {
+										setTokenId(
+											data.data.result[data.data.result.length - 1].tokenID,
+										);
+									}
+								});
+							await axiosApi
+								.post("/dog", {
+									dogName: petName,
+									dogBreed: petSpecies,
+									dogBirthDate: petBirth,
+									dogSex: petGender,
+									dogNft: tokenId,
+									dogImg: imageOrigin,
 								})
 								.then(async (data) => {
-									console.log("nftCid", data.data);
-
-									const walletAddress =
-										"0xfF59632D2680F7eD2D057228e14f6eDbf76f8Ccd";
-									if (data.status === 200) {
-										const tx = await mintDogTokenContract.mintDogProfile(
-											walletAddress,
-											`ipfs://${nftCid}`,
-										);
-										const receipt = await tx.wait();
-										setHashId(receipt.hash);
-										console.log("receipt", receipt);
-
-										await axios
-											.get(
-												`https://api.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${process.env.MINT_DOG_TOKEN_ADDRESS}&address=${walletAddress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${process.env.POLYGON_API_KEY}`,
-											)
-											.then((data) => {
-												if (data.status === 200) {
-													setTokenId(
-														data.data.result[data.data.result.length - 1]
-															.tokenID,
-													);
-												}
-											});
-										await axiosApi
-											.post("/dog", {
-												dogName: petName,
-												dogBreed: petSpecies,
-												dogBirthDate: petBirth,
-												dogSex: petGender,
-												dogNft: tokenId,
-												dogImg: imageOrigin,
-											})
-											.then(async (data) => {
-												console.log(data);
-												await alert("프로필 생성이 완료되었습니다.");
-												await navigation.navigate("Profile");
-											});
-									}
+									console.log(data);
+									await alert("프로필 생성이 완료되었습니다.");
+									await navigation.navigate("Profile");
 								});
 						}
 					});
