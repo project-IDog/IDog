@@ -74,8 +74,13 @@ const MyPage = ({navigation}: any) => {
                         관리하기
                     </Text>
                     <ScrollView style={MyPageLayout.myPetList} horizontal={true}>
-                        <MyPet bgImg={MyPetThumbnail1} petCreatedDate="2023.09.04" petName="뽀삐" petSpecies="시베리안 허스키"/>
-                        <MyPet bgImg={MyPetThumbnail2} petCreatedDate="2023.09.04" petName="해피" petSpecies="레브라도 리트리버"/>
+                        {
+                            myDogList.map((myDog, index) => {
+                                return(
+                                    <MyPet bgImg={{uri: myDog.dogImg}} petCreatedDate={myDog.dogBirthDate} petName={myDog.dogName} petSpecies={myDog.dogBreed}/>
+                                );
+                            })
+                        }
                         <TouchableOpacity activeOpacity={0.7}>
                             <View style={MyPageLayout.addNewMyPetWrap}>
                                 <Image
