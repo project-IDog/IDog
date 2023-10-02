@@ -22,6 +22,7 @@ import WhitePenIcon from "../../assets/images/pen-icon.png";
 import AlbumLayout from "../styles/albumLayout";
 
 const Album = ({ navigation }: any) => {
+	const [userName, setUserName] = useState<string>('명예 멍집사');
 	const [statusModalState, setStatusModalState] = useState<Boolean>(false);
 	const [feedList, setFeedList] = useState<Object[]>([]);
 
@@ -62,7 +63,7 @@ const Album = ({ navigation }: any) => {
 	};
 
 	useEffect(() => {
-		axios.get("/photo/user/8").then((data) => {
+		axios.get("/photo/user").then((data) => {
 			if (data.data.message === "사진 조회 성공") {
 				setFeedList(data.data.data);
 			}
@@ -70,6 +71,7 @@ const Album = ({ navigation }: any) => {
 
 		axios.get("/user").then((data) => {
 			if (data.data.message === "회원 정보 조회 완료") {
+				setUserName(data.data.data.userName);
 				setStatusComment(data.data.data.userMessage);
 			}
 		});
@@ -81,7 +83,7 @@ const Album = ({ navigation }: any) => {
 				<ColorHeader title="포토앨범" />
 				<View>
 					<View style={AlbumLayout.profileWrap}>
-						<Text style={AlbumLayout.myNameTitle}>나의 닉네임</Text>
+						<Text style={AlbumLayout.myNameTitle}>{userName}</Text>
 						<Image source={MyPetPhoto} style={AlbumLayout.userPhoto} />
 						<TouchableOpacity
 							activeOpacity={0.7}

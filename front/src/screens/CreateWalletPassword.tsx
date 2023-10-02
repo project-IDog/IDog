@@ -6,6 +6,7 @@ import { ethers } from "ethers";
 import CryptoJS from "react-native-crypto-js";
 import * as SecureStore from 'expo-secure-store';
 import {RPC_URL, SECRET_SALT, NFT_STORAGE} from "@env"
+import axios from "axios"
 
 import CommonLayout from "../components/CommonLayout";
 import ColorHeader from "../components/ColorHeader";
@@ -41,26 +42,21 @@ const CreateWalletPassword = ({navigation}: any) => {
         }
 
         try {
-            const rpcUrl = RPC_URL;
-            const provider = new ethers.JsonRpcProvider(rpcUrl);
-            const newWallet = ethers.Wallet.createRandom(provider);
-            const newMnemonic = await newWallet.mnemonic;
+            axios.get('http://10.0.2.2:3000').then(async (data) => {
+                const encryptedValue = data.data;
+                const decrypted = await decryptValue(encryptedValue, SECRET_SALT);
+                const newAccount = await ethers.HDNodeWallet.fromPhrase(decrypted);
+                console.log("newAccount", newAccount);
+                await SecureStore.setItemAsync("walletAddress", newAccount?.address);
+                await SecureStore.setItemAsync("privateKey", newAccount?.privateKey);
+                await SecureStore.setItemAsync("mnemonic", String(newAccount?.mnemonic?.phrase));
+
+                const walletAddress = await SecureStore.getItemAsync("walletAddress");
+                const privateKey = await SecureStore.getItemAsync("privateKey");
+                const Mnemonic = await newAccount?.mnemonic?.phrase;
         
-            const encrypted = await encryptValue(newMnemonic?.phrase, SECRET_SALT);
-            save("encryptedMnemonic", encrypted);
-
-            const getMnemonic = await getValueFor("encryptedMnemonic");
-
-            const decrypted = await decryptValue(getMnemonic, SECRET_SALT);
-
-            const newAccount = await ethers.HDNodeWallet.fromPhrase(decrypted);
-
-            await console.log(SecureStore.setItemAsync("walletAddress", newAccount?.address));
-            await console.log(SecureStore.setItemAsync("privateKey", newAccount?.privateKey));
-            
-            await navigation.navigate('ProtectWallet');
-            
-            return newMnemonic;
+                await navigation.navigate('ProtectWallet');
+            })
         } catch (error) {
             console.error("Error generating wallet:", error);
         }finally{
@@ -69,32 +65,10 @@ const CreateWalletPassword = ({navigation}: any) => {
         }
     };
 
-    const encryptValue = (value: any, secretkey: any) => {
-        const ciphertext = CryptoJS.AES.encrypt(value, secretkey).toString();
-        return ciphertext;
-    };
-
     const decryptValue = (encrypted: any, secretkey: any) => {
         const bytes = CryptoJS.AES.decrypt(encrypted, secretkey);
         const originalText = bytes.toString(CryptoJS.enc.Utf8);
         return originalText;
-    };
-
-    const save = async (key: any, value: any) => {
-        try {
-            await SecureStore.setItemAsync(key, value);
-        } catch (error) {
-            console.log("Failed to save to store:", error);
-        }
-    };
-    
-    const getValueFor = async (key: any) => {
-        let result = await SecureStore.getItemAsync(key);
-        if (result) {
-            return result;
-        } else {
-            console.log("No values stored under that key.");
-        }
     };
 
     return(
@@ -145,7 +119,7 @@ const CreateWalletPassword = ({navigation}: any) => {
             </CommonLayout>
             {
                 isLoading ?
-                <WalletLoading/>
+                <WalletLoading title="지갑 생성 중.. 잠시만 기다려주세요"/>
                 :
                 <></>
             }

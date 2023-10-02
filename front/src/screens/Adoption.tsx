@@ -1,9 +1,14 @@
-import {useState} from "react"
+import {useState,useEffect} from "react"
 import {View, Text, ScrollView, Image, TextInput, TouchableOpacity} from "react-native"
 import CommonLayout from "../components/CommonLayout";
 import WhiteHeader from "../components/WhiteHeader";
 import SubMain from "../components/SubMain";
 import Footer from "../components/Footer";
+import {mintDogTokenContract, mintIDogTokenAddress,mintIDogTokenAbi} from "../contracts/contract"
+import {ethers} from "ethers"
+import {CLIENT_PRIVATE_KEY, MINT_DOG_TOKEN_ADDRESS} from "@env"
+
+import axios from "../utils/axios";
 
 import AdoptionMainImg from "../../assets/images/adoption-main-img.png"
 import MyPetThumbnail1 from "../../assets/images/my-pet-thumbnail1.png"
@@ -13,21 +18,61 @@ import AdoptionLayout from "../styles/adptionLayout";
 
 const Adoption = ({navigation}: any) => {
     const [myPetPressState, setMyPetPressState] = useState({});
-    const myPetList = [
-        {
-            url: MyPetThumbnail1,
-        },
-        {
-            url: MyPetThumnail2,
-        }
-    ]
+    const [myPetList, setMyPetList] = useState<any>();
+    const [selectedDogNo, setSelectedDogNo] = useState<number>();
+    const [toAddress, setToAddress] = useState<string>();
+    const [tokenId, setTokenId] = useState<number>(0);
 
-    const toggleBorder = (index:number) => {
-        setMyPetPressState((prevState: any) => ({
-            ...prevState,
-            [index]: !prevState[index] || false,
-        }));
+    const toggleBorder = (index:number, selectedDogNo:number) => {
+        setSelectedDogNo(selectedDogNo);
     }
+
+    const submitAdoption = async () => {
+        console.log(selectedDogNo);
+        const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+        const fromPrivateKey = String(CLIENT_PRIVATE_KEY) //입양 보내는 사람의 개인키
+        const gasPriceGwei = "0.0001";
+        const gasPriceWei = ethers.parseUnits(gasPriceGwei, 'gwei');
+
+        const signerInstance = new ethers.Wallet(fromPrivateKey, provider); //(tokenId 즉 NFT 소유주의 개인키로 서명한 지갑 가져오기)
+        const contract = new ethers.Contract(String(mintIDogTokenAddress), mintIDogTokenAbi, signerInstance);
+
+        await axios.get(`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${String(MINT_DOG_TOKEN_ADDRESS)}&address=0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${CLIENT_PRIVATE_KEY}`).then((data) => {
+            console.log(data.data.result[data.data.result.length-1]);
+            setTokenId(() => {
+                return data.data.result[data.data.result.length-1];
+            });
+        })
+
+        console.log("tokenId", tokenId);
+
+        try {
+            const approvalTransaction = await contract.setApprovalForAll(mintIDogTokenAddress, true); //승인받기 
+            console.log(approvalTransaction);
+            console.log("Approval granted to the contract:", mintIDogTokenAddress);
+
+            console.log("tokenid", tokenId);
+        
+            const transferTransaction = await contract.safeTransferFrom(signerInstance.address, toAddress, tokenId); //from, to, tokenId
+            console.log(transferTransaction);
+            console.log("NFT transferred to:", toAddress);
+            await alert("나의 반려견의 입양신청이 완료되었습니다.");
+        } catch (error) {
+            alert("입양신청이 실패하였습니다, 관리자에게 문의하세요.");
+            console.error(error);
+        }
+
+    }
+
+    useEffect(() => {
+        console.log("selectedDogNo", selectedDogNo);
+        axios.get("/dog/list").then((data) => {
+            if(data.data.message === "사용자의 모든 강아지 목록 조회 완료"){
+                setMyPetList(data.data.data);
+            }
+        })
+    }, [tokenId, toAddress]);
+
     return(
         <>
             <CommonLayout>
@@ -39,15 +84,29 @@ const Adoption = ({navigation}: any) => {
                     <Text style={AdoptionLayout.adoptionMainTitle}>입양절차</Text>
                 </View>
 
+
                 <ScrollView horizontal={true} style={AdoptionLayout.myPetList}>
                     {
-                        myPetList.map((value, index) : any => {
+                        myPetList?.map((petItem: any, index: number) => {
+                            console.log(petItem);
+                            if(petItem.dogNo === selectedDogNo){
+                                return(
+                                    <TouchableOpacity key={index} activeOpacity={0.9} onPress={() => toggleBorder(index, petItem.dogNo)}>
+                                        <Image
+                                            source={{uri: petItem.dogImg}}
+                                            style={[
+                                                AdoptionLayout.myPetThumbnail,
+                                            ]}
+                                        />
+                                    </TouchableOpacity>
+                                );
+                            }
                             return(
-                                <TouchableOpacity key={index} activeOpacity={0.9} onPress={() => toggleBorder(index)}>
+                                <TouchableOpacity key={index} activeOpacity={0.9} onPress={() => toggleBorder(index, petItem.dogNo)}>
                                     <Image
-                                        source={value.url}
+                                        source={{uri: petItem.dogImg}}
                                         style={[
-                                            myPetPressState[index] ? AdoptionLayout.myPetThumbnail : AdoptionLayout.myPetThumbnaulDisable,
+                                            AdoptionLayout.myPetThumbnaulDisable,
                                         ]}
                                     />
                                 </TouchableOpacity>
@@ -59,7 +118,11 @@ const Adoption = ({navigation}: any) => {
                 <View style={AdoptionLayout.adoptionFormWrap}>
 
                     <Text style={AdoptionLayout.adoptionFormTitle}>전달할 사람의 닉네임을 입력해주세요.</Text>
-                    <TextInput style={AdoptionLayout.adoptionFormInput}></TextInput>
+                    <TextInput
+                        style={AdoptionLayout.adoptionFormInput}
+                        value={toAddress}
+                        onChangeText={(text) => setToAddress(text)}    
+                    />
 
                     <Text style={AdoptionLayout.adoptionFormTitle}>내 반려견을 떠나보내며 한마디를 입력해주세요.</Text>
                     <TextInput style={AdoptionLayout.adoptionFormInput}></TextInput>
@@ -67,7 +130,7 @@ const Adoption = ({navigation}: any) => {
                 </View>
 
                 <View style={AdoptionLayout.adoptionButtonWrap}>
-                    <TouchableOpacity activeOpacity={0.7} style={AdoptionLayout.submitButton}>
+                    <TouchableOpacity activeOpacity={0.7} style={AdoptionLayout.submitButton} onPress={() => submitAdoption()}>
                         <View >
                             <Text style={AdoptionLayout.submitButtonText}>작성완료</Text>
                         </View>

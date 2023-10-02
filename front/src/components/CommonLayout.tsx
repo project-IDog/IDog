@@ -2,15 +2,30 @@ import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import * as Sentry from "@sentry/react-native";
+import * as SecureStore from "expo-secure-store";
+import { useNavigation } from "@react-navigation/native";
 
 const CommonLayout = ({ children }: any) => {
 	const [renderError, setRenderError] = useState<Boolean>();
+	const navigation = useNavigation();
 
 	useEffect(() => {
 		const handleRenderError = (error: any, isFatal: any) => {
 			Sentry.captureMessage("화면 렌더링 에러");
 			setRenderError(true);
 		};
+
+		const checkExpired = async () => {
+			const sessionStatus = await SecureStore.getItemAsync("session_expired");
+			if(sessionStatus){
+				if(sessionStatus === "expired"){
+					await SecureStore.setItemAsync("session expired", "ok");
+					navigation.navigate("Login");
+				}
+			}
+		} 
+
+		checkExpired();
 
 		ErrorUtils.setGlobalHandler(handleRenderError);
 	}, []);
