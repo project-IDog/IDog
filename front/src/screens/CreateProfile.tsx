@@ -45,6 +45,7 @@ const CreateProfile = ({ navigation }: any) => {
     const [isLoading, setIsLoading] = useState<Boolean>(false);
     const [tokenId, setTokenId] = useState<number>();
     const [imageOrigin, setImageOrigin] = useState<string>();
+    const [myWalletAddress, setMyWalletAddress] = useState<string>();
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -171,7 +172,7 @@ const CreateProfile = ({ navigation }: any) => {
     
 
     const enrollProfile = async () => {
-        await axios.get(`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=0x0d695204afafc42acdf39dbf4bb58deea79895fb&address=0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${process.env.POLYGON_API_KEY}`).then((data) => {
+        await axios.get(`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=0x0d695204afafc42acdf39dbf4bb58deea79895fb&address=${myWalletAddress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${process.env.POLYGON_API_KEY}`).then((data) => {
             if(data.status === 200){
                 setTokenId(data.data.result[data.data.result.length-1].tokenID);
             }
@@ -236,7 +237,7 @@ const CreateProfile = ({ navigation }: any) => {
             gasPrice: ethers.parseUnits('8000', 'gwei')  // gasPrice 설정 (예: 100 gwei)
         };
 
-        const tx = await mintDogTokenContract.mintDogProfile('0xfF59632D2680F7eD2D057228e14f6eDbf76f8Ccd', `ipfs://${nftCid}`,overrides);
+        const tx = await mintDogTokenContract.mintDogProfile(myWalletAddress, `ipfs://${nftCid}`,overrides);
         const receipt = await tx.wait();
         setHashId(receipt.hash);
         console.log("receipt", receipt);
@@ -265,8 +266,15 @@ const CreateProfile = ({ navigation }: any) => {
             })
         }
 
+        const getWalletAddress = async () => {
+            const myWalletAddress = await SecureStore.getItemAsync("walletAddress");
+            setMyWalletAddress(String(myWalletAddress));
+        }
+
+
         getWalletInfoFromStore();
         getPetSpecies();
+        getWalletAddress();
     },[])
 
     return(
