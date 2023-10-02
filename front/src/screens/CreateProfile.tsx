@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
 	View,
 	Text,
@@ -7,6 +7,9 @@ import {
 	TouchableOpacity,
 	Platform,
 	Alert,
+	TouchableWithoutFeedback,
+	ScrollView,
+	TouchableHighlight,
 } from "react-native";
 import ColorHeader from "../components/ColorHeader";
 import CommonLayout from "../components/CommonLayout";
@@ -37,6 +40,10 @@ import AddPlusIcon from "../../assets/images/add-plus-icon.png";
 import PhotoImg from "../../assets/images/photo-ex-img4.png";
 
 import CreateProfileLayout from "../styles/createProfileLayout";
+import {
+	responsiveHeight,
+	responsiveWidth,
+} from "react-native-responsive-dimensions";
 
 const CreateProfile = ({ navigation }: any) => {
 	const [imageUri, setImageUri] = useState<any>(null);
@@ -100,16 +107,14 @@ const CreateProfile = ({ navigation }: any) => {
 			if (err) {
 				console.log("err", err);
 			} else {
-				console.log("loc : ", data.Location);
-
 				axios
-					.post("https://idog.store/blockchain/imageToServer", {
+					.post("http://10.0.2.2:3000/imageToServer", {
 						url: data.Location,
 					})
 					.then((data) => {
 						if (data.status === 200) {
 							axios
-								.post("https://idog.store/blockchain/uploadIpfs", {
+								.post("http://10.0.2.2:3000/uploadIpfs", {
 									img: data.data,
 									petName: petName,
 									petSpecies: petSpecies,
@@ -120,7 +125,7 @@ const CreateProfile = ({ navigation }: any) => {
 									console.log("nftCid", data.data);
 									if (data.status === 200) {
 										const tx = await mintDogTokenContract.mintDogProfile(
-											"0x587DA3fA6997d47ca4a4815011f2d400dB065745",
+											"0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4",
 											`ipfs://${nftCid}`,
 										);
 										const receipt = await tx.wait();
@@ -242,6 +247,15 @@ const CreateProfile = ({ navigation }: any) => {
 		getWalletAddress();
 	}, []);
 
+	const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+
+	const filteredSpeciesList = speciesList.filter((species) => {
+		if (!species.breedName || !searchTerm) return false;
+		return species.breedName.toLowerCase().includes(searchTerm.toLowerCase());
+	});
+
+	const [dropdownVIsible, setDropdownVisible] = useState(false);
+
 	return (
 		<>
 			<CommonLayout>
@@ -279,21 +293,37 @@ const CreateProfile = ({ navigation }: any) => {
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 종을 입력해주세요.
 					</Text>
-					<Picker
-						selectedValue={petSpecies}
-						onValueChange={(itemValue, itemIndex) => setPetSpecies(itemValue)}
+					<TextInput
 						style={CreateProfileLayout.formInput}
-					>
-						{speciesList.map((species: any, index: number) => {
-							return (
+						value={petSpecies || ""} // petSpecies가 null일 경우 빈 문자열을 반환합니다.
+						onChangeText={(text) => {
+							setSearchTerm(text);
+							setPetSpecies(text);
+							setDropdownVisible(true);
+						}}
+						placeholder="종 검색하세요"
+						onBlur={() => setDropdownVisible(false)}
+					/>
+
+					{dropdownVIsible && (
+						<Picker
+							selectedValue={petSpecies}
+							onValueChange={(itemValue, itemIndex) => {
+								setPetSpecies(itemValue);
+								setSearchTerm(itemValue);
+							}}
+							style={CreateProfileLayout.formpicker}
+						>
+							{filteredSpeciesList.map((species, index) => (
 								<Picker.Item
+									key={index}
 									label={species.breedName}
 									value={species.breedName}
-									key={index}
 								/>
-							);
-						})}
-					</Picker>
+							))}
+						</Picker>
+					)}
+
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 성별을 입력해주세요.
 					</Text>

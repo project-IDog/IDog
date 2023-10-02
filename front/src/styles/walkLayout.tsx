@@ -96,8 +96,8 @@ const WalkLayout = StyleSheet.create({
 	},
 	tabText: {
 		fontSize: 12,
-		fontWeight: "500",
-		color: "#C8C9CE",
+		fontWeight: "900",
+		color: "#EE8A72",
 	},
 	tabImage: {
 		width: 10,
@@ -233,6 +233,7 @@ const WalkLayout = StyleSheet.create({
 		fontWeight: "700",
 		color: "#8F8F8F",
 		marginBottom: 7,
+		marginTop: -13,
 	},
 	totalTimeText: {
 		fontSize: 10,

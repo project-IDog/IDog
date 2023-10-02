@@ -89,7 +89,7 @@
                 android:layout_gravity="center"
                 android:text="0:00:00"
                 android:textColor="@android:color/white"
-                android:textSize="30sp"/>
+                android:textSize="28sp"/>
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>
