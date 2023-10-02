@@ -40,7 +40,7 @@ const Adoption = ({navigation}: any) => {
         await axios.get(`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${String(MINT_DOG_TOKEN_ADDRESS)}&address=0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${CLIENT_PRIVATE_KEY}`).then((data) => {
             console.log(data.data.result[data.data.result.length-1]);
             setTokenId(() => {
-                return data.data.result[data.data.result.length-1]
+                return data.data.result[data.data.result.length-1];
             });
         })
 
