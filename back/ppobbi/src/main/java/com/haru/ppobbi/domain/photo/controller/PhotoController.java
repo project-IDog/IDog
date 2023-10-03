@@ -30,8 +30,8 @@ public class PhotoController {
                 .body(ResponseDto.create(CREATE_SUCCESS));
     }
 
-    @GetMapping("/user/{userNo}")
-    public ResponseEntity<ResponseDto<List<PhotoInfoDto>>> getAllAlbum(@PathVariable Integer userNo){
+    @GetMapping("/user")
+    public ResponseEntity<ResponseDto<List<PhotoInfoDto>>> getAllAlbum(@RequestAttribute("userNo") Integer userNo){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(READ_SUCCESS, photoService.selectPhotosByUserNo(userNo)));
     }

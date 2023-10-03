@@ -20,7 +20,7 @@ import axios from "../utils/axios";
 
 const Walk = ({ navigation }: any) => {
 	const [now, setNow] = useState<any>(dayjs());
-	const [todayDate, setTodayDate] = useState<number>(now.format("DD"));
+	const [todayDate, setTodayDate] = useState<number>(now.format("D"));
 	const [todayDay, setTodayDay] = useState<number>(now.get("day"));
 
 	const [weekList, setWeekList] = useState<Object[]>([]);
@@ -30,7 +30,7 @@ const Walk = ({ navigation }: any) => {
 	const [selectedDogNo, setSelectedDogNo] = useState<number>();
 	const [selectedDogImg, setSelectedDogImg] = useState<string>();
 	const [weekTotalTime, setWeekTotalTime] = useState<String>("");
-	const [walkingChartCheck, setWalkingChartCheck] = useState<boolean>(false);
+	const [walkingChartCheck, setWalkingChartCheck] = useState<boolean>(true);
 
 	const getUserInfo = async () => {
 		const response = await axios.get("/user");
@@ -165,15 +165,6 @@ const Walk = ({ navigation }: any) => {
 					bgImg={WalkMainImg}
 					desc="산책 통계 확인"
 				/>
-				{/* <View style={WalkLayout.statistics}>
-					<View style={WalkLayout.timerTitleWrap}>
-						<Text style={WalkLayout.timerMainTitle}>함께 걸었던 시간</Text>
-						<Text style={WalkLayout.timerSubTitle}>
-							3개월간 함께 걸었던 횟수를 측정합니다.
-						</Text>
-					</View>
-					<WalkStatistics weekList={weekList} />
-				</View> */}
 				<View style={WalkLayout.calendarTitleWrap}>
 					<Text style={WalkLayout.calendarDesc}>반려견과 함께 걷는 오늘</Text>
 					<Text style={WalkLayout.calendarTitle}>
@@ -280,9 +271,9 @@ const Walk = ({ navigation }: any) => {
 						>
 							<View style={WalkLayout.tabWrap}>
 								{walkingChartCheck ? (
-									<Text style={WalkLayout.tabText}>산책 통계 보기</Text>
+									<Text style={WalkLayout.tabText}>산책 통계보기</Text>
 								) : (
-									<Text style={WalkLayout.tabText}>산책 빈도 보기</Text>
+									<Text style={WalkLayout.tabText}>산책 시작하기</Text>
 								)}
 							</View>
 						</TouchableOpacity>
@@ -299,7 +290,7 @@ const Walk = ({ navigation }: any) => {
 						<View style={WalkLayout.timerTitleWrap}>
 							<Text style={WalkLayout.timerMainTitle}>함께 걸었던 시간</Text>
 							<Text style={WalkLayout.timerSubTitle}>
-								3개월간 함께 걸었던 횟수를 측정합니다.
+								3개월간 함께 걸었던 횟수가 측정됩니다.
 							</Text>
 						</View>
 						<WalkStatistics weekList={weekList} />

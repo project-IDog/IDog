@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
 	View,
 	Text,
@@ -7,6 +7,9 @@ import {
 	TouchableOpacity,
 	Platform,
 	Alert,
+	TouchableWithoutFeedback,
+	ScrollView,
+	TouchableHighlight,
 } from "react-native";
 import ColorHeader from "../components/ColorHeader";
 import CommonLayout from "../components/CommonLayout";
@@ -63,6 +66,7 @@ const CreateProfile = ({ navigation }: any) => {
 	const [isLoading, setIsLoading] = useState<Boolean>(false);
 	const [tokenId, setTokenId] = useState<number>();
 	const [imageOrigin, setImageOrigin] = useState<string>();
+	const [myWalletAddress, setMyWalletAddress] = useState<string>();
 
 	const showDatePicker = () => {
 		setDatePickerVisibility(true);
@@ -73,10 +77,16 @@ const CreateProfile = ({ navigation }: any) => {
 	};
 
 	const handleConfirm = async (date: string) => {
+		console.log("handle confirm date:", date);
+
 		const dateAll = new Date(date);
-		const year = dateAll.getFullYear();
-		let month = Number(dateAll.getMonth() + 1);
-		const day = dateAll.getDate();
+		// const year = dateAll.getFullYear();
+		// let month = Number(dateAll.getMonth() + 1);
+		// const day = dateAll.getDate();
+
+		var year = dateAll.getFullYear();
+		var month = ("0" + (1 + dateAll.getMonth())).slice(-2);
+		var day = ("0" + dateAll.getDate()).slice(-2);
 		await setPetBirth(year + "-" + month + "-" + day);
 		hideDatePicker();
 	};
@@ -90,7 +100,6 @@ const CreateProfile = ({ navigation }: any) => {
 
 	const uploadImage = async (uri: any) => {
 		const response = await fetch(uri);
-		// const imageBlob = new Blob([buffer], { type: "image/*" });
 		const blob = await response.blob();
 		const objectURL = URL.createObjectURL(blob);
 		console.log("오브젝트 유알엘:", objectURL);
@@ -106,116 +115,91 @@ const CreateProfile = ({ navigation }: any) => {
 			if (err) {
 				console.log("err", err);
 			} else {
-				const s3data = await fetch(data.Location);
-				// const download = async () => {
-				//     await RNFS.downloadFile({
-				//         fromUrl: data.Location,
-				//         toFile: `${RNFS.DocumentDirectoryPath}/your-image.jpg`, // 로컬 경로 및 파일명
-				//     });
-				// }
-				// const downloadReponse = await download();
-				// console.log("download", downloadReponse);
-				// console.log("directorypath", RNFS.DocumentDirectoryPath);
-				// const buffer = await RNFS.readFile(RNFS.DocumentDirectoryPath + '/your-image.jpg');
-				// console.log("buffer", buffer);
-				setImageOrigin(data.Location);
+				axios
+					.post("https://idog.store/blockchain/uploadIpfs", {
+						img: data.Location,
+						petName: petName,
+						petSpecies: petSpecies,
+						petBirth: petBirth,
+						petGender: petGender,
+					})
+					.then(async (data) => {
+						// console.log("data : ", data);
+						console.log("nftCid", data.data.nftCid);
 
-				console.log("s3data", s3data);
-				const blobImg = await new Blob(['<img src="', data.Location, '" />'], {
-					type: "text/html",
-					endings: "native",
-				});
-				const reader = new FileReader();
-				reader.readAsDataURL(blob);
-				reader.onload = async () => {
-					const base64data = reader.result;
-					// console.log("base64data", base64data);
+						setNftCid(data.data.nftCid);
+						setImageOrigin(data.data.imageCid);
 
-					const nft_storage_url = "https://api.nft.storage/upload";
-					await axios
-						.post(nft_storage_url, blob, {
-							headers: {
-								Authorization: `Bearer ${process.env.NFT_STORAGE_KEY}`,
-							},
-						})
-						.then(async (res) => {
-							const nft_storage_url = "https://api.nft.storage/upload";
-							const metaData = await {
-								name: petName,
-								description: "",
-								image: "ipfs://" + res.data.value.cid,
-								attributes: [
-									{ trait_type: "dogName", value: petName },
-									{ trait_type: "dogBreed", value: petSpecies },
-									{ trait_type: "dogbirth", value: petBirth },
-									{ trait_type: "dogSex", value: petGender },
-								],
-							};
-							console.log("metadata", metaData);
+						console.log("usestate nftcid", nftCid);
+						console.log("usestate imagecid", imageOrigin);
+
+						const nftCidConst = data.data.nftCid;
+						const imageOriginConst = data.data.imageCid;
+
+						console.log(nftCidConst);
+
+						const walletAddress = "0xfF59632D2680F7eD2D057228e14f6eDbf76f8Ccd";
+						if (data.status === 200) {
+							const tx = await mintDogTokenContract.mintDogProfile(
+								walletAddress,
+								`ipfs://${nftCidConst}`,
+							);
+							const receipt = await tx.wait();
+							setHashId(receipt.hash);
+							console.log("receipt", receipt);
+
+							var tokenIdConst;
+							const POLYGON_KEY = String(POLYGON_API_KEY);
 							await axios
-								.post(nft_storage_url, metaData, {
-									headers: {
-										Authorization: `Bearer ${process.env.NFT_STORAGE_KEY}`,
-										"Content-Type": "application/json",
-									},
-								})
-								.then((res) => {
-									console.log("nftCid", res.data.value.cid);
-									setNftCid(res.data.value.cid);
-								})
-								.catch((err) => {
-									console.log(err);
+								.get(
+									`https://api.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${process.env.MINT_DOG_TOKEN_ADDRESS}&address=${walletAddress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${POLYGON_KEY}`,
+								)
+								.then((data) => {
+									if (data.status === 200) {
+										// tokenID -> 업데이트 느려서 이전 토큰 값 가져와서 +1
+										setTokenId(
+											Number(
+												data.data.result[data.data.result.length - 1].tokenID,
+											) + Number(1),
+										);
+
+										tokenIdConst =
+											Number(
+												data.data.result[data.data.result.length - 1].tokenID,
+											) + Number(1);
+									}
 								});
-							console.log("ImageCid", res.data.value.cid);
-						})
-						.catch((err) => {
-							console.error(err);
-						});
-				};
+
+							await axiosApi
+								.post("/dog", {
+									dogName: petName,
+									dogBreed: petSpecies,
+									dogBirthDate: petBirth,
+									dogSex: petGender,
+									dogNft: tokenIdConst,
+									dogImg: imageOriginConst,
+								})
+								.then(async (data) => {
+									console.log(data);
+									await alert("프로필 생성이 완료되었습니다.");
+									await navigation.navigate("Profile");
+								});
+						}
+					});
 			}
 		});
 	};
 
 	const uploadIpfs = async () => {
 		try {
-			await setIsLoading(true);
+			setIsLoading(true);
 
 			await uploadImage(imageUri);
-
-			// await createProfile();
-
-			// await enrollProfile();
-
-			await alert("프로필 생성이 완료되었습니다.");
-			// await navigation.navigate('Profile');
 		} catch (err) {
+			console.error(err);
 		} finally {
 			await setIsLoading(false);
 		}
-	};
-
-	const enrollProfile = async () => {
-		await axios
-			.get(
-				`https://api-testnet.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=0x0d695204afafc42acdf39dbf4bb58deea79895fb&address=0xDdc622a21B9aCCAE645cDeF23f07De884B2EC3D4&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${process.env.POLYGON_API_KEY}`,
-			)
-			.then((data) => {
-				if (data.status === 200) {
-					setTokenId(data.data.result[data.data.result.length - 1].tokenID);
-				}
-			});
-		await axiosApi
-			.post("/dog", {
-				dogName: petName,
-				dogBreed: petSpecies,
-				dogBirthDate: "2023-09-27",
-				dogSex: petGender,
-				dogNft: tokenId,
-				dogImg: imageOrigin,
-			})
-			.then((data) => {
-				console.log(data);
-			});
 	};
 
 	// 권한 요청
@@ -255,28 +239,7 @@ const CreateProfile = ({ navigation }: any) => {
 		}
 	};
 
-	const createProfile = async () => {
-		// const walletAddress = await SecureStore.getItemAsync("walletAddress");
-		// const walletPrivateKey = await SecureStore.getItemAsync("walletPrivateKey");
-
-		const provider = await new ethers.JsonRpcProvider(process.env.RPC_URL);
-
-		const privateKey = process.env.ADMIN_WALLET_PRIVATE_KEY;
-		const gasPriceGwei = "100000";
-		const priceWei = ethers.parseUnits(gasPriceGwei, "gwei");
-		const overrides = {
-			gasPrice: ethers.parseUnits("8000", "gwei"), // gasPrice 설정 (예: 100 gwei)
-		};
-
-		const tx = await mintDogTokenContract.mintDogProfile(
-			"0xfF59632D2680F7eD2D057228e14f6eDbf76f8Ccd",
-			`ipfs://${nftCid}`,
-			overrides,
-		);
-		const receipt = await tx.wait();
-		setHashId(receipt.hash);
-		console.log("receipt", receipt);
-	};
+	const createProfile = async () => {};
 
 	useEffect(() => {
 		const getWalletInfoFromStore = async () => {
@@ -300,8 +263,14 @@ const CreateProfile = ({ navigation }: any) => {
 			});
 		};
 
+		const getWalletAddress = async () => {
+			const myWalletAddress = await SecureStore.getItemAsync("walletAddress");
+			setMyWalletAddress(String(myWalletAddress));
+		};
+
 		getWalletInfoFromStore();
 		getPetSpecies();
+		getWalletAddress();
 	}, []);
 
 	const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
@@ -350,7 +319,6 @@ const CreateProfile = ({ navigation }: any) => {
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 종을 입력해주세요.
 					</Text>
-
 					<TextInput
 						style={CreateProfileLayout.formInput}
 						value={searchTerm || ""} // petSpecies가 null일 경우 빈 문자열을 반환합니다.
@@ -385,7 +353,6 @@ const CreateProfile = ({ navigation }: any) => {
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 성별을 입력해주세요.
 					</Text>
-
 					<Picker
 						selectedValue={petGender}
 						onValueChange={(itemValue, itemIndex) => setPetGender(itemValue)}

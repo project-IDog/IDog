@@ -2,7 +2,7 @@ package com.haru.ppobbi.domain.walking.controller;
 
 import static com.haru.ppobbi.domain.walking.constant.WalkingResponseMessage.*;
 import com.haru.ppobbi.domain.walking.dto.WalkingRequestDto.RegistRequestDto;
-import com.haru.ppobbi.domain.walking.dto.WalkingResponseDto.WalkingInfoDto;
+import com.haru.ppobbi.domain.walking.dto.WalkingResponseDto.*;
 import com.haru.ppobbi.domain.walking.entity.Walking;
 import com.haru.ppobbi.domain.walking.service.WalkingService;
 import com.haru.ppobbi.global.dto.ResponseDto;
@@ -22,9 +22,9 @@ public class WalkingController {
     private final WalkingService walkingService;
 
     @PostMapping()
-    public ResponseEntity<ResponseDto<String>> registOrUpdateWalking(@RequestAttribute("userNo") Integer userNo, @RequestBody RegistRequestDto registRequestDto){
+    public ResponseEntity<ResponseDto<String>> registOrUpdateWalking(@RequestBody RegistRequestDto registRequestDto){
         log.debug("service start: {}", registRequestDto.getWalkingStartDate());
-        Walking walking = walkingService.registOrUpdateWalking(userNo, registRequestDto);
+        Walking walking = walkingService.registOrUpdateWalking(registRequestDto);
         log.debug("service end");
         return (walking.getWalkingCount() == 1) ?
                 ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.create(CREATE_SUCCESS)) :
@@ -32,7 +32,7 @@ public class WalkingController {
     }
 
     @GetMapping()
-    public ResponseEntity<ResponseDto<List<WalkingInfoDto>>> getWalkingInfoByUser(@RequestAttribute("userNo") Integer userNo){
+    public ResponseEntity<ResponseDto<List<WalkingSummaryDto>>> getWalkingInfoByUser(@RequestAttribute("userNo") Integer userNo){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.create(READ_SUCCESS, walkingService.selectWalkingsByUserNo(userNo)));
     }

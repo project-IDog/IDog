@@ -1,9 +1,8 @@
 package com.haru.ppobbi.domain.challenge.controller;
 
-import static com.haru.ppobbi.domain.challenge.constant.ChallengeResponseMessage.*;
+import static com.haru.ppobbi.domain.challenge.constant.UserChallengeResponseMessage.*;
 
 import com.haru.ppobbi.domain.challenge.dto.UserChallengeResponseDto.*;
-import com.haru.ppobbi.domain.challenge.entity.UserChallenge;
 import com.haru.ppobbi.domain.challenge.service.UserChallengeService;
 import com.haru.ppobbi.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;

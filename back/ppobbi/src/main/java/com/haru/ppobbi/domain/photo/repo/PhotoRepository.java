@@ -34,4 +34,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Integer> {
      */
     public List<Photo> findAllByDogDogNoAndCanceled(Integer dogNo, Integer canceled);
 
+    public List<Photo> findTop3ByDogDogNoAndCanceledOrderByPhotoIsGoatDescCreateDateDesc(Integer dogNo, Integer canceled);
+
 }

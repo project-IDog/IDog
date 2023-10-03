@@ -29,10 +29,9 @@ public class UserRedisServiceImpl implements UserRedisService {
         userRedisRepository.save(UserInfo.builder()
             .userNo(user.getUserNo())
             .userId(user.getUserId())
+            .userName(user.getUserName())
             .userMessage(user.getUserMessage())
-            .userPrivateKey(user.getUserPrivateKey())
             .userProfileImg(user.getUserProfileImg())
-            .userWallet(user.getUserWallet())
             .ttl(USER_INFO_TTL)
             .build()
         );
@@ -46,7 +45,7 @@ public class UserRedisServiceImpl implements UserRedisService {
     }
 
     @Override
-    public void updateUserInfoToRedis(User user) {
+    public void updateUserMessageToRedis(User user) {
         Optional<UserInfo> userInfoOptional = userRedisRepository.findById(user.getUserNo());
         if (userInfoOptional.isPresent()) {
             UserInfo userInfo = userInfoOptional.get();
@@ -59,8 +58,6 @@ public class UserRedisServiceImpl implements UserRedisService {
                 .userName(user.getUserName())
                 .userMessage(user.getUserMessage())
                 .userProfileImg(user.getUserProfileImg())
-                .userPrivateKey(user.getUserPrivateKey())
-                .userWallet(user.getUserWallet())
                 .build()
             );
         }
@@ -69,5 +66,24 @@ public class UserRedisServiceImpl implements UserRedisService {
     @Override
     public void deleteUserInfoFromRedis(Integer userNo) {
         userRedisRepository.deleteById(userNo);
+    }
+
+    @Override
+    public void updateUserNameToRedis(User user) {
+        Optional<UserInfo> userInfoOptional = userRedisRepository.findById(user.getUserNo());
+        if (userInfoOptional.isPresent()) {
+            UserInfo userInfo = userInfoOptional.get();
+            userInfo.updateUserNameMessage(user.getUserName());
+            userRedisRepository.save(userInfo);
+        } else {
+            userRedisRepository.save(UserInfo.builder()
+                .userNo(user.getUserNo())
+                .userId(user.getUserId())
+                .userName(user.getUserName())
+                .userMessage(user.getUserMessage())
+                .userProfileImg(user.getUserProfileImg())
+                .build()
+            );
+        }
     }
 }

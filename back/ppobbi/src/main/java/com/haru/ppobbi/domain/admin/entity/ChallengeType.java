@@ -1,10 +1,7 @@
 package com.haru.ppobbi.domain.admin.entity;
 
 import com.haru.ppobbi.global.entity.BaseEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -20,4 +17,9 @@ public class ChallengeType extends BaseEntity {
     private Integer challengeTypeNo;
     @Column(name = "challenge_type_name")
     private String challengeTypeName;
+
+    @Builder
+    public ChallengeType(String challengeTypeName){
+        this.challengeTypeName = challengeTypeName;
+    }
 }
