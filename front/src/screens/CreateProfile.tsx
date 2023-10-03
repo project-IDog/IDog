@@ -92,6 +92,8 @@ const CreateProfile = ({ navigation }: any) => {
 		const response = await fetch(uri);
 		// const imageBlob = new Blob([buffer], { type: "image/*" });
 		const blob = await response.blob();
+		const objectURL = URL.createObjectURL(blob);
+		console.log("오브젝트 유알엘:", objectURL);
 		const filename = await uri.split("/").pop();
 		const type = await blob.type;
 		const params = await {
@@ -247,6 +249,8 @@ const CreateProfile = ({ navigation }: any) => {
 		console.log("result", result);
 		if (!result.canceled) {
 			console.log("img", result.assets[0].uri);
+			console.log("img", result.assets[0]);
+
 			setImageUri(result.assets[0].uri);
 		}
 	};
@@ -349,7 +353,7 @@ const CreateProfile = ({ navigation }: any) => {
 
 					<TextInput
 						style={CreateProfileLayout.formInput}
-						value={petSpecies || ""} // petSpecies가 null일 경우 빈 문자열을 반환합니다.
+						value={searchTerm || ""} // petSpecies가 null일 경우 빈 문자열을 반환합니다.
 						onChangeText={(text) => {
 							setSearchTerm(text);
 							setPetSpecies(text);

@@ -24,7 +24,6 @@ import CreateWalletPassword from "./src/screens/CreateWalletPassword";
 import ProtectWallet from "./src/screens/ProtectWallet";
 import Ipfs from "./src/screens/Ipfs";
 import Widget from "./src/screens/Widget";
-import DogHeaven from "./src/screens/DogHeaven";
 import CurrentAppState from "./src/components/CurrentAppState";
 import ChoiceDog from "./src/screens/ChoiceDog";
 import MemorialParkDetail from "./src/screens/MemorialParkDetail";
@@ -62,7 +61,6 @@ const App = () => {
 						component={CreateWalletPassword}
 					/>
 					<Stack.Screen name="ProtectWallet" component={ProtectWallet} />
-					<Stack.Screen name="DogHeaven" component={DogHeaven} />
 					<Stack.Screen name="Three" component={Three} />
 					<Stack.Screen
 						name="MemorialParkDetail"

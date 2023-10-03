@@ -40,6 +40,18 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 		null,
 	);
 
+	const [uesrInfo, setUserInfo] = useState<Object[]>([]);
+
+	const getUserInfo = () => {
+		axios.get("/user").then((data) => {
+			setUserInfo(data.data.data);
+		});
+	};
+
+	useEffect(() => {
+		getUserInfo();
+	}, []);
+
 	const fetchComments = () => {
 		axios.get(`/comment/${data.graveNo}`).then((response) => {
 			if (response.data.message === "추모 댓글 조회 성공") {
@@ -267,6 +279,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 								.slice(0, showAllComments ? commentList.length : 3)
 								.map((comment, index) => {
 									const formattedTime = comment.createTime.replace("T", " ");
+
 									return (
 										<View
 											style={[MemorialParkLayout.mpComentWarp]}
@@ -286,21 +299,24 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 												<Text style={[MemorialParkLayout.mpComentDate]}>
 													{comment?.userName}, {formattedTime}
 												</Text>
-												<TouchableOpacity
-													onPress={() => {
-														setSelectedCommentNo(comment.commentNo);
-														setConfirmationModalVisible(true);
-													}}
-												>
-													<Text
-														style={{
-															color: "black",
-															paddingRight: responsiveWidth(30),
+
+												{comment.userId === uesrInfo?.userId && (
+													<TouchableOpacity
+														onPress={() => {
+															setSelectedCommentNo(comment.commentNo);
+															setConfirmationModalVisible(true);
 														}}
 													>
-														삭제하기
-													</Text>
-												</TouchableOpacity>
+														<Text
+															style={{
+																color: "black",
+																paddingRight: responsiveWidth(30),
+															}}
+														>
+															삭제하기
+														</Text>
+													</TouchableOpacity>
+												)}
 											</View>
 										</View>
 									);

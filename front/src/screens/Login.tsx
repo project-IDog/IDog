@@ -38,6 +38,7 @@ const Login = () => {
 			console.log(data.data.message);
 			if (data.data?.message === "로그인 완료") {
 				stores.LoginStore.setLogged(true);
+				console.log("로그인데이터 확인!:", data.data.data);
 				console.log("data.data.data.accessToken: ", data.data.data.accessToken);
 				console.log(
 					"data.data.data.refreshToken: ",
