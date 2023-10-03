@@ -29,7 +29,7 @@ import CurrentAppState from "./src/components/CurrentAppState";
 import ChoiceDog from "./src/screens/ChoiceDog";
 import MemorialParkDetail from "./src/screens/MemorialParkDetail";
 import WalkStatistics from "./src/components/WalkStatistics";
-import SplashScreen from "react-native-splash-screen";
+// import SplashScreen from "react-native-splash-screen";
 
 const App = () => {
 	const Stack = createNativeStackNavigator();
@@ -38,9 +38,9 @@ const App = () => {
 		dsn: sentry_dsn,
 		tracesSampleRate: 1.0,
 	});
-	useEffect(() => {
-		SplashScreen.hide();
-	}, []);
+	// useEffect(() => {
+	// 	SplashScreen.hide();
+	// }, []);
 
 	return (
 		<>

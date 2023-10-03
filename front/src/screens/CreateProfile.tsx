@@ -40,10 +40,6 @@ import AddPlusIcon from "../../assets/images/add-plus-icon.png";
 import PhotoImg from "../../assets/images/photo-ex-img4.png";
 
 import CreateProfileLayout from "../styles/createProfileLayout";
-import {
-	responsiveHeight,
-	responsiveWidth,
-} from "react-native-responsive-dimensions";
 
 const CreateProfile = ({ navigation }: any) => {
 	const [imageUri, setImageUri] = useState<any>(null);
@@ -61,7 +57,6 @@ const CreateProfile = ({ navigation }: any) => {
 			new Date().getDate(),
 	);
 	const [nftCid, setNftCid] = useState<string | null>();
-	const [speciesList, setSpeciesList] = useState<any[]>([]);
 	const [hashId, setHashId] = useState<any>();
 	const [isLoading, setIsLoading] = useState<Boolean>(false);
 	const [tokenId, setTokenId] = useState<number>();
@@ -101,8 +96,6 @@ const CreateProfile = ({ navigation }: any) => {
 	const uploadImage = async (uri: any) => {
 		const response = await fetch(uri);
 		const blob = await response.blob();
-		const objectURL = URL.createObjectURL(blob);
-		console.log("오브젝트 유알엘:", objectURL);
 		const filename = await uri.split("/").pop();
 		const type = await blob.type;
 		const params = await {
@@ -233,8 +226,6 @@ const CreateProfile = ({ navigation }: any) => {
 		console.log("result", result);
 		if (!result.canceled) {
 			console.log("img", result.assets[0].uri);
-			console.log("img", result.assets[0]);
-
 			setImageUri(result.assets[0].uri);
 		}
 	};
@@ -273,13 +264,13 @@ const CreateProfile = ({ navigation }: any) => {
 		getWalletAddress();
 	}, []);
 
-	const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+	const [searchTerm, setSearchTerm] = useState<string>(""); // 검색어 상태
 
+	const [speciesList, setSpeciesList] = useState<any[]>([]);
 	const filteredSpeciesList = speciesList.filter((species) => {
 		if (!species.breedName || !searchTerm) return false;
 		return species.breedName.toLowerCase().includes(searchTerm.toLowerCase());
 	});
-
 	const [dropdownVIsible, setDropdownVisible] = useState(false);
 
 	return (
@@ -314,41 +305,51 @@ const CreateProfile = ({ navigation }: any) => {
 					<TextInput
 						style={CreateProfileLayout.formInput}
 						onChangeText={(text) => setPetName(text)}
-						value={petName}
+						value={petName || ""}
 					/>
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 종을 입력해주세요.
 					</Text>
-					<TextInput
-						style={CreateProfileLayout.formInput}
-						value={searchTerm || ""} // petSpecies가 null일 경우 빈 문자열을 반환합니다.
-						onChangeText={(text) => {
-							setSearchTerm(text);
-							setPetSpecies(text);
-							setDropdownVisible(true);
-						}}
-						placeholder="종 검색하세요"
-						onBlur={() => setDropdownVisible(false)}
-					/>
-
-					{dropdownVIsible && (
-						<Picker
-							selectedValue={petSpecies}
-							onValueChange={(itemValue, itemIndex) => {
-								setPetSpecies(itemValue);
-								setSearchTerm(itemValue);
+					<>
+						<TextInput
+							style={CreateProfileLayout.formInput}
+							value={petSpecies || ""}
+							onChangeText={(text) => {
+								setPetSpecies(text);
+								setSearchTerm(text); // 검색어 업데이트
+								setDropdownVisible(true);
 							}}
-							style={CreateProfileLayout.formpicker}
-						>
-							{filteredSpeciesList.map((species, index) => (
+							placeholder="종을 검색해 아래를 클릭하세요"
+							onBlur={() => setDropdownVisible(false)}
+						/>
+						{dropdownVIsible ? (
+							<Picker
+								selectedValue={petSpecies} // 여기는 petSpecies를 사용합니다.
+								onValueChange={(itemValue, itemIndex) => {
+									setPetSpecies(itemValue);
+									setSearchTerm(`${itemValue}`);
+								}}
+								style={CreateProfileLayout.formInput}
+							>
 								<Picker.Item
-									key={index}
-									label={species.breedName}
-									value={species.breedName}
+									key={-1}
+									label={`"${petSpecies}"검색결과를 클릭하세요`}
+									value={""}
+									style={{color: "#EE8A72", fontWeight: "bold", fontSize: 16}}
 								/>
-							))}
-						</Picker>
-					)}
+								{filteredSpeciesList.map((species, index) => {
+									return (
+										<Picker.Item
+											key={index}
+											label={species.breedName}
+											value={species.breedName}
+											style={{color: "#000000"}}
+										/>
+									);
+								})}
+							</Picker>
+						) : null}
+					</>
 
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 성별을 입력해주세요.
