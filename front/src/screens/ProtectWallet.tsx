@@ -8,12 +8,14 @@ import WalletProcess from "../components/WalletProcess";
 import Footer from "../components/Footer";
 
 import ProtectWalletLayout from "../styles/protectWalletLayout";
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const ProtectWallet = ({navigation}: any) => {
     const [clickStatus, setClickStatus] = useState<boolean>(false);
-    const [mnemonic, setMnemonic] = useState<string>();
+    const [mnemonic, setMnemonic] = useState<string>('');
 
     const showMnemonic = () => {
+        Clipboard.setString(mnemonic);
         setClickStatus(true);
     }
 
