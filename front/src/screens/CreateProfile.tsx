@@ -110,8 +110,8 @@ const CreateProfile = ({ navigation }: any) => {
 						petBirth: petBirth,
 						petGender: petGender,
 					}).then(async (data) => {
-						const nftCid = data.data;
-						const imageOrigin = "https://ipfs.io/ipfs/" + data.data;
+						const nftCid = data.data.nftCid;
+						const imageOrigin = "https://ipfs.io/ipfs/" + data.data.imageCid;
 						console.log("nftCid", nftCid);
 
 						const walletAddress = myWalletAddress;
@@ -140,18 +140,21 @@ const CreateProfile = ({ navigation }: any) => {
 											dogBirthDate: petBirth,
 											dogSex: petGender,
 											dogNft: tokenId,
-											dogImg: imageOrigin,
+											dogImg: String(imageOrigin),
 										}).then(async (data) => {
 											console.log(data);
 											if(data.data.message === "강아지 프로필 등록 완료"){
 												await alert("프로필 생성이 완료되었습니다.");
 												await setIsLoading(false);
-												await navigation.navigate("Profile");
+												await navigation.replace("Profile");
 											}else{
 												await setIsLoading(false);
 												alert('프로필 생성 실패, 관리자에게 문의하세요.');
 											}
 										});
+									}else{
+										alert("프로필 생성 실패, 관리자에게 문의하세요.");
+										setIsLoading(false);
 									}
 								});
 						}else{
@@ -381,7 +384,7 @@ const CreateProfile = ({ navigation }: any) => {
 				<Footer />
 			</CommonLayout>
 			{isLoading ? (
-				<WalletLoading title="프로필 생성중.. 잠시만 기다려주세요." />
+				<WalletLoading title="프로필을 생성하는데 10초 이상 소요될 수 있습니다."/>
 			) : (
 				<></>
 			)}
