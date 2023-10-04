@@ -112,9 +112,6 @@ public class DogServiceImpl implements DogService{
     @Override
     public List<DogNftResponseDto> selectDogNftsByUserNo(Integer userNo) {
         List<Dog> dogList = dogRepository.findAllByUserNoAndCanceledOrderByDogName(userNo, BaseConstant.NOTCANCELED);
-        if(dogList.size() == 0) {
-            throw new NotFoundException(ALL_DOG_NOT_FOUND_EXCEPTION.message());
-        }
 
         List<DogNftResponseDto> dogNftResponseDtoList = new ArrayList<>();
         for (int i=0; i<dogList.size(); i++){
@@ -141,9 +138,6 @@ public class DogServiceImpl implements DogService{
     @Override
     public List<DogisAliveResponseDto> selectAliveDogsByUserNo(Integer userNo) {
         List<Dog> dogList = dogRepository.findAllByUserNoAndDogIsDeadAndCanceled(userNo, BaseConstant.NOTDEAD, BaseConstant.NOTCANCELED);
-        if(dogList.size() ==0) {
-            throw new NotFoundException(ALL_DOG_NOT_FOUND_EXCEPTION.message());
-        }
 
         List<DogisAliveResponseDto> aliveResponseDtoList = new ArrayList<>();
         for (int i=0; i<dogList.size(); i++){
