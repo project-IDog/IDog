@@ -13,7 +13,7 @@ const WalkStatistics = (props: any) => {
 			<ContributionGraph
 				values={data}
 				endDate={new Date()}
-				numDays={105}
+				numDays={98}
 				width={screenWidth}
 				height={220}
 				chartConfig={{

@@ -1,13 +1,11 @@
 import {
 	View,
 	Text,
-	StyleSheet,
 	TouchableOpacity,
 	ScrollView,
-	NativeSyntheticEvent,
-	NativeScrollEvent,
 	Image,
 	RefreshControl,
+	Animated,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import MainHeader from "../components/MainHeader";
@@ -18,6 +16,12 @@ import RipnftCreate from "../components/RipnftCreate";
 import nftbgcloud from "../../assets/images/skysky.png";
 import axios from "../utils/axios";
 import dog1 from "../../assets/images/adoption-main-img.png";
+import scrolldownblack from "../../assets/scrolldownblack.json";
+import LottieView from "lottie-react-native";
+import {
+	responsiveHeight,
+	responsiveWidth,
+} from "react-native-responsive-dimensions";
 
 type AlbumData = {
 	photoUrl: string;
@@ -38,7 +42,6 @@ const Main = ({ navigation }: any) => {
 	const [dataList, setDataList] = useState<DogData[]>([]);
 	useEffect(() => {
 		axios.get("/grave").then((data) => {
-			console.log("무덤 조회하기!!", data.data.data);
 			if (data.data.message === "무덤 조회 성공") {
 				setDataList(data.data.data);
 			}
@@ -61,6 +64,23 @@ const Main = ({ navigation }: any) => {
 
 		setRefreshing(false);
 	}, [ripIndex, dataList, RipdataList]);
+
+	const opacity = useState(new Animated.Value(0))[0];
+
+	useEffect(() => {
+		Animated.sequence([
+			Animated.timing(opacity, {
+				toValue: 1,
+				duration: 3000,
+				useNativeDriver: true,
+			}),
+			Animated.timing(opacity, {
+				toValue: 0,
+				duration: 3000,
+				useNativeDriver: true,
+			}),
+		]).start();
+	}, [RipdataList]);
 
 	return (
 		<>
@@ -85,9 +105,7 @@ const Main = ({ navigation }: any) => {
 								? "rgb(0, 0, 0)"
 								: Colors[RipdataList.length - (index % Colors.length) - 1];
 
-						const imageUrl: string | null = data?.dogImg
-							? `https://ipfs.io/ipfs/${data.dogImg.split("://")[1]}`
-							: "https://ppobbi.s3.ap-northeast-2.amazonaws.com/044f0812-8b86-4bf3-80aa-6a71cecd5ec4.jpeg";
+						const imageUrl: string | null = data?.dogImg;
 
 						return (
 							<View key={index} style={[MemorialParkDesignLayout.nftview]}>
@@ -95,6 +113,30 @@ const Main = ({ navigation }: any) => {
 									style={[MemorialParkDesignLayout.linearalign, { flex: 1 }]}
 									colors={[startColor, endColor]}
 								>
+									<Animated.View style={{ opacity: opacity }}>
+										<LottieView
+											autoPlay={true}
+											loop={true}
+											source={scrolldownblack}
+											style={{
+												position: "absolute",
+												right: responsiveWidth(26),
+												height: responsiveHeight(10),
+												top: responsiveHeight(-1),
+											}}
+										/>
+										<Text
+											style={{
+												color: "black",
+												fontSize: 18,
+												fontWeight: "bold",
+												textAlign: "center",
+											}}
+										>
+											스크롤을 내리면 {"\n"} rip NFT를 확인할 수 있습니다
+										</Text>
+									</Animated.View>
+
 									<Image
 										source={nftbgcloud}
 										style={MemorialParkDesignLayout.lineralignbg}
