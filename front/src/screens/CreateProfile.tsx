@@ -111,11 +111,12 @@ const CreateProfile = ({ navigation }: any) => {
 						petBirth: petBirth,
 						petGender: petGender,
 					}).then(async (data) => {
-						const nftCid = data.data.nftCid;
+						const nftCid = data.data;
+						console.log("nftCid", nftCid);
 
 						const walletAddress = myWalletAddress;
 						console.log("walletAddress", walletAddress);
-						if (data.data.message === "OK") {
+						if (data.status=== 200) {
 							const tx = await mintDogTokenContract.mintDogProfile(
 								walletAddress,
 								`ipfs://${nftCid}`,
