@@ -6,8 +6,6 @@ import Footer from "../components/Footer";
 
 import CreateWalletMainLayout from "../styles/CreateWalletMainLayout";
 
-import WalletMainImg from "../../assets/images/wallet-main-img.png";
-
 const CreateWalletMain = ({navigation} : any) => {
     return(
         <>
@@ -17,10 +15,6 @@ const CreateWalletMain = ({navigation} : any) => {
                     <Text style={CreateWalletMainLayout.mainTitle}>지갑 설정</Text>
                     <Text style={CreateWalletMainLayout.subTitle}>기존 지갑을 불러오거나 새 지갑을 만드세요.</Text>
                 </View>
-                <Image
-                    source={WalletMainImg}
-                    style={CreateWalletMainLayout.mainWalletImg}
-                />
                 <View style={CreateWalletMainLayout.buttonWrap}>
                     <TouchableOpacity>
                         <View style={CreateWalletMainLayout.reButton}>
