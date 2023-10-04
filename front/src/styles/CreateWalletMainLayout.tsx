@@ -17,6 +17,10 @@ const CreateWalletMainLayout = StyleSheet.create({
         color:"#B1B1B7",
         marginTop:8,
     },
+    mainWalletImg:{
+        width:240,
+        height:240,
+    },
     buttonWrap:{
         paddingHorizontal:responsiveWidth(4),
         marginTop:"100%",
