@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import {mintDogTokenContract, mintIDogTokenAddress,mintIDogTokenAbi} from "../contracts/contract"
 import {ethers} from "ethers"
 import {CLIENT_PRIVATE_KEY, MINT_DOG_TOKEN_ADDRESS} from "@env"
+import * as SecureStore from "expo-secure-store";
 
 import axios from "../utils/axios";
 
@@ -22,6 +23,7 @@ const Adoption = ({navigation}: any) => {
     const [selectedDogNo, setSelectedDogNo] = useState<number>();
     const [toAddress, setToAddress] = useState<string>();
     const [tokenId, setTokenId] = useState<number>(0);
+    const [walletAddress, setWalletAddress] = useState<string>();
 
     const toggleBorder = (index:number, selectedDogNo:number) => {
         setSelectedDogNo(selectedDogNo);
@@ -69,6 +71,15 @@ const Adoption = ({navigation}: any) => {
                 setMyPetList(data.data.data);
             }
         })
+
+        const getMyAddress = async () => {
+            const walletAddress = await SecureStore.getItemAsync("walletAddress");
+			if (walletAddress) {
+				setWalletAddress(walletAddress);
+			}
+        }
+
+        getMyAddress();
     }, [tokenId, toAddress]);
 
     return(
