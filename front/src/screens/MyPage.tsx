@@ -1,5 +1,5 @@
 import {useState,useEffect} from "react"
-import {View, Text, Image, TouchableOpacity, ScrollView, TextInput} from "react-native"
+import {View, Text, Image, TouchableOpacity, ScrollView } from "react-native"
 import CommonLayout from "../components/CommonLayout"
 import Footer from "../components/Footer"
 import MyPet from "../components/MyPetLayout"
@@ -31,6 +31,8 @@ import MyPageLayout from "../styles/mypageLayout"
 const MyPage = ({navigation}: any) => {
     const [userName, setUserName] = useState<string>('명예 멍집사');
     const [myDogList, setMyDogList] = useState<Object[]>([]);
+    const [myPhotoImg, setMyPhotoImg] = useState<string>();
+
     useEffect(() => {
         axios.get('/dog/list').then((data) => {
             if(data.status === 200){
@@ -40,6 +42,7 @@ const MyPage = ({navigation}: any) => {
 
         axios.get('/user').then((data) => {
             if(data.status === 200){
+                setMyPhotoImg(data.data.data.userProfileImg);
                 setUserName(data.data.data.userName);
             }
         })
@@ -53,12 +56,12 @@ const MyPage = ({navigation}: any) => {
                 <View style={MyPageLayout.myInfoWrap}>
                     <View style={MyPageLayout.myThumbnailWrap}>
                         <Image
-                            source={MyPageThumbnail}
+                            source={{uri: myPhotoImg}}
                             style={MyPageLayout.profileThumbnail}
                         />
-                        <TouchableOpacity activeOpacity={0.7} style={MyPageLayout.penIconWrap}>
+                        {/* <TouchableOpacity activeOpacity={0.7} style={MyPageLayout.penIconWrap} onPress={() => setEditImgStatus(true)}>
                             <View style={MyPageLayout.penIconButton}><Image source={PenIcon} /></View>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                     <View style={MyPageLayout.myProfileInfoWrap}>
                         <View style={MyPageLayout.flexWrap}>

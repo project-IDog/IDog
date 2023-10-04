@@ -20,6 +20,13 @@ const CreateProfileLayout = StyleSheet.create({
 		color: "#535458",
 		marginTop: 3,
 	},
+	editShowDogImg:{
+		width:100,
+		height:132,
+		borderRadius:6,
+		marginHorizontal:responsiveWidth(4),
+		marginTop:24,
+	},
 	imageUploadWrap: {
 		width: responsiveWidth(92),
 		height: 132,

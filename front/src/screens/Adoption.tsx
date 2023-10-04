@@ -32,7 +32,6 @@ const Adoption = ({navigation}: any) => {
     const submitAdoption = async () => {
         console.log(selectedDogNo);
         const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
-        //const fromPrivateKey = String(CLIENT_PRIVATE_KEY) //입양 보내는 사람의 개인키
         const fromPrivateKey = await String(SecureStore.getItemAsync("privateKey"));
         const polygonApiKey = process.env.POLYGON_API_KEY; 
         const gasPriceGwei = "0.001";
