@@ -37,7 +37,15 @@ const EditMypageLayout = StyleSheet.create({
         borderColor:"#9D9D9D",
         marginTop:7,
     },
-
+    showPrivateKeyInput:{
+        height:36,
+        borderWidth:1,
+        borderColor:"#9D9D9D",
+        backgroundColor:"#9D9D9D",
+        marginTop:7,
+        padding:8,
+        color:"#FFF",
+    },
 
     editMyPageButtonWrap:{
         paddingHorizontal:responsiveWidth(4),

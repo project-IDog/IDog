@@ -70,6 +70,8 @@ const CreateWalletPassword = ({navigation}: any) => {
                 await navigation.navigate('ProtectWallet');
             })
         } catch (error) {
+            alert("지갑 생성 실패, 관리자에게 문의하세요.");
+            setIsLoading(false);
             console.error("Error generating wallet:", error);
         }
     };
