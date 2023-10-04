@@ -50,10 +50,10 @@ const CreateProfile = ({ navigation }: any) => {
 	const [petGender, setPetGender] = useState<string | null>("M");
 	const [petBirth, setPetBirth] = useState<string | null>(
 		new Date().getFullYear() +
-			"-" +
-			Number(new Date().getMonth() + 1) +
-			"-" +
-			new Date().getDate(),
+		"-" +
+		("0" + Number(1+ Number(new Date().getMonth()))).slice(-2) +
+		"-" +
+		("0" + new Date().getDate()).slice(-2)
 	);
 	const [nftCid, setNftCid] = useState<string | null>();
 	const [speciesList, setSpeciesList] = useState<any[]>([]);
