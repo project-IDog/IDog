@@ -136,6 +136,7 @@ const CreateProfile = ({ navigation }: any) => {
 									`https://api.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${process.env.MINT_DOG_TOKEN_ADDRESS}&address=${walletAddress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${POLYGON_KEY}`,
 								)
 								.then(async (data) => {
+									console.log("data", data);
 									if (data.status === 200) {
 										const tokenId = Number(data.data.result[data.data.result.length-1].tokenID) + Number(1);
 										console.log("polygon api", data);

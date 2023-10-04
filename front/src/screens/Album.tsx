@@ -25,6 +25,7 @@ const Album = ({ navigation }: any) => {
 	const [userName, setUserName] = useState<string>('명예 멍집사');
 	const [statusModalState, setStatusModalState] = useState<Boolean>(false);
 	const [feedList, setFeedList] = useState<Object[]>([]);
+	const [myProfileImg, setMyProfileImg] = useState<string>();
 
 	const [feedActiveState, setFeedActiveState] = useState<Boolean>(false);
 	const [albumActiveState, setAlbumActiveState] = useState<Boolean>(true);
@@ -71,6 +72,8 @@ const Album = ({ navigation }: any) => {
 
 		axios.get("/user").then((data) => {
 			if (data.data.message === "회원 정보 조회 완료") {
+				console.log("user", data.data.data);
+				setMyProfileImg(data.data.data.userProfileImg);
 				setUserName(data.data.data.userName);
 				setStatusComment(data.data.data.userMessage);
 			}
@@ -84,7 +87,7 @@ const Album = ({ navigation }: any) => {
 				<View>
 					<View style={AlbumLayout.profileWrap}>
 						<Text style={AlbumLayout.myNameTitle}>{userName}</Text>
-						<Image source={MyPetPhoto} style={AlbumLayout.userPhoto} />
+						<Image source={{uri:myProfileImg}} style={AlbumLayout.userPhoto} />
 						<TouchableOpacity
 							activeOpacity={0.7}
 							style={AlbumLayout.changeImageWrap}
