@@ -22,12 +22,12 @@
       </intent-filter>
       <meta-data android:name="android.appwidget.provider" android:resource="@xml/stop_watch_info"/>
     </receiver>
-    <receiver android:name=".NewAppWidget" android:exported="false">
-      <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-      </intent-filter>
-      <meta-data android:name="android.appwidget.provider" android:resource="@xml/new_app_widget_info"/>
-    </receiver>
+<!--    <receiver android:name=".NewAppWidget" android:exported="false">-->
+<!--      <intent-filter>-->
+<!--        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>-->
+<!--      </intent-filter>-->
+<!--      <meta-data android:name="android.appwidget.provider" android:resource="@xml/new_app_widget_info"/>-->
+<!--    </receiver>-->
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="true"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS" android:value="0"/>

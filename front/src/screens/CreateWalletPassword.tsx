@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import {View, Text, TouchableOpacity, Image, TextInput } from "react-native"
-import Checkbox from 'expo-checkbox';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, Image, TextInput } from "react-native";
+import Checkbox from "expo-checkbox";
 import "react-native-get-random-values";
 import { ethers } from "ethers";
 import CryptoJS from "react-native-crypto-js";
