@@ -353,18 +353,32 @@ const CreateProfile = ({ navigation }: any) => {
 				</View>
 
 				<View style={CreateProfileLayout.formButtonWrap}>
-					<TouchableOpacity
-						activeOpacity={0.7}
-						onPress={() => {
-							uploadIpfs();
-						}}
-					>
-						<View style={CreateProfileLayout.submitButton}>
-							<Text style={CreateProfileLayout.submitButtonText}>
-								프로필 생성하기
-							</Text>
-						</View>
-					</TouchableOpacity>
+					{
+						isLoading ?
+						<TouchableOpacity
+							activeOpacity={0.7}
+						>
+							<View style={CreateProfileLayout.submitInactiveButton}>
+								<Text style={CreateProfileLayout.submitInactiveButtonText}>
+									프로필 생성하기
+								</Text>
+							</View>
+						</TouchableOpacity>
+						:
+						<TouchableOpacity
+							activeOpacity={0.7}
+							onPress={() => {
+								uploadIpfs();
+							}}
+						>
+							<View style={CreateProfileLayout.submitButton}>
+								<Text style={CreateProfileLayout.submitButtonText}>
+									프로필 생성하기
+								</Text>
+							</View>
+						</TouchableOpacity>
+					}
+					
 					<TouchableOpacity
 						activeOpacity={0.7}
 						onPress={() => navigation.navigate("Profile")}
