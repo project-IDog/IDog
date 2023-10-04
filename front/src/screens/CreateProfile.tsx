@@ -104,70 +104,82 @@ const CreateProfile = ({ navigation }: any) => {
 			if (err) {
 				console.log("err", err);
 			} else {
-				await axios.post("https://idog.store/blockchain/uploadIpfs", {
-						img: data.Location,
-						petName: petName,
-						petSpecies: petSpecies,
-						petBirth: petBirth,
-						petGender: petGender,
-					}).then(async (data) => {
-						const nftCid = data.data.nftCid;
-						const imageOrigin = "https://ipfs.io/ipfs/" + data.data.imageCid;
-						console.log("nftCid", nftCid);
-						const overrides = {
-							gasPrice: ethers.parseUnits('9000', 'gwei')  // gasPrice 설정 (예: 100 gwei)
-						};
 
-						const walletAddress = myWalletAddress;
-						console.log("walletAddress", walletAddress);
-						if (data.status=== 200) {
-							const tx = await mintDogTokenContract.mintDogProfile(
-								walletAddress,
-								`ipfs://${nftCid}`,
-								overrides
-							);
-							const receipt = await tx.wait();
-							const hashId = receipt.hash;
-							console.log("receipt", receipt);
+				try{
+					await axios.post("https://idog.store/blockchain/uploadIpfs", {
+							img: data.Location,
+							petName: petName,
+							petSpecies: petSpecies,
+							petBirth: petBirth,
+							petGender: petGender,
+						}).then(async (data) => {
+							const nftCid = data.data.nftCid;
+							const imageOrigin = "https://ipfs.io/ipfs/" + data.data.imageCid;
+							console.log("nftCid", nftCid);
+							const overrides = {
+								gasPrice: ethers.parseUnits('9000', 'gwei')  // gasPrice 설정 (예: 100 gwei)
+							};
+	
+							const walletAddress = myWalletAddress;
+							console.log("walletAddress", walletAddress);
+							if (data.status=== 200) {
+								const tx = await mintDogTokenContract.mintDogProfile(
+									walletAddress,
+									`ipfs://${nftCid}`,
+									overrides
+								);
+								const receipt = await tx.wait();
+								const hashId = receipt.hash;
+								console.log("receipt", receipt);
+	
+								const POLYGON_KEY = String(POLYGON_API_KEY);
 
-							const POLYGON_KEY = String(POLYGON_API_KEY);
-							await axios
-								.get(
-									`https://api.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${process.env.MINT_DOG_TOKEN_ADDRESS}&address=${walletAddress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${POLYGON_KEY}`,
-								)
-								.then(async (data) => {
-									console.log("data", data);
-									if (data.status === 200) {
-										const tokenId = Number(data.data.result[data.data.result.length-1].tokenID) + Number(1);
-										console.log("polygon api", data);
-										await axiosApi.post("/dog", {
-											dogName: petName,
-											dogBreed: petSpecies,
-											dogBirthDate: petBirth,
-											dogSex: petGender,
-											dogNft: tokenId,
-											dogImg: String(imageOrigin),
-										}).then(async (data) => {
-											console.log(data);
-											if(data.data.message === "강아지 프로필 등록 완료"){
-												await alert("프로필 생성이 완료되었습니다.");
-												await setIsLoading(false);
-												await navigation.replace("Profile");
+								try{
+									await axios
+										.get(
+											`https://api.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${process.env.MINT_DOG_TOKEN_ADDRESS}&address=${walletAddress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${POLYGON_KEY}`,
+										)
+										.then(async (data) => {
+											console.log("data", data);
+											if (data.status === 200) {
+												const tokenId = Number(data.data.result[data.data.result.length-1].tokenID) + Number(1);
+												console.log("polygon api", data);
+												await axiosApi.post("/dog", {
+													dogName: petName,
+													dogBreed: petSpecies,
+													dogBirthDate: petBirth,
+													dogSex: petGender,
+													dogNft: tokenId,
+													dogImg: String(imageOrigin),
+												}).then(async (data) => {
+													console.log(data);
+													if(data.data.message === "강아지 프로필 등록 완료"){
+														await alert("프로필 생성이 완료되었습니다.");
+														await setIsLoading(false);
+														await navigation.replace("Profile");
+													}else{
+														await setIsLoading(false);
+														alert('프로필 생성 실패, 관리자에게 문의하세요.');
+													}
+												});
 											}else{
-												await setIsLoading(false);
-												alert('프로필 생성 실패, 관리자에게 문의하세요.');
+												alert("프로필 생성 실패, 관리자에게 문의하세요.");
+												setIsLoading(false);
 											}
 										});
-									}else{
-										alert("프로필 생성 실패, 관리자에게 문의하세요.");
-										setIsLoading(false);
-									}
-								});
-						}else{
-							alert('프로필 생성 실패, 관리자에게 문의하세요.');
-							setIsLoading(false);
-						}
-					});
+								}catch(err){
+									alert('프로필 생성 실패, 관리자에게 문의하세요.');
+									setIsLoading(false);
+								}
+							}else{
+								alert('프로필 생성 실패, 관리자에게 문의하세요.');
+								setIsLoading(false);
+							}
+						});
+				}catch(err){
+					alert('프로필 생성 실패, 관리자에게 문의하세요.');
+					setIsLoading(false);
+				}
 			}
 		});
 	};
