@@ -29,6 +29,7 @@ import CurrentAppState from "./src/components/CurrentAppState";
 import ChoiceDog from "./src/screens/ChoiceDog";
 import MemorialParkDetail from "./src/screens/MemorialParkDetail";
 import WalkStatistics from "./src/components/WalkStatistics";
+import ShowPrivate from "./src/screens/ShowPrivate";
 // import SplashScreen from "react-native-splash-screen";
 
 const App = () => {
@@ -65,6 +66,7 @@ const App = () => {
 					<Stack.Screen name="Login" component={Login} />
 					<Stack.Screen name="CreateWalletMain" component={CreateWalletMain} />
 					<Stack.Screen name="AgreeWallet" component={AgreeWallet} />
+					<Stack.Screen name="ShowPrivate" component={ShowPrivate} />
 					<Stack.Screen
 						name="CreateWalletPassword"
 						component={CreateWalletPassword}

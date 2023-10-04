@@ -31,6 +31,7 @@ import {
 	POLYGON_API_KEY,
 } from "@env";
 import RNFS from "react-native-fs";
+import {ethers} from "ethers"
 
 import WalletLoading from "../components/WalletLoading";
 
@@ -113,6 +114,9 @@ const CreateProfile = ({ navigation }: any) => {
 						const nftCid = data.data.nftCid;
 						const imageOrigin = "https://ipfs.io/ipfs/" + data.data.imageCid;
 						console.log("nftCid", nftCid);
+						const overrides = {
+							gasPrice: ethers.parseUnits('9000', 'gwei')  // gasPrice 설정 (예: 100 gwei)
+						};
 
 						const walletAddress = myWalletAddress;
 						console.log("walletAddress", walletAddress);
@@ -120,6 +124,7 @@ const CreateProfile = ({ navigation }: any) => {
 							const tx = await mintDogTokenContract.mintDogProfile(
 								walletAddress,
 								`ipfs://${nftCid}`,
+								overrides
 							);
 							const receipt = await tx.wait();
 							const hashId = receipt.hash;

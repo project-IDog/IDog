@@ -61,9 +61,15 @@ const MyPage = ({navigation}: any) => {
                         </TouchableOpacity>
                     </View>
                     <View style={MyPageLayout.myProfileInfoWrap}>
-                        
-                        <View style={MyPageLayout.myTitleOuter}>
-                            <Text style={MyPageLayout.myTitle}>{`명예 멍집사 :)`}</Text>
+                        <View style={MyPageLayout.flexWrap}>
+                            <View style={MyPageLayout.myTitleOuter}>
+                                <Text style={MyPageLayout.myTitle}>{`명예 멍집사 :)`}</Text>
+                            </View>
+                            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('ShowPrivate')}>
+                                <View style={MyPageLayout.editMyPrivate}>
+                                    <Text style={MyPageLayout.editMyPrivateText}>개인키 확인하기</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
                         <Text style={MyPageLayout.myName}>{userName}님,</Text>
                         <View style={MyPageLayout.myProfileInfo}>

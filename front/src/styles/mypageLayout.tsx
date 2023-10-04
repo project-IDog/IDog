@@ -38,6 +38,11 @@ const MyPageLayout = StyleSheet.create({
         marginTop:-1 * responsiveHeight(3),
         paddingHorizontal:responsiveWidth(4),
     },
+    flexWrap:{
+        display:"flex",
+        flexDirection:"row",
+        alignItems:"center",
+    },
     myTitleOuter:{
         width:responsiveWidth(20),
         height:responsiveHeight(4),
@@ -46,6 +51,22 @@ const MyPageLayout = StyleSheet.create({
         display:"flex",
         justifyContent:"center",
         alignItems:"center",
+    },
+    editMyPrivate:{
+        borderWidth:1,
+        borderColor:"#EE8A72",
+        padding:4,
+        height:responsiveHeight(4),
+        borderRadius:2,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        marginLeft:10,
+    },
+    editMyPrivateText:{
+        fontSize:14,
+        fontWeight:"500",
+        color:"#F09883",
     },
     myTitle:{
         fontSize:10,
