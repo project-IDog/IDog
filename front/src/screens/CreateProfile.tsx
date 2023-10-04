@@ -103,7 +103,6 @@ const CreateProfile = ({ navigation }: any) => {
 			if (err) {
 				console.log("err", err);
 			} else {
-				const imageOrigin = data.Location;
 				await axios.post("https://idog.store/blockchain/uploadIpfs", {
 						img: data.Location,
 						petName: petName,
@@ -112,6 +111,7 @@ const CreateProfile = ({ navigation }: any) => {
 						petGender: petGender,
 					}).then(async (data) => {
 						const nftCid = data.data;
+						const imageOrigin = "https://ipfs.io/ipfs/" + data.data;
 						console.log("nftCid", nftCid);
 
 						const walletAddress = myWalletAddress;
