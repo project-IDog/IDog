@@ -32,9 +32,12 @@ const ProtectWalletLayout = StyleSheet.create({
         marginTop:11,
     },
     newmonicContents:{
-        fontSize:10,
+        fontSize:16,
         fontWeight:"500",
         color:"#2F3241",
+        textAlign:"center",
+        lineHeight:24,
+        paddingHorizontal:responsiveWidth(6),
     },
     newmonicInfoText:{
         fontSize:10,

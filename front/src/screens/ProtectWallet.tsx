@@ -44,7 +44,7 @@ const ProtectWallet = ({navigation}: any) => {
                         
                             {
                                 clickStatus ?
-                                <Text style={ProtectWalletLayout.newmonicContents}>{mnemonic}</Text>
+                                <Text style={ProtectWalletLayout.newmonicContents}>{mnemonic?.split(" ")[0]}&nbsp;&nbsp;{mnemonic?.split(" ")[1]}&nbsp;&nbsp;{mnemonic?.split(" ")[2]}&nbsp;&nbsp;{mnemonic?.split(" ")[3]}{"\n"}{mnemonic?.split(" ")[4]}&nbsp;&nbsp;{mnemonic?.split(" ")[5]}&nbsp;&nbsp;{mnemonic?.split(" ")[6]}&nbsp;&nbsp;{mnemonic?.split(" ")[7]}{"\n"}{mnemonic?.split(" ")[8]}&nbsp;&nbsp;{mnemonic?.split(" ")[9]}&nbsp;&nbsp;{mnemonic?.split(" ")[10]}&nbsp;&nbsp;{mnemonic?.split(" ")[11]}</Text>
                                 :
                                 <Text style={ProtectWalletLayout.newmonicContents}>이 곳을 클릭하여 복구 구문을 확인하세요.</Text>
                             }

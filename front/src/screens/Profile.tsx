@@ -44,7 +44,7 @@ const Profile = ({navigation}:any) => {
     const createProfile = async (moveUri:string) => {
         const walletAddress = await SecureStore.getItemAsync("walletAddress");
         console.log("walletAddress", walletAddress);
-        if(walletAddress === null || walletAddress === undefined){
+        if(walletAddress === null || walletAddress === undefined || walletAddress === ""){
             alert("생성된 지갑이 없습니다. 지갑 생성을 먼저 진행해 주세요.");
             navigation.navigate('CreateWalletMain');
             return;
