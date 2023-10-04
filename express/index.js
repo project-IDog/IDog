@@ -5,11 +5,18 @@ const fs = require("fs");
 const AWS = require("aws-sdk");
 const axios = require("axios");
 const bodyParser = require("body-parser");
+const cors = require('cors');
 const app = express();
 const port = 3000;
 
 require("dotenv").config();
 
+const corsOptions = {
+  origin: "*",
+  Credentials: true,
+}
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -19,11 +26,6 @@ const s3 = new AWS.S3({
   accessKeyId: process.env.ACCESS_KEY_ID,
   secretAccessKey: process.env.SECRET_ACCESS_KEY,
 });
-
-const encryptValue = (value, secretkey) => {
-  const ciphertext = cryptojs.AES.encrypt(value, secretkey).toString();
-  return ciphertext;
-};
 
 const decryptValue = (encrypted, secretkey) => {
   const bytes = cryptojs.AES.decrypt(encrypted, secretkey);
@@ -73,6 +75,27 @@ const getValueFor = async (key) => {
 //     await res.send(fileNameOrigin);
 //   }, 5000);
 // });
+
+app.get("/blockchain/wallet", async (req, res) => {
+  const encryptValue = (value, secretkey) => {
+    const ciphertext = cryptojs.AES.encrypt(value, secretkey).toString();
+    return ciphertext;
+  };
+  try {
+    const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+    const newWallet = ethers.Wallet.createRandom(provider);
+    const newMnemonic = await newWallet.mnemonic;
+    const encryptedValue = await encryptValue(
+      newMnemonic?.phrase,
+      process.env.SECRET_SALT
+    );
+
+    console.log("뉴모닉", newMnemonic.phrase);
+    res.send(String(encryptedValue));
+  } catch (error) {
+    console.error("Error generating wallet:", error);
+  }
+});
 
 app.post("/blockchain/uploadIpfs", async (req, response) => {
   const img = req.body.img;
@@ -140,23 +163,6 @@ app.get("/upload-ipfs", async (req, res) => {
 
   // uploadImage();
   uploadMetaJSON();
-});
-
-app.get("/", async (req, res) => {
-  try {
-    const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
-    const newWallet = ethers.Wallet.createRandom(provider);
-    const newMnemonic = await newWallet.mnemonic;
-    const encryptedValue = await encryptValue(
-      newMnemonic?.phrase,
-      process.env.SECRET_SALT
-    );
-
-    console.log("뉴모닉", newMnemonic.phrase);
-    res.send(String(encryptedValue));
-  } catch (error) {
-    console.error("Error generating wallet:", error);
-  }
 });
 
 app.listen(port, () => {
