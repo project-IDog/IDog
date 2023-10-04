@@ -58,15 +58,19 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 			}
 		});
 		// 죽은 나의 강아지 API 불러오기
-		axios.get("dog/dead").then((data) => {
-			console.log("죽은ㄴ강아지!!", data);
-			if (data.data.message === "사용자의 생존한 강아지 조회 완료") {
-				if (data.data.data.length > 0) {
-					setIsMyProfile(true);
-					setDogDeathList(data.data.data);
+		axios
+			.get("/grave/user")
+			.then((data) => {
+				if (data.data.message === "무덤 조회 성공") {
+					if (data.data.data.length > 0) {
+						setIsMyProfile(true);
+						setDogDeathList(data.data.data);
+					}
 				}
-			}
-		});
+			})
+			.catch((err) => {
+				console.log("아니 왜 안돼!", err);
+			});
 	};
 	const [dogNftList, setDogNftList] = useState<Object[]>([]);
 
