@@ -34,5 +34,5 @@ public interface GraveService{
      * @param userNo - User 기본 키
      * @return {@code List<Grave>}
      */
-    public List<Grave> selectGravesByUserNo(Integer userNo);
+    public List<GraveListDto> selectGravesByUserNo(Integer userNo);
 }
