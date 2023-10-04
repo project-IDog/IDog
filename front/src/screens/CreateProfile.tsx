@@ -361,7 +361,7 @@ const CreateProfile = ({ navigation }: any) => {
 					>
 						<View style={CreateProfileLayout.submitButton}>
 							<Text style={CreateProfileLayout.submitButtonText}>
-								앨범 등록하기
+								프로필 생성하기
 							</Text>
 						</View>
 					</TouchableOpacity>
