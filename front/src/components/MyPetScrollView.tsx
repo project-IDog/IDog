@@ -32,13 +32,7 @@ const MyPetScrollView = (props: any) => {
 		<>
 			<ScrollView horizontal={true} style={MyPetScrollViewLayout.myPetContent}>
 				{props.userDogs.map((myPetImage: any, index: number) => {
-					const imageUrl = `https://ipfs.io/ipfs/${
-						myPetImage.dogImg.split("://")[1]
-					}`;
-					console.log(
-						"imageUrl : 아앙아아은마ㅣ윈뭉ㅁ니ㅓㅜㅇㅁ니ㅓ",
-						imageUrl,
-					);
+					const imageUrl = myPetImage.dogImg;
 					return (
 						<>
 							<TouchableOpacity

@@ -17,7 +17,6 @@ import LottieView from "lottie-react-native";
 import axios from "../utils/axios";
 
 const SubMain = ({ subTitle, mainTitle, bgImg, desc, data }: any) => {
-
 	console.log("이제 받아라!!", data);
 
 	const [flowersCnt, setFlowersCnt] = useState<number>(0);
@@ -57,9 +56,7 @@ const SubMain = ({ subTitle, mainTitle, bgImg, desc, data }: any) => {
 			});
 	}, []);
 
-	const imageUrl: string | null = data?.dogImg
-		? `https://ipfs.io/ipfs/${data.dogImg.split("://")[1]}`
-		: null;
+	const imageUrl: string | null = data?.dogImg ? data.dogImg : null;
 
 	return (
 		<>

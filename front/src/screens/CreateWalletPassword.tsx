@@ -1,13 +1,13 @@
-import React, {useState} from "react";
-import {View, Text, TouchableOpacity, Image, TextInput } from "react-native"
-import Checkbox from 'expo-checkbox';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, Image, TextInput } from "react-native";
+import Checkbox from "expo-checkbox";
 import "react-native-get-random-values";
 import { ethers } from "ethers";
 import CryptoJS from "react-native-crypto-js";
-import * as SecureStore from 'expo-secure-store';
-import {RPC_URL, SECRET_SALT, NFT_STORAGE} from "@env"
-import axios from "axios"
-import axiosApi from "../utils/axios"
+import * as SecureStore from "expo-secure-store";
+import { RPC_URL, SECRET_SALT, NFT_STORAGE } from "@env";
+import axios from "axios";
+import axiosApi from "../utils/axios";
 
 import CommonLayout from "../components/CommonLayout";
 import ColorHeader from "../components/ColorHeader";
