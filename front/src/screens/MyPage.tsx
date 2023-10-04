@@ -1,5 +1,5 @@
 import {useState,useEffect} from "react"
-import {View, Text, Image, TouchableOpacity, ScrollView} from "react-native"
+import {View, Text, Image, TouchableOpacity, ScrollView, TextInput} from "react-native"
 import CommonLayout from "../components/CommonLayout"
 import Footer from "../components/Footer"
 import MyPet from "../components/MyPetLayout"
@@ -61,6 +61,7 @@ const MyPage = ({navigation}: any) => {
                         </TouchableOpacity>
                     </View>
                     <View style={MyPageLayout.myProfileInfoWrap}>
+                        
                         <View style={MyPageLayout.myTitleOuter}>
                             <Text style={MyPageLayout.myTitle}>{`명예 멍집사 :)`}</Text>
                         </View>
@@ -106,7 +107,6 @@ const MyPage = ({navigation}: any) => {
                         <Image source={Badge3} style={MyPageLayout.badge}/>
                         <Image source={Badge4} style={MyPageLayout.badge}/>
                         <Image source={Badge5} style={MyPageLayout.badge}/>
-
                     </ScrollView>
                 </View>
                 <Footer/>
