@@ -84,6 +84,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 			.then((data) => {
 				console.log(selectedData?.dogNo, deathDate);
 				console.log("데이ㅓ받기!", data);
+				console.log("hello:", data.dogImg);
 				if (data.data.message === "무덤 생성 완료") {
 					// setDogNftList([]);
 					Alert.alert(
@@ -181,7 +182,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 										}}
 									>
 										<Image
-											source={exImg}
+											source={{ uri: data.dogImg }}
 											style={MemorialParkDesignLayout.modalcontentimg}
 										/>
 										<View style={MemorialParkDesignLayout.modalcontents}>
@@ -190,7 +191,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 													style={MemorialParkDesignLayout.riptitlename}
 													horizontal={true}
 												>
-													<Text style={MemorialParkDesignLayout.nfttext}>
+													<Text style={MemorialParkDesignLayout.nfttext2}>
 														{data.dogName}
 													</Text>
 												</ScrollView>

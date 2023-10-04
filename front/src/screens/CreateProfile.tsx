@@ -152,7 +152,7 @@ const CreateProfile = ({ navigation }: any) => {
 												dogBirthDate: petBirth,
 												dogSex: petGender,
 												dogNft: tokenId,
-												dogImg: String(imageOrigin),
+												dogImg: `https://ipfs.io/ipfs/${imageOrigin}`,
 											})
 											.then(async (data) => {
 												console.log(data);

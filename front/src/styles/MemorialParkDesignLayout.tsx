@@ -157,6 +157,11 @@ const MemorialParkDesignLayout = StyleSheet.create({
 	},
 	nfttext: {
 		fontSize: 20,
+		color: "#ffffff",
+		fontWeight: "bold",
+	},
+	nfttext2: {
+		fontSize: 20,
 		color: "black",
 		fontWeight: "bold",
 	},
@@ -188,7 +193,6 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		width: responsiveWidth(12),
 		borderRadius: 10,
 		resizeMode: "cover",
-		backgroundColor: "rgb(0,0,0,0.5)",
 	},
 
 	ripnftrow1: {
