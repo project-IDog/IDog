@@ -16,7 +16,6 @@ import CommonLayout from "../components/CommonLayout";
 import Footer from "../components/Footer";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as SecureStore from "expo-secure-store";
-import { ethers } from "ethers";
 import { mintDogTokenContract } from "../contracts/contract";
 import * as ImagePicker from "expo-image-picker";
 import axiosApi from "../utils/axios";
@@ -57,11 +56,14 @@ const CreateProfile = ({ navigation }: any) => {
 			new Date().getDate(),
 	);
 	const [nftCid, setNftCid] = useState<string | null>();
+	const [speciesList, setSpeciesList] = useState<any[]>([]);
 	const [hashId, setHashId] = useState<any>();
 	const [isLoading, setIsLoading] = useState<Boolean>(false);
 	const [tokenId, setTokenId] = useState<number>();
 	const [imageOrigin, setImageOrigin] = useState<string>();
 	const [myWalletAddress, setMyWalletAddress] = useState<string>();
+	const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+	const [dropdownVIsible, setDropdownVisible] = useState(false);
 
 	const showDatePicker = () => {
 		setDatePickerVisibility(true);
@@ -75,10 +77,6 @@ const CreateProfile = ({ navigation }: any) => {
 		console.log("handle confirm date:", date);
 
 		const dateAll = new Date(date);
-		// const year = dateAll.getFullYear();
-		// let month = Number(dateAll.getMonth() + 1);
-		// const day = dateAll.getDate();
-
 		var year = dateAll.getFullYear();
 		var month = ("0" + (1 + dateAll.getMonth())).slice(-2);
 		var day = ("0" + dateAll.getDate()).slice(-2);
@@ -98,7 +96,7 @@ const CreateProfile = ({ navigation }: any) => {
 		const blob = await response.blob();
 		const filename = await uri.split("/").pop();
 		const type = await blob.type;
-		const params = await {
+		const params = {
 			Bucket: AWS_BUCKET,
 			Key: filename,
 			Body: blob,
@@ -108,15 +106,13 @@ const CreateProfile = ({ navigation }: any) => {
 			if (err) {
 				console.log("err", err);
 			} else {
-				axios
-					.post("https://idog.store/blockchain/uploadIpfs", {
+				await axios.post("https://idog.store/blockchain/uploadIpfs", {
 						img: data.Location,
 						petName: petName,
 						petSpecies: petSpecies,
 						petBirth: petBirth,
 						petGender: petGender,
-					})
-					.then(async (data) => {
+					}).then(async (data) => {
 						// console.log("data : ", data);
 						console.log("nftCid", data.data.nftCid);
 
@@ -131,7 +127,7 @@ const CreateProfile = ({ navigation }: any) => {
 
 						console.log(nftCidConst);
 
-						const walletAddress = "0xfF59632D2680F7eD2D057228e14f6eDbf76f8Ccd";
+						const walletAddress = myWalletAddress;
 						if (data.status === 200) {
 							const tx = await mintDogTokenContract.mintDogProfile(
 								walletAddress,
@@ -163,20 +159,19 @@ const CreateProfile = ({ navigation }: any) => {
 									}
 								});
 
-							await axiosApi
-								.post("/dog", {
+							await axiosApi.post("/dog", {
 									dogName: petName,
 									dogBreed: petSpecies,
 									dogBirthDate: petBirth,
 									dogSex: petGender,
 									dogNft: tokenIdConst,
 									dogImg: imageOriginConst,
-								})
-								.then(async (data) => {
+								}).then(async (data) => {
 									console.log(data);
 									await alert("프로필 생성이 완료되었습니다.");
 									await navigation.navigate("Profile");
 								});
+							await setIsLoading(false);
 						}
 					});
 			}
@@ -184,15 +179,9 @@ const CreateProfile = ({ navigation }: any) => {
 	};
 
 	const uploadIpfs = async () => {
-		try {
-			setIsLoading(true);
+		await setIsLoading(true);
 
-			await uploadImage(imageUri);
-		} catch (err) {
-			console.error(err);
-		} finally {
-			await setIsLoading(false);
-		}
+		await uploadImage(imageUri);
 	};
 
 	// 권한 요청
@@ -230,8 +219,6 @@ const CreateProfile = ({ navigation }: any) => {
 		}
 	};
 
-	const createProfile = async () => {};
-
 	useEffect(() => {
 		const getWalletInfoFromStore = async () => {
 			const walletAddress = await SecureStore.getItemAsync("walletAddress");
@@ -264,14 +251,10 @@ const CreateProfile = ({ navigation }: any) => {
 		getWalletAddress();
 	}, []);
 
-	const [searchTerm, setSearchTerm] = useState<string>(""); // 검색어 상태
-
-	const [speciesList, setSpeciesList] = useState<any[]>([]);
 	const filteredSpeciesList = speciesList.filter((species) => {
 		if (!species.breedName || !searchTerm) return false;
 		return species.breedName.toLowerCase().includes(searchTerm.toLowerCase());
 	});
-	const [dropdownVIsible, setDropdownVisible] = useState(false);
 
 	return (
 		<>
@@ -305,51 +288,41 @@ const CreateProfile = ({ navigation }: any) => {
 					<TextInput
 						style={CreateProfileLayout.formInput}
 						onChangeText={(text) => setPetName(text)}
-						value={petName || ""}
+						value={petName}
 					/>
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 종을 입력해주세요.
 					</Text>
-					<>
-						<TextInput
-							style={CreateProfileLayout.formInput}
-							value={petSpecies || ""}
-							onChangeText={(text) => {
-								setPetSpecies(text);
-								setSearchTerm(text); // 검색어 업데이트
-								setDropdownVisible(true);
+					<TextInput
+						style={CreateProfileLayout.formInput}
+						value={petSpecies || ""} // petSpecies가 null일 경우 빈 문자열을 반환합니다.
+						onChangeText={(text) => {
+							setSearchTerm(text);
+							setPetSpecies(text);
+							setDropdownVisible(true);
+						}}
+						placeholder="종 검색하세요"
+						onBlur={() => setDropdownVisible(false)}
+					/>
+
+					{dropdownVIsible && (
+						<Picker
+							selectedValue={petSpecies}
+							onValueChange={(itemValue, itemIndex) => {
+								setPetSpecies(itemValue);
+								setSearchTerm(itemValue);
 							}}
-							placeholder="종을 검색해 아래를 클릭하세요"
-							onBlur={() => setDropdownVisible(false)}
-						/>
-						{dropdownVIsible ? (
-							<Picker
-								selectedValue={petSpecies} // 여기는 petSpecies를 사용합니다.
-								onValueChange={(itemValue, itemIndex) => {
-									setPetSpecies(itemValue);
-									setSearchTerm(`${itemValue}`);
-								}}
-								style={CreateProfileLayout.formInput}
-							>
+							style={CreateProfileLayout.formpicker}
+						>
+							{filteredSpeciesList.map((species, index) => (
 								<Picker.Item
-									key={-1}
-									label={`"${petSpecies}"검색결과를 클릭하세요`}
-									value={""}
-									style={{color: "#EE8A72", fontWeight: "bold", fontSize: 16}}
+									key={index}
+									label={species.breedName}
+									value={species.breedName}
 								/>
-								{filteredSpeciesList.map((species, index) => {
-									return (
-										<Picker.Item
-											key={index}
-											label={species.breedName}
-											value={species.breedName}
-											style={{color: "#000000"}}
-										/>
-									);
-								})}
-							</Picker>
-						) : null}
-					</>
+							))}
+						</Picker>
+					)}
 
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 성별을 입력해주세요.
