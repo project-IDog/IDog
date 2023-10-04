@@ -143,10 +143,15 @@ const CreateProfile = ({ navigation }: any) => {
 											dogImg: imageOrigin,
 										}).then(async (data) => {
 											console.log(data);
-											await alert("프로필 생성이 완료되었습니다.");
-											await navigation.navigate("Profile");
+											if(data.data.message === "강아지 프로필 등록 완료"){
+												await alert("프로필 생성이 완료되었습니다.");
+												await setIsLoading(false);
+												await navigation.navigate("Profile");
+											}else{
+												await setIsLoading(false);
+												alert('프로필 생성 실패, 관리자에게 문의하세요.');
+											}
 										});
-										await setIsLoading(false);
 									}
 								});
 						}else{
