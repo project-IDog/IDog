@@ -88,6 +88,15 @@ const CreateProfileLayout = StyleSheet.create({
 		marginTop: 33,
 		marginBottom: 22,
 	},
+	submitInactiveButton: {
+		width: responsiveWidth(92),
+		height: 50,
+		backgroundColor: "#DDD",
+		borderRadius: 10,
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+	},
 	submitButton: {
 		width: responsiveWidth(92),
 		height: 50,
@@ -96,6 +105,11 @@ const CreateProfileLayout = StyleSheet.create({
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	submitInactiveButtonText:{
+		fontSize: 16,
+		fontWeight: "700",
+		color: "#EE8A72",
 	},
 	submitButtonText: {
 		fontSize: 16,
