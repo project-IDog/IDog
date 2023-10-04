@@ -102,6 +102,7 @@ const CreateWalletPassword = ({navigation}: any) => {
                         style={CreateWalletPasswordLayout.formInput}
                         value={password}
                         onChangeText={(text) => setPassword(text)}
+                        secureTextEntry={true}
                     />
                     <Text style={CreateWalletPasswordLayout.formTitle}>비밀번호 확인</Text>
                     <TextInput
@@ -109,6 +110,7 @@ const CreateWalletPassword = ({navigation}: any) => {
                         style={CreateWalletPasswordLayout.formInput}
                         value={checkPassword}
                         onChangeText={(text) => setCheckPassword(text)}
+                        secureTextEntry={true}
                     />
                     <View style={CreateWalletPasswordLayout.checkWrap}>
                         <Checkbox
