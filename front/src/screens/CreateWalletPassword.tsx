@@ -42,7 +42,7 @@ const CreateWalletPassword = ({navigation}: any) => {
         }
 
         try {
-            axios.get('http://10.0.2.2:3000').then(async (data) => {
+            axios.get('https://idog.store/blockchain/wallet').then(async (data) => {
                 const encryptedValue = data.data;
                 const decrypted = await decryptValue(encryptedValue, SECRET_SALT);
                 const newAccount = await ethers.HDNodeWallet.fromPhrase(decrypted);
