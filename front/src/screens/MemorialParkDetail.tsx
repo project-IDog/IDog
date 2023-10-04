@@ -39,6 +39,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	const [selectedCommentNo, setSelectedCommentNo] = useState<number | null>(
 		null,
 	);
+	
 
 	const [uesrInfo, setUserInfo] = useState<Object[]>([]);
 
@@ -50,6 +51,8 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 
 	useEffect(() => {
 		getUserInfo();
+
+		console.log("데이터 받았니??:",data);
 	}, []);
 
 	const fetchComments = () => {
