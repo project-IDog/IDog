@@ -55,12 +55,9 @@ const CreateProfile = ({ navigation }: any) => {
 		"-" +
 		("0" + new Date().getDate()).slice(-2)
 	);
-	const [nftCid, setNftCid] = useState<string | null>();
 	const [speciesList, setSpeciesList] = useState<any[]>([]);
 	const [hashId, setHashId] = useState<any>();
 	const [isLoading, setIsLoading] = useState<Boolean>(false);
-	const [tokenId, setTokenId] = useState<number>();
-	const [imageOrigin, setImageOrigin] = useState<string>();
 	const [myWalletAddress, setMyWalletAddress] = useState<string>();
 	const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
 	const [dropdownVIsible, setDropdownVisible] = useState(false);
@@ -106,6 +103,7 @@ const CreateProfile = ({ navigation }: any) => {
 			if (err) {
 				console.log("err", err);
 			} else {
+				const imageOrigin = data.Location;
 				await axios.post("https://idog.store/blockchain/uploadIpfs", {
 						img: data.Location,
 						petName: petName,
@@ -113,65 +111,46 @@ const CreateProfile = ({ navigation }: any) => {
 						petBirth: petBirth,
 						petGender: petGender,
 					}).then(async (data) => {
-						// console.log("data : ", data);
-						console.log("nftCid", data.data.nftCid);
-
-						setNftCid(data.data.nftCid);
-						setImageOrigin(data.data.imageCid);
-
-						console.log("usestate nftcid", nftCid);
-						console.log("usestate imagecid", imageOrigin);
-
-						const nftCidConst = data.data.nftCid;
-						const imageOriginConst = data.data.imageCid;
-
-						console.log(nftCidConst);
+						const nftCid = data.data.nftCid;
 
 						const walletAddress = myWalletAddress;
-						if (data.status === 200) {
+						console.log("walletAddress", walletAddress);
+						if (data.data.message === "OK") {
 							const tx = await mintDogTokenContract.mintDogProfile(
 								walletAddress,
-								`ipfs://${nftCidConst}`,
+								`ipfs://${nftCid}`,
 							);
 							const receipt = await tx.wait();
-							setHashId(receipt.hash);
+							const hashId = receipt.hash;
 							console.log("receipt", receipt);
 
-							var tokenIdConst;
 							const POLYGON_KEY = String(POLYGON_API_KEY);
 							await axios
 								.get(
 									`https://api.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${process.env.MINT_DOG_TOKEN_ADDRESS}&address=${walletAddress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${POLYGON_KEY}`,
 								)
-								.then((data) => {
+								.then(async (data) => {
 									if (data.status === 200) {
-										// tokenID -> 업데이트 느려서 이전 토큰 값 가져와서 +1
-										setTokenId(
-											Number(
-												data.data.result[data.data.result.length - 1].tokenID,
-											) + Number(1),
-										);
-
-										tokenIdConst =
-											Number(
-												data.data.result[data.data.result.length - 1].tokenID,
-											) + Number(1);
+										const tokenId = Number(data.data.result[data.data.result.length-1].tokenID) + Number(1);
+										console.log("polygon api", data);
+										await axiosApi.post("/dog", {
+											dogName: petName,
+											dogBreed: petSpecies,
+											dogBirthDate: petBirth,
+											dogSex: petGender,
+											dogNft: tokenId,
+											dogImg: imageOrigin,
+										}).then(async (data) => {
+											console.log(data);
+											await alert("프로필 생성이 완료되었습니다.");
+											await navigation.navigate("Profile");
+										});
+										await setIsLoading(false);
 									}
 								});
-
-							await axiosApi.post("/dog", {
-									dogName: petName,
-									dogBreed: petSpecies,
-									dogBirthDate: petBirth,
-									dogSex: petGender,
-									dogNft: tokenIdConst,
-									dogImg: imageOriginConst,
-								}).then(async (data) => {
-									console.log(data);
-									await alert("프로필 생성이 완료되었습니다.");
-									await navigation.navigate("Profile");
-								});
-							await setIsLoading(false);
+						}else{
+							alert('프로필 생성 실패, 관리자에게 문의하세요.');
+							setIsLoading(false);
 						}
 					});
 			}
@@ -179,9 +158,14 @@ const CreateProfile = ({ navigation }: any) => {
 	};
 
 	const uploadIpfs = async () => {
-		await setIsLoading(true);
-
-		await uploadImage(imageUri);
+		try{
+			await setIsLoading(true);
+	
+			await uploadImage(imageUri);
+		}catch(err){
+			await setIsLoading(false);
+			alert("민팅 생성 에러, 관리자에게 문의하세요.");
+		}
 	};
 
 	// 권한 요청
