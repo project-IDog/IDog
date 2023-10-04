@@ -106,13 +106,15 @@ const CreateProfile = ({ navigation }: any) => {
 			if (err) {
 				console.log("err", err);
 			} else {
-				await axios.post("https://idog.store/blockchain/uploadIpfs", {
+				await axios
+					.post("https://idog.store/blockchain/uploadIpfs", {
 						img: data.Location,
 						petName: petName,
 						petSpecies: petSpecies,
 						petBirth: petBirth,
 						petGender: petGender,
-					}).then(async (data) => {
+					})
+					.then(async (data) => {
 						// console.log("data : ", data);
 						console.log("nftCid", data.data.nftCid);
 
@@ -159,14 +161,16 @@ const CreateProfile = ({ navigation }: any) => {
 									}
 								});
 
-							await axiosApi.post("/dog", {
+							await axiosApi
+								.post("/dog", {
 									dogName: petName,
 									dogBreed: petSpecies,
 									dogBirthDate: petBirth,
 									dogSex: petGender,
 									dogNft: tokenIdConst,
 									dogImg: imageOriginConst,
-								}).then(async (data) => {
+								})
+								.then(async (data) => {
 									console.log(data);
 									await alert("프로필 생성이 완료되었습니다.");
 									await navigation.navigate("Profile");
@@ -293,36 +297,47 @@ const CreateProfile = ({ navigation }: any) => {
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 종을 입력해주세요.
 					</Text>
-					<TextInput
-						style={CreateProfileLayout.formInput}
-						value={petSpecies || ""} // petSpecies가 null일 경우 빈 문자열을 반환합니다.
-						onChangeText={(text) => {
-							setSearchTerm(text);
-							setPetSpecies(text);
-							setDropdownVisible(true);
-						}}
-						placeholder="종 검색하세요"
-						onBlur={() => setDropdownVisible(false)}
-					/>
 
-					{dropdownVIsible && (
-						<Picker
-							selectedValue={petSpecies}
-							onValueChange={(itemValue, itemIndex) => {
-								setPetSpecies(itemValue);
-								setSearchTerm(itemValue);
+					<>
+						<TextInput
+							style={CreateProfileLayout.formInput}
+							value={petSpecies || ""}
+							onChangeText={(text) => {
+								setPetSpecies(text);
+								setSearchTerm(text); // 검색어 업데이트
+								setDropdownVisible(true);
 							}}
-							style={CreateProfileLayout.formpicker}
-						>
-							{filteredSpeciesList.map((species, index) => (
+							placeholder="종을 검색해 아래를 클릭하세요"
+							onBlur={() => setDropdownVisible(false)}
+						/>
+						{dropdownVIsible ? (
+							<Picker
+								selectedValue={petSpecies} // 여기는 petSpecies를 사용합니다.
+								onValueChange={(itemValue, itemIndex) => {
+									setPetSpecies(itemValue);
+									setSearchTerm(`${itemValue}`);
+								}}
+								style={CreateProfileLayout.formInput}
+							>
 								<Picker.Item
-									key={index}
-									label={species.breedName}
-									value={species.breedName}
+									key={-1}
+									label={`"${petSpecies}"검색결과를 클릭하세요`}
+									value={""}
+									style={{ color: "#EE8A72", fontWeight: "bold", fontSize: 16 }}
 								/>
-							))}
-						</Picker>
-					)}
+								{filteredSpeciesList.map((species, index) => {
+									return (
+										<Picker.Item
+											key={index}
+											label={species.breedName}
+											value={species.breedName}
+											style={{ color: "#000000" }}
+										/>
+									);
+								})}
+							</Picker>
+						) : null}
+					</>
 
 					<Text style={CreateProfileLayout.formTitle}>
 						반려견의 성별을 입력해주세요.
@@ -353,18 +368,15 @@ const CreateProfile = ({ navigation }: any) => {
 				</View>
 
 				<View style={CreateProfileLayout.formButtonWrap}>
-					{
-						isLoading ?
-						<TouchableOpacity
-							activeOpacity={0.7}
-						>
+					{isLoading ? (
+						<TouchableOpacity activeOpacity={0.7}>
 							<View style={CreateProfileLayout.submitInactiveButton}>
 								<Text style={CreateProfileLayout.submitInactiveButtonText}>
 									프로필 생성하기
 								</Text>
 							</View>
 						</TouchableOpacity>
-						:
+					) : (
 						<TouchableOpacity
 							activeOpacity={0.7}
 							onPress={() => {
@@ -377,8 +389,8 @@ const CreateProfile = ({ navigation }: any) => {
 								</Text>
 							</View>
 						</TouchableOpacity>
-					}
-					
+					)}
+
 					<TouchableOpacity
 						activeOpacity={0.7}
 						onPress={() => navigation.navigate("Profile")}
