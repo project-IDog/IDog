@@ -125,8 +125,7 @@ const CreateProfile = ({ navigation }: any) => {
 							if (data.status=== 200) {
 								const tx = await mintDogTokenContract.mintDogProfile(
 									walletAddress,
-									`ipfs://${nftCid}`,
-									overrides
+									`ipfs://${nftCid}`
 								);
 								const receipt = await tx.wait();
 								const hashId = receipt.hash;
