@@ -2,6 +2,7 @@ package com.haru.ppobbi.domain.dog.service;
 
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogOwnerUpdateRequestDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogisDeadResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogisAliveResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogNftResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
@@ -156,6 +157,29 @@ public class DogServiceImpl implements DogService{
 
         }
         return aliveResponseDtoList;
+    }
+
+    @Override
+    public List<DogisDeadResponseDto> selectDeadDogsByUserNo(Integer userNo) {
+        List<Dog> dogList = dogRepository.findAllByUserNoAndDogIsDeadAndCanceled(userNo, BaseConstant.DEAD, BaseConstant.NOTCANCELED);
+
+        List<DogisDeadResponseDto> deadResponseDtoList = new ArrayList<>();
+        for (int i=0; i<dogList.size(); i++){
+            DogisDeadResponseDto nowDog = DogisDeadResponseDto.builder()
+                    .userNo(dogList.get(i).getUserNo())
+                    .dogNo(dogList.get(i).getDogNo())
+                    .dogName(dogList.get(i).getDogName())
+                    .dogBreed(dogList.get(i).getDogBreed())
+                    .dogBirthDate(dogList.get(i).getDogBirthDate())
+                    .dogIsDead(dogList.get(i).getDogIsDead())
+                    .dogSex(dogList.get(i).getDogSex())
+                    .dogNft(dogList.get(i).getDogNft())
+                    .dogImg(dogList.get(i).getDogImg())
+                    .build();
+            deadResponseDtoList.add(nowDog);
+
+        }
+        return deadResponseDtoList;
     }
 
 }

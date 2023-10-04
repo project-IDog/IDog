@@ -4,6 +4,7 @@ import static com.haru.ppobbi.domain.dog.constant.DogResponseMessage.*;
 
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogOwnerUpdateRequestDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogisDeadResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogisAliveResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogNftResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
@@ -98,6 +99,13 @@ public class DogController {
                 .body(ResponseDto.create(READ_ALL_ALIVE_DOG, aliveDogResponseDtoList));
     }
 
+    @GetMapping("/dead")
+    public ResponseEntity<ResponseDto<List<DogisDeadResponseDto>>> getAllDeadDogInfo(@RequestAttribute("userNo") Integer userNo){
+        log.info("DogController - getAllDogNftInfo : 사용자의 모든 생존한 강아지 NFT 조회 " );
+        List<DogisDeadResponseDto> deadDogResponseDtoList = dogService.selectDeadDogsByUserNo(userNo);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.create(READ_ALL_ALIVE_DOG, deadDogResponseDtoList));
+    }
 
 
 

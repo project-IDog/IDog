@@ -2,6 +2,7 @@ package com.haru.ppobbi.domain.dog.service;
 
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogOwnerUpdateRequestDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogisDeadResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogisAliveResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogNftResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
@@ -83,6 +84,14 @@ public interface DogService {
      * @return {@code List<Dog>}
      */
     List<DogisAliveResponseDto> selectAliveDogsByUserNo(Integer userNo);
+
+    /**
+     * userNo를 받아 모든 사망한 Dog 조회
+     * @author Sunhee
+     * @param userNo - User 기본 키
+     * @return {@code List<Dog>}
+     */
+    List<DogisDeadResponseDto> selectDeadDogsByUserNo(Integer userNo);
 
 
 
