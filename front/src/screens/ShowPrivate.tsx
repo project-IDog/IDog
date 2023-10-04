@@ -30,8 +30,10 @@ const ShowPrivate = ({navigation}: any) => {
 
     useEffect(() => {
         const getPrivateKey = async () => {
+            const myWalletAddress = await SecureStore.getItemAsync("walletAddress");
             const privateKey = await SecureStore.getItemAsync("privateKey");
-            if(privateKey){
+            if(privateKey && myWalletAddress){
+                setWalletAddress(myWalletAddress);
                 setPrivateKey(privateKey);
             }
 
@@ -59,6 +61,12 @@ const ShowPrivate = ({navigation}: any) => {
                         style={EditMypageLayout.editMyPageFormInput}
                         value={password}
                         onChangeText={(text) => setPassword(text)}
+                    />
+
+                    <Text style={EditMypageLayout.editMyPageFormText}>아래에 고객님의 소중한 지갑주소를 알려드려요.</Text>
+                    <TextInput
+                        style={EditMypageLayout.showPrivateKeyInput}
+                        value={walletAddress}
                     />
 
                     <Text style={EditMypageLayout.editMyPageFormText}>아래에 고객님의 소중한 개인키를 알려드려요.</Text>
