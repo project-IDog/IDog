@@ -54,14 +54,13 @@ const CreateWalletPassword = ({navigation}: any) => {
                 const walletAddress = await SecureStore.getItemAsync("walletAddress");
                 const privateKey = await SecureStore.getItemAsync("privateKey");
                 const Mnemonic = await newAccount?.mnemonic?.phrase;
-        
+                
+                setIsLoading(false);
+                setIsChecked(false);
                 await navigation.navigate('ProtectWallet');
             })
         } catch (error) {
             console.error("Error generating wallet:", error);
-        }finally{
-            setIsLoading(false);
-            setIsChecked(false);
         }
     };
 
