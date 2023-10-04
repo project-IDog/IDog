@@ -188,6 +188,7 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		width: responsiveWidth(12),
 		borderRadius: 10,
 		resizeMode: "cover",
+		backgroundColor: "rgb(0,0,0,0.5)",
 	},
 
 	ripnftrow1: {
@@ -323,7 +324,6 @@ const MemorialParkDesignLayout = StyleSheet.create({
 	},
 	riptitlename: {
 		// width: responsiveWidth(4),
-	
 	},
 });
 

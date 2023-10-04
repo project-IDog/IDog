@@ -42,7 +42,6 @@ const Main = ({ navigation }: any) => {
 	const [dataList, setDataList] = useState<DogData[]>([]);
 	useEffect(() => {
 		axios.get("/grave").then((data) => {
-			console.log("무덤 조회하기!!", data.data.data);
 			if (data.data.message === "무덤 조회 성공") {
 				setDataList(data.data.data);
 			}
@@ -106,9 +105,7 @@ const Main = ({ navigation }: any) => {
 								? "rgb(0, 0, 0)"
 								: Colors[RipdataList.length - (index % Colors.length) - 1];
 
-						const imageUrl: string | null = data?.dogImg
-							? `https://ipfs.io/ipfs/${data.dogImg.split("://")[1]}`
-							: "https://ppobbi.s3.ap-northeast-2.amazonaws.com/044f0812-8b86-4bf3-80aa-6a71cecd5ec4.jpeg";
+						const imageUrl: string | null = data?.dogImg;
 
 						return (
 							<View key={index} style={[MemorialParkDesignLayout.nftview]}>

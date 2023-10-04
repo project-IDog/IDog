@@ -137,9 +137,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 		});
 	};
 
-	const imageUrl: string | null = data?.dogImg
-		? `https://ipfs.io/ipfs/${data.dogImg.split("://")[1]}`
-		: null;
+	const imageUrl: string | null = data?.dogImg ? data.dogImg : null;
 
 	const handleConfirm = () => {
 		axios
