@@ -1,13 +1,11 @@
 import {
 	View,
 	Text,
-	StyleSheet,
 	TouchableOpacity,
 	ScrollView,
-	NativeSyntheticEvent,
-	NativeScrollEvent,
 	Image,
 	RefreshControl,
+	Animated,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import MainHeader from "../components/MainHeader";
@@ -18,6 +16,12 @@ import RipnftCreate from "../components/RipnftCreate";
 import nftbgcloud from "../../assets/images/skysky.png";
 import axios from "../utils/axios";
 import dog1 from "../../assets/images/adoption-main-img.png";
+import scrolldownblack from "../../assets/scrolldownblack.json";
+import LottieView from "lottie-react-native";
+import {
+	responsiveHeight,
+	responsiveWidth,
+} from "react-native-responsive-dimensions";
 
 type AlbumData = {
 	photoUrl: string;
@@ -62,6 +66,23 @@ const Main = ({ navigation }: any) => {
 		setRefreshing(false);
 	}, [ripIndex, dataList, RipdataList]);
 
+	const opacity = useState(new Animated.Value(0))[0];
+
+	useEffect(() => {
+		Animated.sequence([
+			Animated.timing(opacity, {
+				toValue: 1,
+				duration: 3000,
+				useNativeDriver: true,
+			}),
+			Animated.timing(opacity, {
+				toValue: 0,
+				duration: 3000,
+				useNativeDriver: true,
+			}),
+		]).start();
+	}, [RipdataList]);
+
 	return (
 		<>
 			<ScrollView
@@ -95,6 +116,30 @@ const Main = ({ navigation }: any) => {
 									style={[MemorialParkDesignLayout.linearalign, { flex: 1 }]}
 									colors={[startColor, endColor]}
 								>
+									<Animated.View style={{ opacity: opacity }}>
+										<LottieView
+											autoPlay={true}
+											loop={true}
+											source={scrolldownblack}
+											style={{
+												position: "absolute",
+												right: responsiveWidth(26),
+												height: responsiveHeight(10),
+												top: responsiveHeight(-1),
+											}}
+										/>
+										<Text
+											style={{
+												color: "black",
+												fontSize: 18,
+												fontWeight: "bold",
+												textAlign: "center",
+											}}
+										>
+											스크롤을 내리면 {"\n"} rip NFT를 확인할 수 있습니다
+										</Text>
+									</Animated.View>
+
 									<Image
 										source={nftbgcloud}
 										style={MemorialParkDesignLayout.lineralignbg}

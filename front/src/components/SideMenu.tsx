@@ -68,7 +68,7 @@ const SideMenu = (props: any) => {
 						></SideMenuIcon>
 						{/* <SideMenuIcon title="진료일정등록" imageIcon={MedicalIcon}></SideMenuIcon> */}
 						<SideMenuIcon
-							title="산책루트"
+							title="산책기록"
 							imageIcon={WalkRootIcon}
 							movePage="Walk"
 						></SideMenuIcon>

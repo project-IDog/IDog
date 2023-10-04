@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { View, Modal } from "react-native";
 import MemorialParkDesignLayout from "../styles/MemorialParkDesignLayout";
-import { Text, TouchableOpacity, Image, TextInput, Alert } from "react-native";
+import {
+	Text,
+	TouchableOpacity,
+	Image,
+	TextInput,
+	Alert,
+	Animated,
+	ScrollView,
+} from "react-native";
 import {
 	responsiveHeight,
 	responsiveWidth,
@@ -9,14 +17,33 @@ import {
 import Animation from "../components/Animation";
 import exImg from "../../assets/images/photo-ex-img3.png";
 import axios from "../utils/axios";
-
+import scrolldown from "../../assets/scrolldown.json";
+import LottieView from "lottie-react-native";
 interface RipnftCreateProps {
 	setDataList: (data: any) => void;
 }
 
 const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
+	const opacity = useState(new Animated.Value(0))[0];
+
+	useEffect(() => {
+		Animated.sequence([
+			Animated.timing(opacity, {
+				toValue: 1,
+				duration: 3000,
+				useNativeDriver: true,
+			}),
+			Animated.timing(opacity, {
+				toValue: 0,
+				duration: 3000,
+				useNativeDriver: true,
+			}),
+		]).start(); // 애니메이션이 완료된 후 메시지 숨김
+	}, []);
+
 	const fetchNftList = () => {
 		axios.get("/dog/alive").then((data) => {
+			console.log("생존강아지 조회!", data);
 			if (data.data.message === "사용자의 생존한 강아지 조회 완료") {
 				setDogNftList(data.data.data);
 			}
@@ -88,6 +115,38 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 	return (
 		<View style={MemorialParkDesignLayout.view1}>
 			<Animation />
+			<View
+				style={{
+					width: responsiveHeight(30),
+					position: "absolute",
+					top: responsiveHeight(25),
+					alignItems: "center",
+				}}
+			>
+				<Animated.View style={{ opacity: opacity }}>
+					<LottieView
+						autoPlay={true}
+						loop={true}
+						source={scrolldown}
+						style={{
+							position: "absolute",
+							right: responsiveWidth(26),
+							height: responsiveHeight(10),
+							top: responsiveHeight(-1),
+						}}
+					/>
+					<Text
+						style={{
+							color: "black",
+							fontSize: 18,
+							fontWeight: "bold",
+							textAlign: "center",
+						}}
+					>
+						스크롤을 내리면 {"\n"} rip NFT를 확인할 수 있습니다
+					</Text>
+				</Animated.View>
+			</View>
 			<TouchableOpacity
 				style={MemorialParkDesignLayout.ripnfbtn}
 				onPress={() => setModalVisible(true)}
@@ -111,37 +170,41 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 								반려견 RIP 기억하기
 							</Text>
 						</View>
-						{dogNftList?.map((data: any) => {
-							return (
-								<TouchableOpacity
-									key={data.dogNo}
-									style={MemorialParkDesignLayout.modalcontentcontainer}
-									onPress={() => {
-										handleClick(data);
-									}}
-								>
-									<Image
-										source={exImg}
-										style={MemorialParkDesignLayout.modalcontentimg}
-									/>
-									<View style={MemorialParkDesignLayout.modalcontents}>
-										<View style={MemorialParkDesignLayout.modalcontentrow}>
-											<Text style={MemorialParkDesignLayout.modalcontenttitle}>
-												{data.dogName}
-											</Text>
-											<Text style={MemorialParkDesignLayout.modalcontenttitle}>
-												{data.dogBreed}
+						<ScrollView>
+							{dogNftList?.map((data: any) => {
+								return (
+									<TouchableOpacity
+										key={data.dogNo}
+										style={MemorialParkDesignLayout.modalcontentcontainer}
+										onPress={() => {
+											handleClick(data);
+										}}
+									>
+										<Image
+											source={exImg}
+											style={MemorialParkDesignLayout.modalcontentimg}
+										/>
+										<View style={MemorialParkDesignLayout.modalcontents}>
+											<View style={MemorialParkDesignLayout.modalcontentrow}>
+												<ScrollView
+													style={MemorialParkDesignLayout.riptitlename}
+													horizontal={true}
+												>
+													<Text style={MemorialParkDesignLayout.nfttext}>
+														{data.dogName}
+													</Text>
+												</ScrollView>
+											</View>
+											<Text
+												style={MemorialParkDesignLayout.modalcontentdatetitle}
+											>
+												{data.dogBirthDate}~{data.dogDeathDate}~{data.dogNo}
 											</Text>
 										</View>
-										<Text
-											style={MemorialParkDesignLayout.modalcontentdatetitle}
-										>
-											{data.dogBirthDate}~{data.dogDeathDate}~{data.dogNo}
-										</Text>
-									</View>
-								</TouchableOpacity>
-							);
-						})}
+									</TouchableOpacity>
+								);
+							})}
+						</ScrollView>
 
 						<TouchableOpacity
 							style={MemorialParkDesignLayout.modalclosebtn}
