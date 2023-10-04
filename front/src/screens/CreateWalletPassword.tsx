@@ -7,6 +7,7 @@ import CryptoJS from "react-native-crypto-js";
 import * as SecureStore from 'expo-secure-store';
 import {RPC_URL, SECRET_SALT, NFT_STORAGE} from "@env"
 import axios from "axios"
+import axiosApi from "../utils/axios"
 
 import CommonLayout from "../components/CommonLayout";
 import ColorHeader from "../components/ColorHeader";
@@ -39,6 +40,15 @@ const CreateWalletPassword = ({navigation}: any) => {
 
         if(!isLoading){
             setIsLoading(true);
+        }
+
+        try{
+            axiosApi.put('/user/wallet', {
+                "userWalletPw": password,
+            })
+        }catch(err){
+            alert("지갑 생성 오류, 관리자에게 문의하세요.");
+            console.error("비밀번호 저장 오류");
         }
 
         try {
