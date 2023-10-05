@@ -17,6 +17,7 @@ import NftCardIcon from "../../assets/images/nft-card-icon.png";
 import VaccineIcon from "../../assets/images/vaccine-icon.png";
 import AdoptionIcon from "../../assets/images/adoption-icon.png";
 import PhotoAlbumIcon from "../../assets/images/photo-album-icon.png";
+import WalletColorIcon from "../../assets/images/wallet-icon-color.png"
 
 const Main = ({ navigation }: any) => {
 	const [userName, setUserName] = useState<string|null>(null);
@@ -157,10 +158,10 @@ const Main = ({ navigation }: any) => {
 							movePage="Profile"
 						/>
 						<IconButton
-							desc="반려견 다이어리"
-							title="진료기록"
-							iconImage={VaccineIcon}
-							movePage="Profile"
+							desc="소중한 나의 개인정보"
+							title="마이페이지"
+							iconImage={WalletColorIcon}
+							movePage="MyPage"
 						/>
 					</View>
 					<View style={MainLayout.flexButtonWrap}>

@@ -130,7 +130,7 @@ const CreateProfile = ({ navigation }: any) => {
 									`ipfs://${nftCid}`
 								);
 								const receipt = await tx.wait();
-								const hashId = receipt.hash;
+								const receiptHash = receipt.hash;
 								console.log("receipt", receipt);
 	
 								const POLYGON_KEY = String(POLYGON_API_KEY);
@@ -143,19 +143,17 @@ const CreateProfile = ({ navigation }: any) => {
 										.then(async (data) => {
 											console.log("data", data);
 											if (data.status === 200) {
-												const tokenId = Number(data.data.result[data.data.result.length-1].tokenID) + Number(1);
 												console.log("polygon api", data);
 												await axiosApi.post("/dog", {
 													dogName: petName,
 													dogBreed: petSpecies,
 													dogBirthDate: petBirth,
 													dogSex: petGender,
-													dogNft: tokenId,
+													dogHash: receiptHash,
 													dogImg: String(imageOrigin),
 												}).then(async (data) => {
-													console.log(data);
 													if(data.data.message === "강아지 프로필 등록 완료"){
-														await alert("프로필 생성이 완료되었습니다.");
+														Alert.alert('프로필 생성이 완료되었습니다.', '외부 디지털 지갑에서 확인하려면 최대 1일까지도 소요될 수 있습니다.');
 														await setIsLoading(false);
 														await navigation.replace("Profile");
 													}else{
@@ -374,8 +372,46 @@ const CreateProfile = ({ navigation }: any) => {
 						onCancel={hideDatePicker}
 					/>
 				</View>
+				{
+					dropdownVIsible ?
+					<>
+						<View style={{marginTop:33}}></View>
+							<View style={CreateProfileLayout.formButtonWrap}>
+							{isLoading ? (
+								<TouchableOpacity activeOpacity={0.7}>
+									<View style={CreateProfileLayout.submitInactiveButton}>
+										<Text style={CreateProfileLayout.submitInactiveButtonText}>
+											프로필 생성하기
+										</Text>
+									</View>
+								</TouchableOpacity>
+							) : (
+								<TouchableOpacity
+									activeOpacity={0.7}
+									onPress={() => {
+										uploadIpfs();
+									}}
+								>
+									<View style={CreateProfileLayout.submitButton}>
+										<Text style={CreateProfileLayout.submitButtonText}>
+											프로필 생성하기
+										</Text>
+									</View>
+								</TouchableOpacity>
+							)}
 
-				<View style={CreateProfileLayout.formButtonWrap}>
+							<TouchableOpacity
+								activeOpacity={0.7}
+								onPress={() => navigation.navigate("Profile")}
+							>
+								<View style={CreateProfileLayout.cancelButton}>
+									<Text style={CreateProfileLayout.cancelButtonText}>취소하기</Text>
+								</View>
+							</TouchableOpacity>
+						</View>
+					</>
+					:
+					<View style={CreateProfileLayout.formButtonWrap}>
 					{isLoading ? (
 						<TouchableOpacity activeOpacity={0.7}>
 							<View style={CreateProfileLayout.submitInactiveButton}>
@@ -408,6 +444,8 @@ const CreateProfile = ({ navigation }: any) => {
 						</View>
 					</TouchableOpacity>
 				</View>
+				}
+				
 				<Footer />
 			</CommonLayout>
 			{isLoading ? (

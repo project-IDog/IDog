@@ -106,10 +106,19 @@ const EditProfile = ({navigation, route} : any) => {
                         value={myWalletAddress}
                     />
                     <Text style={CreateProfileLayout.formTitle}>내 반려견의 token id입니다.</Text>
-                    <TextInput
-                        style={CreateProfileLayout.formInput}
-                        value={String(selectedDog?.dogNft)}
-                    />
+                    {
+                        selectedDog?.dogNft === null ?
+                        <TextInput
+                            style={CreateProfileLayout.formInput}
+                            value="token id 생성 전 입니다. 최대 하루까지 소요될 수 있습니다."
+                        />
+                        :
+                        <TextInput
+                            style={CreateProfileLayout.formInput}
+                            value={String(selectedDog?.dogNft)}
+                        />
+                    }
+                    
                 </View>
 
                 <View style={CreateProfileLayout.formButtonWrap}>
