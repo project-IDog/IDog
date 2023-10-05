@@ -88,6 +88,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 				setCommentList(data.data.data);
 			}
 		});
+		// console.log("DATA DATA ", data);
 
 		setTimeout(() => {
 			Animated.parallel([
@@ -124,10 +125,11 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	}, []);
 
 	useEffect(() => {
-		axios.get("/photo/user").then((data) => {
+		axios.get(`/photo/dog/${data.dogNo}`).then((data) => {
 			if (data.data.message === "사진 조회 성공") {
 				setFeedList(data.data.data);
 			}
+			console.log("DATADATA", data.data);
 		});
 	}, []);
 
