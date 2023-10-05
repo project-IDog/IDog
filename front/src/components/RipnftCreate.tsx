@@ -181,7 +181,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 					onPress={() => setModalVisible(true)}
 				>
 					<Text style={MemorialParkDesignLayout.ripnftbtntext}>
-						RIP 프로필 기억하기
+						Memorial Sky
 					</Text>
 				</TouchableOpacity>
 			)}
@@ -434,7 +434,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 														>
 															{data?.dogName}
 														</Text>
-														의 추모공원으로 {"\n"}이동하시겠습니까?
+														의 하늘공원으로 {"\n"}이동하시겠습니까?
 													</Text>
 													<View
 														style={

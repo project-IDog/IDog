@@ -39,7 +39,6 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	const [selectedCommentNo, setSelectedCommentNo] = useState<number | null>(
 		null,
 	);
-	
 
 	const [uesrInfo, setUserInfo] = useState<Object[]>([]);
 
@@ -52,7 +51,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	useEffect(() => {
 		getUserInfo();
 
-		console.log("데이터 받았니??:",data);
+		console.log("데이터 받았니??:", data);
 	}, []);
 
 	const fetchComments = () => {
@@ -150,7 +149,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 					setConfirmationModalVisible(false);
 					fetchComments();
 					Alert.alert(
-						"추모 공원",
+						"하늘공원",
 						"댓글을 삭제했습니다.",
 						[
 							{
@@ -185,7 +184,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 				</Animated.View>
 				<MainHeader />
 				<SubMainRip
-					subTitle="추모공원"
+					subTitle="하늘공원"
 					mainTitle={`반려견에게 영원한 평화와 \n행복을 기원합니다.`}
 					bgImg={MpImage}
 					desc="추모하기"

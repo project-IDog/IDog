@@ -11,13 +11,13 @@ const SideMenuIcon = ({ title, imageIcon, movePage }: any) => {
 	const { LoginStore } = IndexStore();
 
 	const authHandling = () => {
-		// 추모공원은 로그인이 진행되지 않아도 랜딩 가능
+		// 하늘공원은 로그인이 진행되지 않아도 랜딩 가능
 		if (movePage === "Three") {
 			navigation.navigate(movePage);
 			return;
 		}
 
-		// 추모공원 외 페이지는 로그인에 따른 핸들링 진행
+		// 하늘공원 외 페이지는 로그인에 따른 핸들링 진행
 		if (LoginStore.isLogged) {
 			navigation.navigate(movePage);
 		} else {

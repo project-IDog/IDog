@@ -112,7 +112,7 @@ const Main = ({ navigation }: any) => {
 						<Text style={MainLayout.tribeTitle}>평생 행복하도록.</Text>
 						<Text style={MainLayout.tribeDesc}>
 							반려견과 함께했던 모든 추억이 잊혀지지 않고{"\n"}
-							기억될 수 있도록 온라인 추모공원에서 관리해드려요
+							기억될 수 있도록 온라인 하늘공원에서 관리해드려요
 						</Text>
 						<TouchableOpacity
 							activeOpacity={0.7}
@@ -120,7 +120,7 @@ const Main = ({ navigation }: any) => {
 						>
 							<View style={MainLayout.moveTribeButton}>
 								<Text style={MainLayout.moveTribeButtonText}>
-									온라인 추모공원 둘러보기
+									온라인 하늘공원 둘러보기
 								</Text>
 							</View>
 						</TouchableOpacity>

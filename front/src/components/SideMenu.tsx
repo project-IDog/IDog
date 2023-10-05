@@ -73,7 +73,7 @@ const SideMenu = (props: any) => {
 							movePage="Walk"
 						></SideMenuIcon>
 						<SideMenuIcon
-							title="추모공원"
+							title="하늘공원"
 							imageIcon={TribeIcon}
 							movePage="Three"
 						></SideMenuIcon>
