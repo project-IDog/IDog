@@ -24,11 +24,6 @@ const Main = ({ navigation }: any) => {
 	const { LoginStore } = IndexStore();
 
 	const authHandling = (pageName: string) => {
-		if (pageName === "Three") {
-			navigation.navigate(pageName);
-			return;
-		}
-
 		if (LoginStore.isLogged) {
 			navigation.navigate(pageName);
 		} else {
