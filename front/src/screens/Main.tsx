@@ -62,7 +62,7 @@ const Main = ({ navigation }: any) => {
 						>
 							<View style={MainLayout.walkRootButton}>
 								<Text style={MainLayout.walkRootButtonText}>
-									산책루트 확인하기
+									산책기록 확인하기
 								</Text>
 							</View>
 						</TouchableOpacity>
