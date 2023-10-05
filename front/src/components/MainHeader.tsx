@@ -24,7 +24,9 @@ const MainHeader = () => {
   return (
     <>
         <View style={styles.header}>
-            <Text style={styles.logo}><Image source={IdogLogo} style={styles.idogLogo}/></Text>
+            <Text style={styles.logo}>
+              <Image source={IdogLogo} style={styles.idogLogo}/>
+            </Text>
             <TouchableOpacity activeOpacity={0.7} onPress={clickHamburger}>
               <Image
                   source={HamburgerMenu}

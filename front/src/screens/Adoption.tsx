@@ -126,7 +126,7 @@ const Adoption = ({navigation}: any) => {
 
                 <View style={AdoptionLayout.adoptionFormWrap}>
 
-                    <Text style={AdoptionLayout.adoptionFormTitle}>전달할 사람의 닉네임을 입력해주세요.</Text>
+                    <Text style={AdoptionLayout.adoptionFormTitle}>전달할 사람의 지갑주소를 입력해주세요.</Text>
                     <TextInput
                         style={AdoptionLayout.adoptionFormInput}
                         value={toAddress}

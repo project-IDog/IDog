@@ -107,7 +107,7 @@ const Profile = ({navigation}:any) => {
                                 );
                             })
                         }
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => createProfile('createProfile')}>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => createProfile('CreateProfile')}>
                             <View style={ProfileLayout.addNewNftWrap}>
                                 <Image
                                     source={AddPlusIcon}
