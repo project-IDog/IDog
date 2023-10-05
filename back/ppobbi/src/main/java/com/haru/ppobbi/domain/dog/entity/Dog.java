@@ -82,14 +82,14 @@ public class Dog extends BaseEntity {
     public void setDogHash(String dogHash) { this.dogHash = dogHash; }
 
     @Builder
-    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBirthDate, Character dogSex, Integer dogIsDead, Integer dogNft, String dogImg) {
+    public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBirthDate, Character dogSex, Integer dogIsDead, String dogHash, String dogImg) {
         this.userNo = userNo;
         this.dogName = dogName;
         this.dogBreed = dogBreed;
         this.dogBirthDate = dogBirthDate;
         this.dogSex = dogSex;
         this.dogIsDead = dogIsDead;
-        this.dogNft = dogNft;
+        this.dogHash = dogHash;
         this.dogImg = dogImg;
     }
 

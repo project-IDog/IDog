@@ -15,7 +15,7 @@ public class DogRequestDto {
         private String dogBreed;
         private LocalDate dogBirthDate;
         private Character dogSex;
-        private Integer dogNft;
+        private String dogHash;
         private String dogImg;
     }
 

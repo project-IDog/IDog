@@ -41,7 +41,7 @@ public class DogServiceImpl implements DogService{
                 .dogBirthDate(dogSaveRequestDto.getDogBirthDate())
                 .dogSex(dogSaveRequestDto.getDogSex())
                 .dogIsDead(BaseConstant.NOTDEAD)
-                .dogNft(dogSaveRequestDto.getDogNft())
+                .dogHash(dogSaveRequestDto.getDogHash())
                 .dogImg(dogSaveRequestDto.getDogImg())
                 .build();
 
