@@ -160,7 +160,7 @@ const Walk = ({ navigation }: any) => {
 			<CommonLayout>
 				<WhiteHeader title="함께 걷는 시간" />
 				<SubMain
-					subTitle="산책루트"
+					subTitle="산책기록"
 					mainTitle={`내 반려견과\n함께걷는 오늘,\n더 행복한 여정이 되도록.`}
 					bgImg={WalkMainImg}
 					desc="산책 통계 확인"
