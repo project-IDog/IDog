@@ -193,6 +193,7 @@ const MemorialParkDesignLayout = StyleSheet.create({
 		width: responsiveWidth(12),
 		borderRadius: 10,
 		resizeMode: "cover",
+		marginHorizontal: 2,
 	},
 
 	ripnftrow1: {

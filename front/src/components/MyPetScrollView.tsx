@@ -46,7 +46,7 @@ const MyPetScrollView = (props: any) => {
 										style={{
 											width: 100,
 											height: 132,
-											marginHorizontal: responsiveWidth(4),
+											marginHorizontal: responsiveWidth(1),
 											borderRadius: 10,
 											borderWidth: 4,
 											borderColor:

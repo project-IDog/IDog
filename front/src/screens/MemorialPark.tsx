@@ -186,11 +186,12 @@ const Main = ({ navigation }: any) => {
 														const combinedData = [
 															...(data?.topAlbums || []),
 															...Array(dummyCount).fill(
-																"https://firebasestorage.googleapis.com/v0/b/asjdba-6e4b7.appspot.com/o/dog1.jpg?alt=media&token=68bb18c2-5b0f-4c4b-b816-7cfb8484a9ed",
+																"https://ppobbi.s3.ap-northeast-2.amazonaws.com/default-card-img.png",
 															),
 														];
 
 														return combinedData.map((imgData, idx) => {
+															console.log(imgData);
 															return (
 																<Image
 																	key={idx}
