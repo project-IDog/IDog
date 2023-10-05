@@ -1,9 +1,11 @@
 import {useState} from "react"
 import {View, Text, ImageBackground, TouchableOpacity} from "react-native"
 import MyPetLayout from "../styles/myPet"
+import { useNavigation } from "@react-navigation/native";
 
-const MyPet = ({bgImg, petCreatedDate, petName, petSpecies}: any) => {
+const MyPet = ({bgImg, petCreatedDate, petName, petSpecies, dogNo}: any) => {
     const [petCardState, setPetCardState] = useState<Boolean>(false);
+    const navigation = useNavigation();
 
     const activeCardInfo = () => {
         setPetCardState(true);
@@ -11,6 +13,10 @@ const MyPet = ({bgImg, petCreatedDate, petName, petSpecies}: any) => {
 
     const disableCardInfo = () => {
         setPetCardState(false);
+    }
+
+    const moveDetailPage = () => {
+        navigation.navigate('EditProfile', {selectedNo: dogNo});
     }
     return(
         <>
@@ -27,8 +33,8 @@ const MyPet = ({bgImg, petCreatedDate, petName, petSpecies}: any) => {
                                         <Text style={MyPetLayout.myPetNameTitle}>Pet Name.</Text>
                                         <Text style={MyPetLayout.myPetName}>{petName}</Text>
                                         <Text style={MyPetLayout.myPetSpecies}># {petSpecies}</Text>
-                                        <TouchableOpacity activeOpacity={0.7}>
-                                            <View style={MyPetLayout.myPetEditButton}><Text style={MyPetLayout.myPetEditButtonText}>수정하기</Text></View>
+                                        <TouchableOpacity activeOpacity={0.7} onPress={moveDetailPage}>
+                                            <View style={MyPetLayout.myPetEditButton}><Text style={MyPetLayout.myPetEditButtonText}>상세보기</Text></View>
                                         </TouchableOpacity>
                                     </View>
                                 </TouchableOpacity>

@@ -41,7 +41,7 @@ const EditProfile = ({navigation, route} : any) => {
         })
 
         const getAddress = async () => {
-            const address = await SecureStore.getItemAsync("walletAddress");
+            const address = await process.env.MINT_DOG_TOKEN_ADDRESS;
             setMyWalletAddress(String(address));
         }
 
@@ -100,7 +100,7 @@ const EditProfile = ({navigation, route} : any) => {
                         onConfirm={handleConfirm}
                         onCancel={hideDatePicker}
                     />
-                    <Text style={CreateProfileLayout.formTitle}>내 지갑의 주소입니다.</Text>
+                    <Text style={CreateProfileLayout.formTitle}>반려견이 등록된 지갑 주소입니다.</Text>
                     <TextInput
                         style={CreateProfileLayout.formInput}
                         value={myWalletAddress}
