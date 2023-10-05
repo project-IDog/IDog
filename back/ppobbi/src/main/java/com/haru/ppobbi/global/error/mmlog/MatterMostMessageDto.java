@@ -94,7 +94,7 @@ public class MatterMostMessageDto {
                     .replaceAll("\t", " ");
 
 
-            sb.append("**Stack Trace**\\n\\n").append("```");
+            sb.append("**Stack Trace**").append('\n').append('\n').append("```");
             sb.append(converted, 0, Math.min(4000, converted.length())).append("```");
 
             this.card = sb.toString();
