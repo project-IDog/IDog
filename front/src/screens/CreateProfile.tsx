@@ -105,6 +105,7 @@ const CreateProfile = ({ navigation }: any) => {
 				alert('시스템 에러, 관리자에게 문의하세요.');
 				setIsLoading(false);
 				console.log("err", err);
+				return;
 			} else {
 
 				try{
