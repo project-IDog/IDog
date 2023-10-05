@@ -102,6 +102,8 @@ const CreateProfile = ({ navigation }: any) => {
 		};
 		await s3.upload(params, async (err: any, data: any) => {
 			if (err) {
+				alert('시스템 에러, 관리자에게 문의하세요.');
+				setIsLoading(false);
 				console.log("err", err);
 			} else {
 

@@ -33,7 +33,7 @@ const Adoption = ({navigation}: any) => {
         console.log(selectedDogNo);
         const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
         const fromPrivateKey = await String(SecureStore.getItemAsync("privateKey"));
-        const polygonApiKey = process.env.POLYGON_API_KEY; 
+        const polygonApiKey = process.env.POLYGON_API_KEY;
         const gasPriceGwei = "0.001";
         const gasPriceWei = ethers.parseUnits(gasPriceGwei, 'gwei');
 
