@@ -14,5 +14,7 @@ public interface DogRepository extends JpaRepository<Dog, Integer> {
 
     List<Dog> findAllByUserNoAndDogIsDeadAndCanceled(Integer userNo, Integer isDead, Integer isCanceled);
 
+    List<Dog> findByDogHashIsNotNullAndCanceled(Integer isCanceled);
+
 
 }

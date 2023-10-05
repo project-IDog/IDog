@@ -13,6 +13,7 @@ public enum UserResponseMessage implements ResponseMessage {
     UPDATE_USER_WALLET_PW_SUCCESS("회원 디지털지갑 비밀번호 저장 완료"),
     CHECK_USER_WALLET_PW_SUCCESS("회원 디지털지답 비밀번호 확인 성공"),
     CHECK_USER_WALLET_PW_FAIL("회원 디지털지답 비밀번호 확인 실패"),
+    UPDATE_USER_ADDRESS_SUCCESS("회원 디지털 지갑 주소 저장 완료")
     ;
 
     private final String message;

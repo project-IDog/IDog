@@ -66,5 +66,20 @@ public class DogResponseDto {
         private String dogImg;
     }
 
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class DogisDeadResponseDto {
+        private Integer userNo;
+        private Integer dogNo;
+        private String dogName;
+        private String dogBreed;
+        private LocalDate dogBirthDate;
+        private Integer dogIsDead;
+        private Character dogSex;
+        private Integer dogNft;
+        private String dogImg;
+    }
+
 
 }

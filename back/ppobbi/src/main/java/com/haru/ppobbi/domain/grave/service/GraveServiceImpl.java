@@ -90,7 +90,10 @@ public class GraveServiceImpl implements GraveService{
     }
 
     @Override
-    public List<Grave> selectGravesByUserNo(Integer userNo) {
-        return graveRepository.findAllByUserUserNo(userNo);
+    public List<GraveListDto> selectGravesByUserNo(Integer userNo) {
+        List<GraveListDto> graveListDtoList = graveRepository.findAllByUserUserNo(userNo).stream()
+                .map(GraveListDto::new).collect(Collectors.toList());
+        graveListDtoList.forEach(e -> e.setTopAlbums(photoRepository.findTop3ByDogDogNoAndCanceledOrderByPhotoIsGoatDescCreateDateDesc(e.getDogNo(), BaseConstant.NOTCANCELED)));
+        return graveListDtoList;
     }
 }

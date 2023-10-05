@@ -39,6 +39,9 @@ public class User extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
 
+    @Column(name = "user_address")
+    private String userAddress;
+
     @Column(name = "user_wallet_pw")
     private String userWalletPw;
 
@@ -72,4 +75,6 @@ public class User extends BaseEntity {
     public void updateUserWalletSalt(String userWalletSalt) {
         this.userWalletSalt = userWalletSalt;
     }
+
+    public void updateUserAddress(String userAddress) { this.userAddress = userAddress; }
 }

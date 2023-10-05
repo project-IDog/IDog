@@ -8,6 +8,7 @@ import static com.haru.ppobbi.global.constant.BaseConstant.CANCELED;
 import static com.haru.ppobbi.global.constant.BaseConstant.NOTCANCELED;
 
 import com.haru.ppobbi.domain.user.dto.TokenInfo;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserAddressRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserWalletPwRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserInfoRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
@@ -221,6 +222,20 @@ public class UserServiceImpl implements UserService {
         }
 
         return CHECK_USER_WALLET_PW_FAIL.message();
+    }
+
+    @Override
+    public void updateUserAddress(Integer userNo, UserAddressRequestDto userAddressRequestDto) {
+        User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
+        log.debug("[userService/updateUserAddress] update user address : {}",
+                userAddressRequestDto.getUserAddress());
+
+        user.updateUserAddress(userAddressRequestDto.getUserAddress());
+        userRepository.save(user);
+
+        // redis 에 적용
+        userRedisService.updateUserAddressToRedis(user);
     }
 
     // 비밀번호 해싱
