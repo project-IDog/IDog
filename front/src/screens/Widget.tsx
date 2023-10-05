@@ -46,7 +46,9 @@ const Widget = (props: any) => {
 			() => {
 				setWidgetData("0:00:00");
 				setIsPlaying(false);
-				props.getWalkingWeek();
+				setTimeout(() => {
+					props.getWalkingWeek();
+				}, 200);
 			},
 		);
 
