@@ -23,13 +23,14 @@ public class UserInfo {
     private String userProfileImg;
     private String userWalletPw;
     private String userWalletSalt;
+    private String userAddress;
 
     @TimeToLive(unit = TimeUnit.MILLISECONDS)
     private Long ttl;
 
     @Builder
     UserInfo(Integer userNo, String userId, String userName, String userMessage,
-        String userProfileImg, String userWalletPw, String userWalletSalt, Long ttl) {
+        String userProfileImg, String userWalletPw, String userWalletSalt, String userAddress, Long ttl) {
         this.userNo = userNo;
         this.userId = userId;
         this.userName = userName;
@@ -37,6 +38,7 @@ public class UserInfo {
         this.userProfileImg = userProfileImg;
         this.userWalletPw = userWalletPw;
         this.userWalletSalt = userWalletSalt;
+        this.userAddress = userAddress;
         this.ttl = ttl;
 
     }
@@ -52,5 +54,7 @@ public class UserInfo {
     public void updateUserWalletPw(String userWalletPw) { this.userWalletPw = userWalletPw; }
 
     public void updateUserWalletSalt(String userWalletSalt){ this.userWalletSalt = userWalletSalt; }
+
+    public void updateUserAddress(String userAddress) { this.userAddress = userAddress; }
 
 }

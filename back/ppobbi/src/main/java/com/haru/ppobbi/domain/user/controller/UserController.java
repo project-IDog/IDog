@@ -1,6 +1,7 @@
 package com.haru.ppobbi.domain.user.controller;
 
 import com.haru.ppobbi.domain.user.dto.TokenInfo;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserAddressRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserWalletPwRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserInfoRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
@@ -102,6 +103,15 @@ public class UserController {
         String status = userService.checkUserWalletPw(userNo, userWalletPwRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseDto.create(status)
+        );
+    }
+
+    @PutMapping("/address")
+    public  ResponseEntity<ResponseDto<String>> updateUserAddress (
+            @RequestAttribute("userNo") Integer userNo, @RequestBody UserAddressRequestDto userAddressRequestDto) {
+        userService.updateUserAddress(userNo, userAddressRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseDto.create(UPDATE_USER_ADDRESS_SUCCESS)
         );
     }
 

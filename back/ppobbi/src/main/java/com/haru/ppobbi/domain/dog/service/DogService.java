@@ -1,5 +1,6 @@
 package com.haru.ppobbi.domain.dog.service;
 
+import com.haru.ppobbi.domain.dog.dto.DogDto.DogInfoDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogOwnerUpdateRequestDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogisDeadResponseDto;
@@ -92,7 +93,6 @@ public interface DogService {
      * @return {@code List<Dog>}
      */
     List<DogisDeadResponseDto> selectDeadDogsByUserNo(Integer userNo);
-
 
 
 

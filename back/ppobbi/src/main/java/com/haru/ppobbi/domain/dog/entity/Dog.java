@@ -48,7 +48,10 @@ public class Dog extends BaseEntity {
     private Integer dogNft;
 
     @Column(name = "dog_img")
-    private  String dogImg;
+    private String dogImg;
+
+    @Column(name = "dog_hash")
+    private String dogHash;
 
     @OneToMany(mappedBy = "dog")
     private List<Walking> walkings = new ArrayList<Walking>();

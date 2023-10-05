@@ -114,4 +114,26 @@ public class UserRedisServiceImpl implements UserRedisService {
             );
         }
     }
+
+    @Override
+    public void updateUserAddressToRedis(User user) {
+        Optional<UserInfo> userInfoOptional = userRedisRepository.findById(user.getUserNo());
+        if (userInfoOptional.isPresent()) {
+            UserInfo userInfo = userInfoOptional.get();
+            userInfo.updateUserAddress(user.getUserAddress());
+            userRedisRepository.save(userInfo);
+        } else {
+            userRedisRepository.save(UserInfo.builder()
+                    .userNo(user.getUserNo())
+                    .userId(user.getUserId())
+                    .userName(user.getUserName())
+                    .userMessage(user.getUserMessage())
+                    .userProfileImg(user.getUserProfileImg())
+                    .userWalletPw(user.getUserWalletPw())
+                    .userWalletSalt(user.getUserWalletSalt())
+                    .userAddress(user.getUserAddress())
+                    .build()
+            );
+        }
+    }
 }
