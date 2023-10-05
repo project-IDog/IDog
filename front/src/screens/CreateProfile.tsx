@@ -107,7 +107,6 @@ const CreateProfile = ({ navigation }: any) => {
 				console.log("err", err);
 				return;
 			} else {
-
 				try{
 					await axios.post("https://idog.store/blockchain/uploadIpfs", {
 							img: data.Location,

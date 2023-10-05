@@ -17,13 +17,19 @@ const CreateWalletMainLayout = StyleSheet.create({
         color:"#B1B1B7",
         marginTop:8,
     },
-    mainWalletImg:{
+    walletCenterWrap:{
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+    },
+    idogWalletImg:{
         width:240,
         height:240,
+        marginTop:"25%",
     },
     buttonWrap:{
         paddingHorizontal:responsiveWidth(4),
-        marginTop:"100%",
+        marginTop:"25%",
         marginBottom:28,
     },
     reButton:{

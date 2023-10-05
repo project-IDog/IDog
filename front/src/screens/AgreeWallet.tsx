@@ -67,7 +67,7 @@ const AgreeWallet = ({navigation}: any) => {
                 </View>
 
                 <View style={AgreeWalletLayout.buttonWrap}>
-                    <TouchableOpacity activeOpacity={0.7} style={AgreeWalletLayout.widthWrap}>
+                    <TouchableOpacity activeOpacity={0.7} style={AgreeWalletLayout.widthWrap} onPress={() => navigation.navigate('Main')}>
                         <View style={AgreeWalletLayout.disAgreeButton}>
                             <Text style={AgreeWalletLayout.disAgreeButtonText}>아니요, 괜찮습니다.</Text>
                         </View>
