@@ -48,7 +48,10 @@ public class Dog extends BaseEntity {
     private Integer dogNft;
 
     @Column(name = "dog_img")
-    private  String dogImg;
+    private String dogImg;
+
+    @Column(name = "dog_hash")
+    private String dogHash;
 
     @OneToMany(mappedBy = "dog")
     private List<Walking> walkings = new ArrayList<Walking>();
@@ -73,6 +76,10 @@ public class Dog extends BaseEntity {
     public void updateDogOwner(Integer userNo) {
         this.userNo = userNo;
     }
+
+    public void updateDogNft(Integer dogNft) { this.dogNft = dogNft; }
+
+    public void setDogHash(String dogHash) { this.dogHash = dogHash; }
 
     @Builder
     public Dog(Integer userNo, String dogName, String dogBreed, LocalDate dogBirthDate, Character dogSex, Integer dogIsDead, Integer dogNft, String dogImg) {
