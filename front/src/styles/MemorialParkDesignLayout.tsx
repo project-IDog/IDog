@@ -280,7 +280,7 @@ const MemorialParkDesignLayout = StyleSheet.create({
 	},
 	modalcontentimg: {
 		height: responsiveHeight(12),
-		width: responsiveWidth(24),
+		width: responsiveWidth(20),
 		borderRadius: 20,
 		resizeMode: "cover",
 	},
