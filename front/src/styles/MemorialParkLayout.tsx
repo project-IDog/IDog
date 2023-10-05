@@ -58,6 +58,12 @@ const AdoptionLayout = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: "900",
 	},
+	mpBreed: {
+		paddingHorizontal: responsiveWidth(3),
+		marginTop: 5,
+		fontSize: 14,
+		fontWeight: "600",
+	},
 	mpDate: {
 		marginHorizontal: responsiveWidth(4),
 		marginTop: 5,
@@ -89,7 +95,7 @@ const AdoptionLayout = StyleSheet.create({
 		justifyContent: "space-between",
 	},
 	tabImage: {
-		width: responsiveWidth(40),
+		width: responsiveWidth(36),
 		height: responsiveHeight(20),
 		paddingHorizontal: responsiveWidth(1),
 		borderRadius: 25,

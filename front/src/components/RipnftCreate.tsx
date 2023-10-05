@@ -49,6 +49,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 			// console.log("생존강아지 조회!", data);
 			if (data.data.message === "사용자의 생존한 강아지 조회 완료") {
 				setDogNftList(data.data.data);
+				console.log("생존강아지 조회!", data.data.data);
 			}
 		});
 
@@ -102,7 +103,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 				if (data.data.message === "무덤 생성 완료") {
 					// setDogNftList([]);
 					Alert.alert(
-						"Memorial Sky",
+						"영원의 안식처",
 						"등록이 완료되었습니다.",
 						[
 							{
@@ -162,6 +163,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 						}}
 					>
 						스크롤을 내리면 {"\n"} rip NFT를 확인할 수 있습니다
+						{/* 화면이 올라가야하는데 이게 맞나? */}
 					</Text>
 				</Animated.View>
 			</View>
@@ -172,7 +174,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 					onPress={() => setModalVisibleDeath(true)}
 				>
 					<Text style={MemorialParkDesignLayout.ripnftbtntext}>
-						내 RIP 반려견 리스트
+						Rest In Peace
 					</Text>
 				</TouchableOpacity>
 			) : (
@@ -181,7 +183,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 					onPress={() => setModalVisible(true)}
 				>
 					<Text style={MemorialParkDesignLayout.ripnftbtntext}>
-						Memorial Sky
+						Rest In Peace
 					</Text>
 				</TouchableOpacity>
 			)}
@@ -197,9 +199,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 				<View style={MemorialParkDesignLayout.modalcontainer}>
 					<View style={MemorialParkDesignLayout.modalinnercontainer}>
 						<View style={MemorialParkDesignLayout.modaltitlecontainer}>
-							<Text style={MemorialParkDesignLayout.modaltitle}>
-								반려견 RIP 기억하기
-							</Text>
+							<Text style={MemorialParkDesignLayout.modaltitle}>ㅇㅇ</Text>
 						</View>
 						<ScrollView>
 							{dogNftList?.map((data: any) => {
@@ -229,7 +229,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 											<Text
 												style={MemorialParkDesignLayout.modalcontentdatetitle}
 											>
-												{data.dogBirthDate}~{data.dogDeathDate}~{data.dogNo}
+												{data.dogBirthDate}~{data.dogDeathDate}
 											</Text>
 										</View>
 									</TouchableOpacity>
@@ -292,7 +292,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 									paddingVertical: 10,
 								}}
 							>
-								반려견 RIP 등록
+								하늘공원 등록
 							</Text>
 						</View>
 						<TextInput
@@ -376,7 +376,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 					<View style={MemorialParkDesignLayout.modalinnercontainer}>
 						<View style={MemorialParkDesignLayout.modaltitlecontainer}>
 							<Text style={MemorialParkDesignLayout.modaltitle}>
-								내 RIP 반려견 기억하기
+								나의 반려견
 							</Text>
 						</View>
 						<ScrollView>
@@ -409,7 +409,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 												<Text
 													style={MemorialParkDesignLayout.modalcontentdatetitle}
 												>
-													{data.dogBirthDate}~{data.dogDeathDate}~{data.dogNo}
+													{data.dogBirthDate}~{data.dogDeathDate}
 												</Text>
 											</View>
 										</TouchableOpacity>
