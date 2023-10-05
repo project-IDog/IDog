@@ -138,7 +138,7 @@ const Profile = ({ navigation }: any) => {
 									<NftProfile
 										dogName={`내 반려견 ${dogItem.dogName}`}
 										createdTitle="등록한 날짜"
-										createdAt={dogItem.createDate}
+										createdAt={dogItem.createDate.split("T")[0]}
 										species={dogItem.dogBreed}
 										bgImg={dogItem.dogImg}
 										dogNo={dogItem.dogNo}
