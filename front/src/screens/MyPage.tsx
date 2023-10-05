@@ -94,11 +94,11 @@ const MyPage = ({navigation}: any) => {
                         {
                             myDogList.map((myDog, index) => {
                                 return(
-                                    <MyPet bgImg={{uri: myDog.dogImg}} petCreatedDate={myDog.dogBirthDate} petName={myDog.dogName} petSpecies={myDog.dogBreed}/>
+                                    <MyPet bgImg={{uri: myDog.dogImg}} petCreatedDate={myDog.dogBirthDate} petName={myDog.dogName} petSpecies={myDog.dogBreed} dogNo={myDog.dogNo}/>
                                 );
                             })
                         }
-                        <TouchableOpacity activeOpacity={0.7}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('CreateProfile')}>
                             <View style={MyPageLayout.addNewMyPetWrap}>
                                 <Image
                                     source={AddPlusIcon}
