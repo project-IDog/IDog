@@ -19,6 +19,7 @@ import AdoptionIcon from "../../assets/images/adoption-icon.png";
 import PhotoAlbumIcon from "../../assets/images/photo-album-icon.png";
 
 const Main = ({ navigation }: any) => {
+	const [userName, setUserName] = useState<string|null>(null);
 	const { LoginStore } = IndexStore();
 
 	const authHandling = (pageName: string) => {
@@ -34,6 +35,13 @@ const Main = ({ navigation }: any) => {
 		}
 	};
 
+	useEffect(() => {
+		axios.get('/user').then((data) => {
+			if(data.status === 200){
+				setUserName(data.data.data.userName);
+			}
+		})
+	})
 	return (
 		<>
 			<CommonLayout>
@@ -130,7 +138,7 @@ const Main = ({ navigation }: any) => {
 				<View style={MainLayout.randingButtonWrap}>
 					{LoginStore.isLogged ? (
 						<Text style={MainLayout.randingTitle}>
-							<Text style={MainLayout.boldRandingTitle}>김싸피</Text> 님을 위한
+							<Text style={MainLayout.boldRandingTitle}>{userName}</Text> 님을 위한
 							내 반려견 서비스
 						</Text>
 					) : (
