@@ -11,13 +11,6 @@ const SideMenuIcon = ({ title, imageIcon, movePage }: any) => {
 	const { LoginStore } = IndexStore();
 
 	const authHandling = () => {
-		// 하늘공원은 로그인이 진행되지 않아도 랜딩 가능
-		if (movePage === "Three") {
-			navigation.navigate(movePage);
-			return;
-		}
-
-		// 하늘공원 외 페이지는 로그인에 따른 핸들링 진행
 		if (LoginStore.isLogged) {
 			navigation.navigate(movePage);
 		} else {

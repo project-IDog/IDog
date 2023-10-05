@@ -17,10 +17,10 @@ import NftCardIcon from "../../assets/images/nft-card-icon.png";
 import VaccineIcon from "../../assets/images/vaccine-icon.png";
 import AdoptionIcon from "../../assets/images/adoption-icon.png";
 import PhotoAlbumIcon from "../../assets/images/photo-album-icon.png";
-import WalletColorIcon from "../../assets/images/wallet-icon-color.png"
+import WalletColorIcon from "../../assets/images/wallet-icon-color.png";
 
 const Main = ({ navigation }: any) => {
-	const [userName, setUserName] = useState<string|null>(null);
+	const [userName, setUserName] = useState<string | null>(null);
 	const { LoginStore } = IndexStore();
 
 	const authHandling = (pageName: string) => {
@@ -37,12 +37,12 @@ const Main = ({ navigation }: any) => {
 	};
 
 	useEffect(() => {
-		axios.get('/user').then((data) => {
-			if(data.status === 200){
+		axios.get("/user").then((data) => {
+			if (data.status === 200) {
 				setUserName(data.data.data.userName);
 			}
-		})
-	})
+		});
+	});
 	return (
 		<>
 			<CommonLayout>
@@ -139,8 +139,8 @@ const Main = ({ navigation }: any) => {
 				<View style={MainLayout.randingButtonWrap}>
 					{LoginStore.isLogged ? (
 						<Text style={MainLayout.randingTitle}>
-							<Text style={MainLayout.boldRandingTitle}>{userName}</Text> 님을 위한
-							내 반려견 서비스
+							<Text style={MainLayout.boldRandingTitle}>{userName}</Text> 님을
+							위한 내 반려견 서비스
 						</Text>
 					) : (
 						<Text style={MainLayout.randingTitle}>
