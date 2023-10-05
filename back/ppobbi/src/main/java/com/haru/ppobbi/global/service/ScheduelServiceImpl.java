@@ -61,7 +61,7 @@ public class ScheduelServiceImpl {
 
             Mono<PolygonJsonResponseDto> response;
             PolygonJsonResponseDto data;
-            try {
+//            try {
                 response = webClient.get()
                     .uri(searchUri)
                     .retrieve()
@@ -69,10 +69,11 @@ public class ScheduelServiceImpl {
                     .onErrorMap(err -> new Exception("민팅 후 토큰아이디 업데이트 실패", err));
 
                 data = response.share().block();
-            } catch (Exception e) { // 임시로 Exception 받게 함
-                log.debug("[scheduleService] 토큰 업데이트 실패");
-                continue;
-            }
+//            } catch (Exception e) { // 임시로 Exception 받게 함
+//                log.debug("[scheduleService] 토큰 업데이트 실패");
+//                continue;
+//            }
+
             System.out.println(dog.getDogHash());
 
             //결과로 받은 값의 transaction hash를 비교하면서 dog_nft 업데이트를 진행
