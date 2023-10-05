@@ -95,7 +95,7 @@ const AdoptionLayout = StyleSheet.create({
 		justifyContent: "space-between",
 	},
 	tabImage: {
-		width: responsiveWidth(36),
+		width: responsiveWidth(40),
 		height: responsiveHeight(20),
 		paddingHorizontal: responsiveWidth(1),
 		borderRadius: 25,

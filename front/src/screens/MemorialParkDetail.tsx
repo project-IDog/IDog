@@ -341,14 +341,14 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 				<View style={[MemorialParkLayout.mpTitlewrap2]}>
 					<Text style={MemorialParkLayout.MpDesc}>Memorial 앨범</Text>
 					<Text style={[MemorialParkLayout.MpTitle]}>
-						추억이 담겨진 사진을 {"\n"}확인해보세요
+						추억이 담겨진 Memory를 {"\n"}확인해보세요
 					</Text>
 				</View>
 
 				<View style={[MemorialParkLayout.mpTitlewrap4]}>
 					<View style={[MemorialParkLayout.mpAlbumText]}>
 						<Text style={[MemorialParkLayout.mpAlbumTitle]}>
-							{data.dogName}의 기억들
+							{data.dogName}의 Memorial 앨범
 						</Text>
 					</View>
 

@@ -103,7 +103,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 				if (data.data.message === "무덤 생성 완료") {
 					// setDogNftList([]);
 					Alert.alert(
-						"영원의 안식처",
+						"Rest In Peace",
 						"등록이 완료되었습니다.",
 						[
 							{
@@ -163,7 +163,6 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 						}}
 					>
 						스크롤을 내리면 {"\n"} rip NFT를 확인할 수 있습니다
-						{/* 화면이 올라가야하는데 이게 맞나? */}
 					</Text>
 				</Animated.View>
 			</View>
