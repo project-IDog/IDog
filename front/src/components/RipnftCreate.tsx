@@ -198,7 +198,9 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 				<View style={MemorialParkDesignLayout.modalcontainer}>
 					<View style={MemorialParkDesignLayout.modalinnercontainer}>
 						<View style={MemorialParkDesignLayout.modaltitlecontainer}>
-							<Text style={MemorialParkDesignLayout.modaltitle}>ㅇㅇ</Text>
+							<Text style={MemorialParkDesignLayout.modaltitle}>
+								나의 반려견
+							</Text>
 						</View>
 						<ScrollView>
 							{dogNftList?.map((data: any) => {

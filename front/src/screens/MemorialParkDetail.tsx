@@ -223,14 +223,25 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 									</Text>
 								</View>
 								<View style={[MemorialParkLayout.mpBtw]}>
-									<Text
-										style={[
-											MemorialParkLayout.mpTitle,
-											{ color: "blue", fontWeight: "900" },
-										]}
-									>
-										{data.dogSex}
-									</Text>
+									{data.dogSex === "M" ? (
+										<Text
+											style={[
+												MemorialParkLayout.mpTitle,
+												{ color: "blue", fontWeight: "900" },
+											]}
+										>
+											{data.dogSex}
+										</Text>
+									) : (
+										<Text
+											style={[
+												MemorialParkLayout.mpTitle,
+												{ color: "red", fontWeight: "900" },
+											]}
+										>
+											{data.dogSex}
+										</Text>
+									)}
 									<Text style={[MemorialParkLayout.mpTitle]}>
 										Memorial 앨범
 									</Text>
