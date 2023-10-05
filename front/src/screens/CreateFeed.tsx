@@ -49,7 +49,17 @@ const CreateFeed = ({navigation, route}: any) => {
 			if (err) {
 				console.log("err", err);
 			} else {
-				console.log("data", data);
+				axios.post('/photo', {
+					dogNo:selectedId,
+					photoUrl:data.Location,
+					photoComment:comment,
+					photoIsGoat:false,
+				}).then((data) => {
+					if(data.data.message === "사진 등록 완료"){
+						alert("앨범 등록이 완료되었습니다.");
+						navigation.replace('Album');
+					}
+				})
 			}
 		});
 	};
@@ -88,21 +98,7 @@ const CreateFeed = ({navigation, route}: any) => {
 	};
 
     const submitFeed = () => {
-		console.log(SecureStore.getItemAsync("accessToken"));
-		console.log(imageUri);
         uploadImage(imageUri);
-
-		axios.post('/photo', {
-			dogNo:selectedId,
-			photoUrl:imageUri,
-			photoComment:comment,
-			photoIsGoat:false,
-		}).then((data) => {
-			if(data.data.message === "사진 등록 완료"){
-				alert("앨범 등록이 완료되었습니다.");
-				navigation.replace('Album');
-			}
-		})
     }
 
     return(
