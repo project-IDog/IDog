@@ -33,7 +33,9 @@ const WhiteHeader = ({title}: any) => {
                     />
                 </TouchableOpacity>
                 <View style={styles.logoWrap}>
-                    <Text style={styles.logoTitle}>IDOG</Text>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Main')}>
+                        <Text style={styles.logoTitle}>IDOG</Text>
+                    </TouchableOpacity>
                     <View style={styles.verticalLine}></View>
                     <Text style={styles.headerTitle}>{title}</Text>
                 </View>

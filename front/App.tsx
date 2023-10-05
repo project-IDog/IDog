@@ -1,4 +1,4 @@
-import { AppRegistry } from "react-native";
+import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as Sentry from "@sentry/react-native";
@@ -31,6 +31,8 @@ import MemorialParkDetail from "./src/screens/MemorialParkDetail";
 import WalkStatistics from "./src/components/WalkStatistics";
 import ShowPrivate from "./src/screens/ShowPrivate";
 // import SplashScreen from "react-native-splash-screen";
+
+LogBox.ignoreAllLogs();
 
 const App = () => {
 	const Stack = createNativeStackNavigator();

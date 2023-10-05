@@ -64,10 +64,30 @@ const CreateWalletPassword = ({navigation}: any) => {
                 const walletAddress = await SecureStore.getItemAsync("walletAddress");
                 const privateKey = await SecureStore.getItemAsync("privateKey");
                 const Mnemonic = await newAccount?.mnemonic?.phrase;
-                
+                try{
+                    const addressDbApi = await axiosApi.put('/user/address', {
+                        "userWallet": walletAddress,
+                        "userPrivateKey": privateKey,
+                    });
+
+                    if(addressDbApi.status === 200){
+                        setIsLoading(false);
+                        setIsChecked(false);
+                        await navigation.navigate('ProtectWallet');
+                    }else{
+                        alert("지갑 생성 실패, 관리자에게 문의하세요.");
+                        setIsLoading(false);
+                        console.error("Error generating wallet");
+                    }
+                }catch(err){
+                    alert("지갑 생성 실패, 관리자에게 문의하세요.");
+                    setIsLoading(false);
+                    console.error("Error generating wallet:", err);
+                }
+            }).catch((err) => {
+                alert("지갑 생성 실패, 관리자에게 문의하세요.");
                 setIsLoading(false);
-                setIsChecked(false);
-                await navigation.navigate('ProtectWallet');
+                console.error("Error generating wallet:", err);
             })
         } catch (error) {
             alert("지갑 생성 실패, 관리자에게 문의하세요.");
