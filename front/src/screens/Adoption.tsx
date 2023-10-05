@@ -21,51 +21,65 @@ const Adoption = ({navigation}: any) => {
     const [myPetPressState, setMyPetPressState] = useState({});
     const [myPetList, setMyPetList] = useState<any>();
     const [selectedDogNo, setSelectedDogNo] = useState<number>();
+    const [selectedIndex, setSelectedIndex] = useState<number>();
     const [toAddress, setToAddress] = useState<string>();
     const [tokenId, setTokenId] = useState<number>(0);
     const [walletAddress, setWalletAddress] = useState<string>();
 
     const toggleBorder = (index:number, selectedDogNo:number) => {
+        setSelectedIndex(index);
         setSelectedDogNo(selectedDogNo);
     }
 
     const submitAdoption = async () => {
-        console.log(selectedDogNo);
         const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
-        const fromPrivateKey = await String(SecureStore.getItemAsync("privateKey"));
-        const polygonApiKey = process.env.POLYGON_API_KEY;
+        const fromPrivateKey = await SecureStore.getItemAsync("privateKey");
+        const polygonApiKey = String(process.env.POLYGON_API_KEY);
         const gasPriceGwei = "0.001";
         const gasPriceWei = ethers.parseUnits(gasPriceGwei, 'gwei');
 
-        const signerInstance = new ethers.Wallet(fromPrivateKey, provider); //(tokenId 즉 NFT 소유주의 개인키로 서명한 지갑 가져오기)
+        const signerInstance = new ethers.Wallet(String(fromPrivateKey), provider); //(tokenId 즉 NFT 소유주의 개인키로 서명한 지갑 가져오기)
         const fromAdrress = String(signerInstance.address);
         const contract = new ethers.Contract(String(mintIDogTokenAddress), mintIDogTokenAbi, signerInstance);
 
-        await axios.get(`https://api.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${String(MINT_DOG_TOKEN_ADDRESS)}&address=${fromAdrress}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${polygonApiKey}`).then((data) => {
-            console.log("!!data", data.data.result[data.data.result.length-1].tokenID);
-            setTokenId(() => {
-                return data.data.result[data.data.result.length-1].tokenID;
-            });
-        })
+        const polygonScanApi = await axios.get(`https://api.polygonscan.com/api?module=account&action=tokennfttx&contractaddress=${String(MINT_DOG_TOKEN_ADDRESS)}&address=${String(fromAdrress)}&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=${polygonApiKey}`);
+        console.log("polygonScanApi", polygonScanApi);
 
+        const selectedDogTokenId = polygonScanApi.data.result[selectedIndex].tokenID;
+        console.log("selectedDogTokenId", selectedDogTokenId);
         try {
             const approvalTransaction = await contract.setApprovalForAll(String(mintIDogTokenAddress), true); //승인받기 
             console.log(approvalTransaction);
             console.log("Approval granted to the contract:", String(mintIDogTokenAddress));
 
-            const transferTransaction = await contract.safeTransferFrom(signerInstance.address, toAddress, tokenId); //from, to, tokenId
+            const transferTransaction = await contract.safeTransferFrom(signerInstance.address, toAddress, selectedDogTokenId); //from, to, tokenId
             console.log(transferTransaction);
             console.log("NFT transferred to:", toAddress);
-            await alert("나의 반려견의 입양신청이 완료되었습니다.");
+
+            try{
+                const changeDogApi = await axios.post('/dog/nft',{
+                    "dogNo":selectedDogNo,
+                });
+                if(changeDogApi.status === 200){
+                    alert("나의 반려견의 입양신청이 완료되었습니다.");
+                }else{
+                    alert("입양 신청에 실패했습니다, 관리자에게 문의하세요.");
+                }
+                console.log("changeDogApi", changeDogApi);
+            }catch(err){
+                alert('입양 신청에 실패했습니다, 관리자에게 문의하세요.');
+                console.error(err);
+            }
         } catch (error) {
-            alert("입양신청이 실패하였습니다, 관리자에게 문의하세요.");
+            alert("입양 신청에 실패했습니다, 관리자에게 문의하세요.");
             console.error(error);
         }
+
+        
 
     }
 
     useEffect(() => {
-        console.log("selectedDogNo", selectedDogNo);
         axios.get("/dog/list").then((data) => {
             if(data.data.message === "사용자의 모든 강아지 목록 조회 완료"){
                 setMyPetList(data.data.data);
