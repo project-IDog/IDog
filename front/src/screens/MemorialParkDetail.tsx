@@ -39,7 +39,6 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	const [selectedCommentNo, setSelectedCommentNo] = useState<number | null>(
 		null,
 	);
-	
 
 	const [uesrInfo, setUserInfo] = useState<Object[]>([]);
 
@@ -52,7 +51,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	useEffect(() => {
 		getUserInfo();
 
-		console.log("데이터 받았니??:",data);
+		console.log("데이터 받았니??:", data);
 	}, []);
 
 	const fetchComments = () => {
@@ -75,7 +74,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 			})
 			.then((data) => {
 				if (data.data.message === "추모 댓글 등록 완료") {
-					Alert.alert("Memorial Park", "댓글 등록이 완료되었습니다.");
+					Alert.alert("Memorial Sky", "댓글 등록이 완료되었습니다.");
 
 					setComment("");
 					fetchComments();
@@ -89,6 +88,7 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 				setCommentList(data.data.data);
 			}
 		});
+		// console.log("DATA DATA ", data);
 
 		setTimeout(() => {
 			Animated.parallel([
@@ -125,10 +125,11 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 	}, []);
 
 	useEffect(() => {
-		axios.get("/photo/user").then((data) => {
+		axios.get(`/photo/dog/${data.dogNo}`).then((data) => {
 			if (data.data.message === "사진 조회 성공") {
 				setFeedList(data.data.data);
 			}
+			console.log("DATADATA", data.data);
 		});
 	}, []);
 
@@ -185,14 +186,14 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 				</Animated.View>
 				<MainHeader />
 				<SubMainRip
-					subTitle="추모공원"
-					mainTitle={`반려견에게 영원한 평화와 \n행복을 기원합니다.`}
+					subTitle="하늘공원"
+					mainTitle={`반려견에게 영원한 행복과 \n평화를 기원합니다.`}
 					bgImg={MpImage}
 					desc="추모하기"
 					data={data}
 				/>
 				<View style={MemorialParkLayout.MpTitleWrap}>
-					<Text style={MemorialParkLayout.MpDesc}>Memorial Park</Text>
+					<Text style={MemorialParkLayout.MpDesc}>Memorial Sky</Text>
 					<Text style={MemorialParkLayout.MpTitle}>
 						추억이 모아진 반려견의
 						{"\n"}

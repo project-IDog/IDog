@@ -58,6 +58,12 @@ const AdoptionLayout = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: "900",
 	},
+	mpBreed: {
+		paddingHorizontal: responsiveWidth(3),
+		marginTop: 5,
+		fontSize: 14,
+		fontWeight: "600",
+	},
 	mpDate: {
 		marginHorizontal: responsiveWidth(4),
 		marginTop: 5,
