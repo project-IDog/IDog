@@ -87,6 +87,7 @@ const EditMyPage = ({navigation}: any) => {
                         style={EditMypageLayout.editMyPageFormInput}
                         value={walletAddress}
                         onChangeText={(text) => setWalletAddress(String(text))}
+                        editable={false}
                     />
 
                 </View>
