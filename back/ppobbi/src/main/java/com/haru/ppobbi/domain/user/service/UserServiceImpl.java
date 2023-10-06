@@ -225,6 +225,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserAddress(Integer userNo, UserAddressRequestDto userAddressRequestDto) {
         User user = userRepository.findUserByUserNoAndCanceled(userNo, NOTCANCELED)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION.message()));
