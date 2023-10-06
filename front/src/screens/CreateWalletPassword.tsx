@@ -66,11 +66,14 @@ const CreateWalletPassword = ({navigation}: any) => {
                 const Mnemonic = await newAccount?.mnemonic?.phrase;
                 try{
                     const addressDbApi = await axiosApi.put('/user/address', {
-                        "userWallet": walletAddress,
-                        "userPrivateKey": privateKey,
+                        "userAddress": walletAddress,
                     });
 
-                    if(addressDbApi.status === 200){
+                    const walletApi = await axiosApi.put('/user/wallet',{
+                        "userWalletPw": password,
+                    });
+
+                    if(addressDbApi.status === 200 && walletApi.status === 200){
                         setIsLoading(false);
                         setIsChecked(false);
                         await navigation.navigate('ProtectWallet');
