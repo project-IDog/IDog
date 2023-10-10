@@ -176,7 +176,6 @@ const Album = ({ navigation }: any) => {
 					</TouchableOpacity>
 				) : (
 					<View style={AlbumLayout.photoList}>
-						{" "}
 						{feedList.map((value: any, index: number) => {
 							return (
 								<TouchableOpacity
