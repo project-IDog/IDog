@@ -174,6 +174,18 @@ const Adoption = ({ navigation }: any) => {
 										</TouchableOpacity>
 									);
 								}
+								return (
+									<TouchableOpacity
+										key={index}
+										activeOpacity={0.9}
+										onPress={() => toggleBorder(index, petItem.dogNo)}
+									>
+										<Image
+											source={{ uri: petItem.dogImg }}
+											style={[AdoptionLayout.myPetThumbnaulDisable]}
+										/>
+									</TouchableOpacity>
+								);
 							})}
 						</>
 					)}
