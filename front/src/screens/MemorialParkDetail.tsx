@@ -247,7 +247,10 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 									</Text>
 								</View>
 								<View style={[MemorialParkLayout.mpBtw2]}>
-									{feedList.slice(0, 3).map((value: any, index: number) => {
+									{/* 만일 비어있으면 
+																"https://ppobbi.s3.ap-northeast-2.amazonaws.com/default-card-img.png",
+									이미지로 대체 */}
+									{/* {feedList.slice(0, 3).map((value: any, index: number) => {
 										return (
 											<Image
 												key={index}
@@ -255,7 +258,28 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 												style={[MemorialParkLayout.tabImage2]}
 											/>
 										);
-									})}
+									})} */}
+									{(() => {
+										const dataLength = data?.topAlbums?.length || 0;
+										const dummyCount = 3 - dataLength;
+										const combinedData = [
+											...(data?.topAlbums || []),
+											...Array(dummyCount).fill(
+												"https://ppobbi.s3.ap-northeast-2.amazonaws.com/default-card-img.png",
+											),
+										];
+
+										return combinedData.map((imgData, idx) => {
+											console.log(imgData);
+											return (
+												<Image
+													key={idx}
+													source={{ uri: imgData }}
+													style={[MemorialParkLayout.tabImage2]}
+												/>
+											);
+										});
+									})()}
 								</View>
 							</View>
 						</View>
@@ -368,22 +392,41 @@ const MemorialPark: React.FC<any> = ({ navigation, route }) => {
 					{LoginStore.isLogged ? (
 						<>
 							<View style={MemorialParkLayout.mpAlbumcontainer}>
-								{feedList
-									.slice(0, showAllFeeds ? feedList.length : 9)
-									.map((value: any, index: number) => {
-										return (
-											<TouchableOpacity
-												key={`feed_${index}`}
-												activeOpacity={0.7}
-												onPress={Pickpicture(value)}
-											>
-												<Image
-													source={{ uri: value.photoUrl }}
-													style={[MemorialParkLayout.tabImage3]}
-												/>
-											</TouchableOpacity>
-										);
-									})}
+								{feedList.length === 0 ? (
+									// https://ppobbi.s3.ap-northeast-2.amazonaws.com/default-card-img.png
+									<TouchableOpacity
+										activeOpacity={0.8}
+										onPress={() => navigation.navigate("CreateProfile")}
+									>
+										<View style={MemorialParkLayout.mpAlbumplus}>
+											<Image
+												source={{
+													uri: "https://ppobbi.s3.ap-northeast-2.amazonaws.com/default-card-img.png",
+												}}
+												style={[MemorialParkLayout.tabImage3]}
+											/>
+										</View>
+									</TouchableOpacity>
+								) : (
+									<>
+										{feedList
+											.slice(0, showAllFeeds ? feedList.length : 9)
+											.map((value: any, index: number) => {
+												return (
+													<TouchableOpacity
+														key={`feed_${index}`}
+														activeOpacity={0.7}
+														onPress={Pickpicture(value)}
+													>
+														<Image
+															source={{ uri: value.photoUrl }}
+															style={[MemorialParkLayout.tabImage3]}
+														/>
+													</TouchableOpacity>
+												);
+											})}
+									</>
+								)}
 							</View>
 
 							{feedList.length > 9 && !showAllFeeds && (
