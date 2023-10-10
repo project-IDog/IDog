@@ -15,11 +15,9 @@ import {
 	responsiveWidth,
 } from "react-native-responsive-dimensions";
 import Animation from "../components/Animation";
-import exImg from "../../assets/images/photo-ex-img3.png";
 import axios from "../utils/axios";
 import scrolldown from "../../assets/scrolldown.json";
 import LottieView from "lottie-react-native";
-import { set } from "mobx";
 import { useNavigation } from "@react-navigation/native";
 interface RipnftCreateProps {
 	setDataList: (data: any) => void;
@@ -46,10 +44,8 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 
 	const fetchNftList = () => {
 		axios.get("/dog/alive").then((data) => {
-			// console.log("생존강아지 조회!", data);
 			if (data.data.message === "사용자의 생존한 강아지 조회 완료") {
 				setDogNftList(data.data.data);
-				console.log("생존강아지 조회!", data.data.data);
 			}
 		});
 
@@ -59,19 +55,14 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 			}
 		});
 		// 죽은 나의 강아지 API 불러오기
-		axios
-			.get("/grave/user")
-			.then((data) => {
-				if (data.data.message === "무덤 조회 성공") {
-					if (data.data.data.length > 0) {
-						setIsMyProfile(true);
-						setDogDeathList(data.data.data);
-					}
+		axios.get("/grave/user").then((data) => {
+			if (data.data.message === "무덤 조회 성공") {
+				if (data.data.data.length > 0) {
+					setIsMyProfile(true);
+					setDogDeathList(data.data.data);
 				}
-			})
-			.catch((err) => {
-				console.log("아니 왜 안돼!", err);
-			});
+			}
+		});
 	};
 	const [dogNftList, setDogNftList] = useState<Object[]>([]);
 
@@ -94,12 +85,15 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 		setDeathDateInputModalVisible(true);
 	};
 	const handleConfirm = () => {
+		console.log(":asdsad:", selectedData);
+		console.log("dd:", deathDate);
 		axios
 			.post("/grave", {
 				dogNo: selectedData?.dogNo,
 				dogDeathDate: deathDate,
 			})
 			.then((data) => {
+				console.log("데어:", data);
 				if (data.data.message === "무덤 생성 완료") {
 					// setDogNftList([]);
 					Alert.alert(
@@ -118,6 +112,9 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 					setDeathDateInputModalVisible(false);
 					fetchNftList();
 				}
+			})
+			.catch((err) => {
+				console.log("에러:", err.response);
 			});
 	};
 
@@ -130,6 +127,34 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 	const [modalVisibleDeath, setModalVisibleDeath] = useState(false);
 	const [confirmationModalVisible2, setConfirmationModalVisible2] =
 		useState(false);
+
+	const [isdogDeathList, setIsdogDeathList] = useState(false);
+	useEffect(() => {
+		if (dogDeathList) {
+			setIsdogDeathList(true);
+		}
+	}, []);
+
+	const RestInPeaceBtn = () => {
+		{
+			if (dogNftList?.length > 0) {
+				setModalVisible(true);
+				console.log("데이터가 있습니다:", dogNftList);
+			} else {
+				Alert.alert(
+					"Rest In Peace",
+					"나의 강아지를 등록해야 합니다.",
+					[
+						{
+							text: "OK",
+							onPress: () => setConfirmationModalVisible(false),
+						},
+					],
+					{ cancelable: false },
+				);
+			}
+		}
+	};
 
 	return (
 		<View style={MemorialParkDesignLayout.view1}>
@@ -179,7 +204,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 			) : (
 				<TouchableOpacity
 					style={MemorialParkDesignLayout.ripnfbtn}
-					onPress={() => setModalVisible(true)}
+					onPress={() => RestInPeaceBtn()}
 				>
 					<Text style={MemorialParkDesignLayout.ripnftbtntext}>
 						Rest In Peace
@@ -202,6 +227,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 								나의 반려견
 							</Text>
 						</View>
+
 						<ScrollView>
 							{dogNftList?.map((data: any) => {
 								return (
@@ -347,7 +373,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 					<View style={MemorialParkDesignLayout.ripregistermodal}>
 						<Text style={MemorialParkDesignLayout.ripregistercontent}>
 							<Text style={MemorialParkDesignLayout.ripregistertitle}>
-								{selectedData?.dogName}
+								{selectedData?.dogName}, {selectedData?.dogNo}
 							</Text>
 							를 {"\n"}정말로 등록하시겠습니까?
 						</Text>
@@ -376,10 +402,20 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 				<View style={MemorialParkDesignLayout.modalcontainer}>
 					<View style={MemorialParkDesignLayout.modalinnercontainer}>
 						<View style={MemorialParkDesignLayout.modaltitlecontainer}>
+							<TouchableOpacity
+								style={MemorialParkDesignLayout.registerdesign}
+								onPress={() => {
+									setModalVisibleDeath(false);
+									setModalVisible(true);
+								}}
+							>
+								<Text> RIP 등록하기</Text>
+							</TouchableOpacity>
 							<Text style={MemorialParkDesignLayout.modaltitle}>
 								나의 반려견
 							</Text>
 						</View>
+
 						<ScrollView>
 							{dogDeathList?.map((data: any) => {
 								return (

@@ -330,6 +330,12 @@ const MemorialParkDesignLayout = StyleSheet.create({
 	riptitlename: {
 		// width: responsiveWidth(4),
 	},
+
+	registerdesign: {
+		position: "absolute",
+		left: responsiveWidth(0),
+		// fontWeight : "bold",
+	},
 });
 
 export default MemorialParkDesignLayout;
