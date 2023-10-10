@@ -62,12 +62,6 @@ const Main = ({ navigation }: any) => {
 								</Text>
 							</View>
 						</TouchableOpacity>
-						<TouchableOpacity
-							activeOpacity={0.7}
-							onPress={() => navigation.navigate("CreateWalletMain")}
-						>
-							<Text style={MainLayout.ifNoAuthText}>회원이 아니신가요?</Text>
-						</TouchableOpacity>
 					</View>
 				</View>
 
@@ -126,7 +120,9 @@ const Main = ({ navigation }: any) => {
 				<View style={MainLayout.randingButtonWrap}>
 					{LoginStore.isLogged ? (
 						<Text style={MainLayout.randingTitle}>
-							<Text style={MainLayout.boldRandingTitle}>IDog에서 이용가능한</Text> 
+							<Text style={MainLayout.boldRandingTitle}>
+								IDog에서 이용가능한
+							</Text>
 							내 반려견 서비스
 						</Text>
 					) : (
