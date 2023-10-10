@@ -20,6 +20,9 @@ import PhotoImg6 from "../../assets/images/photo-ex-img6.png";
 import WhitePenIcon from "../../assets/images/pen-icon.png";
 
 import AlbumLayout from "../styles/albumLayout";
+import ProfileLayout from "../styles/profileLayout";
+import CreateProfileLayout from "../styles/createProfileLayout";
+import AddPlusIcon from "../../assets/images/add-plus-icon.png";
 
 const Album = ({ navigation }: any) => {
 	const [userName, setUserName] = useState<string>("명예 멍집사");
@@ -152,28 +155,50 @@ const Album = ({ navigation }: any) => {
 					</TouchableOpacity>
 				</View>
 
-				<View style={AlbumLayout.photoList}>
-					{feedList.map((value: any, index: number) => {
-						return (
-							<TouchableOpacity
-								activeOpacity={0.7}
-								key={index}
-								onPress={() =>
-									navigation.push("DetailFeed", {
-										selectImg: { uri: value.photoUrl },
-										comment: value.photoComment,
-										photoNo: value.photoNo,
-									})
-								}
-							>
-								<Image
-									source={{ uri: value.photoUrl }}
-									style={AlbumLayout.photoItem}
-								/>
-							</TouchableOpacity>
-						);
-					})}
-				</View>
+				{feedList.length === 0 ? (
+					// <TouchableOpacity
+					// 	activeOpacity={0.8}
+					// 	onPress={() => navigation.navigate("CreateProfile")}
+					// >
+					// 	<View style={ProfileLayout.addNewNftWrap2}>
+					// 		<Image source={AddPlusIcon} />
+					// 		<Text style={ProfileLayout.newButtonText}>반려견 등록하기</Text>
+					// 	</View>
+					// </TouchableOpacity>
+					<TouchableOpacity
+						activeOpacity={0.7}
+						onPress={() => navigation.navigate("CreateProfile")}
+					>
+						<View style={CreateProfileLayout.imageUploadWrap}>
+							<Image source={AddPlusIcon} />
+							<Text>반려견 등록하기</Text>
+						</View>
+					</TouchableOpacity>
+				) : (
+					<View style={AlbumLayout.photoList}>
+						{" "}
+						{feedList.map((value: any, index: number) => {
+							return (
+								<TouchableOpacity
+									activeOpacity={0.7}
+									key={index}
+									onPress={() =>
+										navigation.push("DetailFeed", {
+											selectImg: { uri: value.photoUrl },
+											comment: value.photoComment,
+											photoNo: value.photoNo,
+										})
+									}
+								>
+									<Image
+										source={{ uri: value.photoUrl }}
+										style={AlbumLayout.photoItem}
+									/>
+								</TouchableOpacity>
+							);
+						})}
+					</View>
+				)}
 				<View style={{ marginTop: 6 }}></View>
 				<Footer />
 				{statusModalState ? (
