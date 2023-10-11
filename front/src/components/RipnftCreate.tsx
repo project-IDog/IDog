@@ -138,6 +138,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 	const RestInPeaceBtn = () => {
 		{
 			if (dogNftList?.length > 0) {
+				setModalVisibleDeath(false);
 				setModalVisible(true);
 				console.log("데이터가 있습니다:", dogNftList);
 			} else {
@@ -405,8 +406,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 							<TouchableOpacity
 								style={MemorialParkDesignLayout.registerdesign}
 								onPress={() => {
-									setModalVisibleDeath(false);
-									setModalVisible(true);
+									RestInPeaceBtn();
 								}}
 							>
 								<Text> RIP 등록하기</Text>
