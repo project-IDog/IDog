@@ -85,8 +85,6 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 		setDeathDateInputModalVisible(true);
 	};
 	const handleConfirm = () => {
-		console.log(":asdsad:", selectedData);
-		console.log("dd:", deathDate);
 		axios
 			.post("/grave", {
 				dogNo: selectedData?.dogNo,
@@ -110,6 +108,7 @@ const RipnftCreate: React.FC<RipnftCreateProps> = ({ setDataList }) => {
 
 					setConfirmationModalVisible(false);
 					setDeathDateInputModalVisible(false);
+					setModalVisible(false);
 					fetchNftList();
 				}
 			})
