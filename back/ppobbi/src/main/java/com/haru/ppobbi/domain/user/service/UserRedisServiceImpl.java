@@ -32,6 +32,8 @@ public class UserRedisServiceImpl implements UserRedisService {
             .userName(user.getUserName())
             .userMessage(user.getUserMessage())
             .userProfileImg(user.getUserProfileImg())
+            .userWalletPw(user.getUserWalletPw())
+            .userWalletSalt(user.getUserWalletSalt())
             .ttl(USER_INFO_TTL)
             .build()
         );
@@ -58,6 +60,8 @@ public class UserRedisServiceImpl implements UserRedisService {
                 .userName(user.getUserName())
                 .userMessage(user.getUserMessage())
                 .userProfileImg(user.getUserProfileImg())
+                .userWalletPw(user.getUserWalletPw())
+                .userWalletSalt(user.getUserWalletSalt())
                 .build()
             );
         }
@@ -82,7 +86,53 @@ public class UserRedisServiceImpl implements UserRedisService {
                 .userName(user.getUserName())
                 .userMessage(user.getUserMessage())
                 .userProfileImg(user.getUserProfileImg())
+                .userWalletPw(user.getUserWalletPw())
+                .userWalletSalt(user.getUserWalletSalt())
                 .build()
+            );
+        }
+    }
+
+    @Override
+    public void updateUserWalletPwAndSaltToRedis(User user) {
+        Optional<UserInfo> userInfoOptional = userRedisRepository.findById(user.getUserNo());
+        if (userInfoOptional.isPresent()) {
+            UserInfo userInfo = userInfoOptional.get();
+            userInfo.updateUserWalletPw(user.getUserWalletPw());
+            userInfo.updateUserWalletSalt(user.getUserWalletSalt());
+            userRedisRepository.save(userInfo);
+        } else {
+            userRedisRepository.save(UserInfo.builder()
+                    .userNo(user.getUserNo())
+                    .userId(user.getUserId())
+                    .userName(user.getUserName())
+                    .userMessage(user.getUserMessage())
+                    .userProfileImg(user.getUserProfileImg())
+                    .userWalletPw(user.getUserWalletPw())
+                    .userWalletSalt(user.getUserWalletSalt())
+                    .build()
+            );
+        }
+    }
+
+    @Override
+    public void updateUserAddressToRedis(User user) {
+        Optional<UserInfo> userInfoOptional = userRedisRepository.findById(user.getUserNo());
+        if (userInfoOptional.isPresent()) {
+            UserInfo userInfo = userInfoOptional.get();
+            userInfo.updateUserAddress(user.getUserAddress());
+            userRedisRepository.save(userInfo);
+        } else {
+            userRedisRepository.save(UserInfo.builder()
+                    .userNo(user.getUserNo())
+                    .userId(user.getUserId())
+                    .userName(user.getUserName())
+                    .userMessage(user.getUserMessage())
+                    .userProfileImg(user.getUserProfileImg())
+                    .userWalletPw(user.getUserWalletPw())
+                    .userWalletSalt(user.getUserWalletSalt())
+                    .userAddress(user.getUserAddress())
+                    .build()
             );
         }
     }

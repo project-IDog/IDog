@@ -39,6 +39,15 @@ public class User extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
 
+    @Column(name = "user_address")
+    private String userAddress;
+
+    @Column(name = "user_wallet_pw")
+    private String userWalletPw;
+
+    @Column(name = "user_wallet_salt")
+    private String userWalletSalt;
+
 
     @Builder
     public User(Integer userNo, String userId, String userName,
@@ -58,4 +67,14 @@ public class User extends BaseEntity {
     public void updateUserMessage(String userMessage) {
         this.userMessage = userMessage;
     }
+
+    public void updateUserWalletPw(String userWalletPw) {
+        this.userWalletPw = userWalletPw;
+    }
+
+    public void updateUserWalletSalt(String userWalletSalt) {
+        this.userWalletSalt = userWalletSalt;
+    }
+
+    public void updateUserAddress(String userAddress) { this.userAddress = userAddress; }
 }

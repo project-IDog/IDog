@@ -1,7 +1,9 @@
 package com.haru.ppobbi.domain.dog.service;
 
+import com.haru.ppobbi.domain.dog.dto.DogDto.DogInfoDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogOwnerUpdateRequestDto;
 import com.haru.ppobbi.domain.dog.dto.DogRequestDto.DogSaveRequestDto;
+import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogisDeadResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogisAliveResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogNftResponseDto;
 import com.haru.ppobbi.domain.dog.dto.DogResponseDto.DogProfileResposeDto;
@@ -39,7 +41,7 @@ public class DogServiceImpl implements DogService{
                 .dogBirthDate(dogSaveRequestDto.getDogBirthDate())
                 .dogSex(dogSaveRequestDto.getDogSex())
                 .dogIsDead(BaseConstant.NOTDEAD)
-                .dogNft(dogSaveRequestDto.getDogNft())
+                .dogHash(dogSaveRequestDto.getDogHash())
                 .dogImg(dogSaveRequestDto.getDogImg())
                 .build();
 
@@ -112,9 +114,6 @@ public class DogServiceImpl implements DogService{
     @Override
     public List<DogNftResponseDto> selectDogNftsByUserNo(Integer userNo) {
         List<Dog> dogList = dogRepository.findAllByUserNoAndCanceledOrderByDogName(userNo, BaseConstant.NOTCANCELED);
-        if(dogList.size() == 0) {
-            throw new NotFoundException(ALL_DOG_NOT_FOUND_EXCEPTION.message());
-        }
 
         List<DogNftResponseDto> dogNftResponseDtoList = new ArrayList<>();
         for (int i=0; i<dogList.size(); i++){
@@ -141,9 +140,6 @@ public class DogServiceImpl implements DogService{
     @Override
     public List<DogisAliveResponseDto> selectAliveDogsByUserNo(Integer userNo) {
         List<Dog> dogList = dogRepository.findAllByUserNoAndDogIsDeadAndCanceled(userNo, BaseConstant.NOTDEAD, BaseConstant.NOTCANCELED);
-        if(dogList.size() ==0) {
-            throw new NotFoundException(ALL_DOG_NOT_FOUND_EXCEPTION.message());
-        }
 
         List<DogisAliveResponseDto> aliveResponseDtoList = new ArrayList<>();
         for (int i=0; i<dogList.size(); i++){
@@ -163,5 +159,30 @@ public class DogServiceImpl implements DogService{
         }
         return aliveResponseDtoList;
     }
+
+    @Override
+    public List<DogisDeadResponseDto> selectDeadDogsByUserNo(Integer userNo) {
+        List<Dog> dogList = dogRepository.findAllByUserNoAndDogIsDeadAndCanceled(userNo, BaseConstant.DEAD, BaseConstant.NOTCANCELED);
+
+        List<DogisDeadResponseDto> deadResponseDtoList = new ArrayList<>();
+        for (int i=0; i<dogList.size(); i++){
+            DogisDeadResponseDto nowDog = DogisDeadResponseDto.builder()
+                    .userNo(dogList.get(i).getUserNo())
+                    .dogNo(dogList.get(i).getDogNo())
+                    .dogName(dogList.get(i).getDogName())
+                    .dogBreed(dogList.get(i).getDogBreed())
+                    .dogBirthDate(dogList.get(i).getDogBirthDate())
+                    .dogIsDead(dogList.get(i).getDogIsDead())
+                    .dogSex(dogList.get(i).getDogSex())
+                    .dogNft(dogList.get(i).getDogNft())
+                    .dogImg(dogList.get(i).getDogImg())
+                    .build();
+            deadResponseDtoList.add(nowDog);
+
+        }
+        return deadResponseDtoList;
+    }
+
+
 
 }

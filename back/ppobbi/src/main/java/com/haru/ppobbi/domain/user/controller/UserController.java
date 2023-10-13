@@ -1,13 +1,8 @@
 package com.haru.ppobbi.domain.user.controller;
 
-import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.DELETE_USER_SUCCESS;
-import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.GET_USER_INFO_SUCCESS;
-import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.REISSUE_ACCESS_TOKEN__SUCCESS;
-import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.SIGN_IN_SUCCESS;
-import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.UPDATE_USER_MESSAGE_SUCCESS;
-import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.UPDATE_USER_NAME_SUCCESS;
-
 import com.haru.ppobbi.domain.user.dto.TokenInfo;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserAddressRequestDto;
+import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserWalletPwRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserInfoRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UpdateUserMessageRequestDto;
 import com.haru.ppobbi.domain.user.dto.UserRequestDto.UserInfoRequestDto;
@@ -27,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.haru.ppobbi.domain.user.constant.UserResponseMessage.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -88,6 +85,33 @@ public class UserController {
         userService.updateUserName(userNo, updateUserInfoRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(UPDATE_USER_NAME_SUCCESS)
+        );
+    }
+
+    @PutMapping("/wallet")
+    public ResponseEntity<ResponseDto<String>> updateUserWalletPw(
+            @RequestAttribute("userNo") Integer userNo, @RequestBody UserWalletPwRequestDto userWalletPwRequestDto) {
+        userService.updateUserWalletPw(userNo, userWalletPwRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseDto.create(UPDATE_USER_WALLET_PW_SUCCESS)
+        );
+    }
+
+    @PostMapping("wallet/check")
+    public ResponseEntity<ResponseDto<String>> checkUserWalletPw(
+            @RequestAttribute("userNo") Integer userNo, @RequestBody UserWalletPwRequestDto userWalletPwRequestDto) {
+        String status = userService.checkUserWalletPw(userNo, userWalletPwRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseDto.create(status)
+        );
+    }
+
+    @PutMapping("/address")
+    public  ResponseEntity<ResponseDto<String>> updateUserAddress (
+            @RequestAttribute("userNo") Integer userNo, @RequestBody UserAddressRequestDto userAddressRequestDto) {
+        userService.updateUserAddress(userNo, userAddressRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseDto.create(UPDATE_USER_ADDRESS_SUCCESS)
         );
     }
 

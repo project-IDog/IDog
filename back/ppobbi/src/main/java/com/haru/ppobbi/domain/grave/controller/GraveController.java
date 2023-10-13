@@ -43,10 +43,16 @@ public class GraveController {
                 .body(ResponseDto.create(READ_SUCCESSS, graveService.selectGraves()));
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<ResponseDto<List<GraveListDto>>> getGravesByUserNo(@RequestAttribute("userNo") Integer userNo){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.create(READ_SUCCESSS, graveService.selectGravesByUserNo(userNo)));
+    }
+
     @GetMapping("/token")
     public ResponseEntity<TokenInfo> hi(){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(jwtTokenHandler.generateToken(10));
+                .body(jwtTokenHandler.generateToken(18));
     }
 
     @GetMapping("/log")
