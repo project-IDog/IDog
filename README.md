@@ -146,7 +146,7 @@ NFT의 데이터가 영원히 저장되는 특성을 이용하여 견주와 반�
 
 ### 아키텍쳐 다이어그램
 
-![Alt text](./exec/images/architecture.PNG) <br/>
+![Alt text](./exec/images/architecture.png) <br/>
 
 ## 📽️ UCC
 
