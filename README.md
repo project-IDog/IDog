@@ -34,7 +34,7 @@ NFT의 데이터가 영원히 저장되는 특성을 이용하여 견주와 반�
 
 ## 🕹️ 기술 스택
 
-![idog_logo](/exec/images/stack.png)
+![stack](/exec/images/stack.PNG)
 
 ## 🧵 환경 설정
 
