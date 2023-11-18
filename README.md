@@ -141,8 +141,8 @@ NFT의 데이터가 영원히 저장되는 특성을 이용하여 견주와 반�
 
 ### API 명세서
 
-![Alt text](./exec/images/api1.PNG) <br/>
-![Alt text](./exec/images/api2.PNG) <br/>
+![Alt text](./exec/images/api_1.PNG) <br/>
+![Alt text](./exec/images/api_2.PNG) <br/>
 
 ### 아키텍쳐 다이어그램
 
