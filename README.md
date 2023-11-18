@@ -34,7 +34,7 @@ NFT의 데이터가 영원히 저장되는 특성을 이용하여 견주와 반�
 
 ## 🕹️ 기술 스택
 
-![idog_logo](/exec/images/stack.png)
+![stack](/exec/images/stack.PNG)
 
 ## 🧵 환경 설정
 
@@ -124,7 +124,7 @@ NFT의 데이터가 영원히 저장되는 특성을 이용하여 견주와 반�
 - 하늘공원에 등록한 반려견의 추모공간에 빠르게 이동할 수 있습니다.
   <br>
 
-## :docs: 사용자 가이드
+## :memo: 사용자 가이드
 
 [바로가기](./exec/Scenario.pdf)
 
@@ -132,7 +132,7 @@ NFT의 데이터가 영원히 저장되는 특성을 이용하여 견주와 반�
 
 ### DB ERD
 
-![Alt text](./exec/images/ERD.PNG) <br/>
+![Alt text](./exec/images/erd.PNG) <br/>
 
 ### 기능 명세서
 
