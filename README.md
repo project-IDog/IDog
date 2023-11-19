@@ -5,9 +5,10 @@
 
 ## 💌 프로젝트 개요
 
-2023.08.21 ~ 2023.10.06(7주)
+2023.08.21 ~ 2023.10.06 (7주)  
+팀원 : 김민섭, 나건, 윤선희, 이가경, 이성섭, 최찬영 (6인)  
 
-### 기획 배경
+### :heavy_check_mark: 기획 배경
 
 강아지 공장을 통해 강아지를 사고파는 행위가 지속되고, 무분별한 파양을 막기 위해 IDog 서비스를 기획
 <br>
@@ -36,11 +37,20 @@ NFT의 데이터가 영원히 저장되는 특성을 이용하여 견주와 반�
 
 ![stack](/exec/images/stack.PNG)
 
+## 🤝 협업 툴
+- GitLab
+- Notion
+- JIRA
+- MatterMost
+- Webex
+- Discord
+<br>
+
 ## 🔎 서비스 소개
 
 **반려동물 양육 가구 552만**인 오늘날, 반려인들에게 **특별한 추억**을 남겨주는 서비스 **“IDog”**
 
-### 회원 관리
+### :pushpin: 1. 회원 관리
 
 **[로그인]** <br>
 <img src="./exec/images/로그인.gif" width="170" height="400">
@@ -56,9 +66,9 @@ NFT의 데이터가 영원히 저장되는 특성을 이용하여 견주와 반�
 
 - NFT를 소유하기 위해, 디지털 지갑을 생성합니다.
 - 지갑에 접근하기 위한 비밀번호를 입력하면 생성 가능합니다.
-  <br>
+  <br><br/>
 
-### 강아지 관리
+### :pushpin: 2. 강아지 관리
 
 **[반려견 NFT 발급]** <br>
 <img src="./exec/images/nft민팅.gif" width="170" height="400">
@@ -72,28 +82,9 @@ NFT의 데이터가 영원히 저장되는 특성을 이용하여 견주와 반�
 <br> <br>
 
 - 등록한 반려견의 정보를 확인할 수 있습니다.
-  <br>
+  <br><br/>
 
-### 산책
-
-**[산책 기록]** <br>
-<img src="./exec/images/산책.gif" width="170" height="400">
-<br> <br>
-
-- 등록된 반려견을 선택하고, 산책 시작 버튼을 통해 기록 할 수 있습니다.
-- 위젯을 이용하여 홈 화면에서 바로 기록 가능합니다.
-  <br>
-
-### 포토앨범
-
-**[사진 등록]**<br>
-<img src="./exec/images/포토앨범.gif" width="170" height="400">
-<br> <br>
-
-- 반려견의 귀여운 모습을 남길 수 있습니다.
-  <br>
-
-### 하늘공원
+### :pushpin: 3. 하늘공원
 
 > 무지개 다리를 건넌 반려견을 추모하기 위한 공간
 
@@ -118,29 +109,50 @@ NFT의 데이터가 영원히 저장되는 특성을 이용하여 견주와 반�
 <br> <br>
 
 - 하늘공원에 등록한 반려견의 추모공간에 빠르게 이동할 수 있습니다.
-  <br>
+  <br><br/>
+
+### :pushpin: 4. 산책
+
+**[산책 기록]** <br>
+<img src="./exec/images/산책.gif" width="170" height="400">
+<br> <br>
+
+- 등록된 반려견을 선택하고, 산책 시작 버튼을 통해 기록 할 수 있습니다.
+- 위젯을 이용하여 홈 화면에서 바로 기록 가능합니다.
+  <br><br/>
+
+### :pushpin: 5. 포토앨범
+
+**[사진 등록]**<br>
+<img src="./exec/images/포토앨범.gif" width="170" height="400">
+<br> <br>
+
+- 반려견의 귀여운 모습을 남길 수 있습니다.
+  <br><br/>
+
 
 ## :memo: 사용자 가이드
 
-[바로가기](./exec/Scenario.pdf)
+[바로가기](./exec/Scenario.pdf) 
+<br/><br/>
 
 ## 📋 프로젝트 산출물
 
-### DB ERD
+### :art: DB ERD
 
 ![Alt text](./exec/images/erd.PNG) <br/>
 
-### 기능 명세서
+### :art: 기능 명세서
 
 ![Alt text](./exec/images/기능1.PNG) <br/>
 ![Alt text](./exec/images/기능2.PNG) <br/>
 
-### API 명세서
+### :art: API 명세서
 
 ![Alt text](./exec/images/api_1.PNG) <br/>
 ![Alt text](./exec/images/api_2.PNG) <br/>
 
-### 아키텍쳐 다이어그램
+### :art: 아키텍쳐 다이어그램
 
 ![Alt text](./exec/images/architecture.png) <br/>
 
