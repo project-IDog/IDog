@@ -28,7 +28,7 @@ NFT의 데이터가 영원히 저장되는 특성을 이용하여 견주와 반�
 | 나건   | Back-End  | -                                                                                                   |
 | 윤선희 | Back-End  | 팀장 <br/> [Back] Dog 관련 api <br/> [BlockChain] 디지털 지갑 구현, 스마트컨트랙트 작성, NFT 민팅 구현 |                                                                                                
 | 이가경 | Back-End  | [Back] 소셜로그인 <br> [Infra] 인프라 구축 및 CI/CD <br> [BlockChain] 디지털 지갑 구현, IPFS 업로드 |
-| 이성섭 | Front-End | -                                                                                                   |
+| 이성섭 | Front-End | [Front] 설계 및 로직 구현 <br> [Animation] RIP 페이지 애니메이션 구현 |                                                                                                  
 | 최찬영 | Front-End | -                                                                                                   |
 
 <br/>
